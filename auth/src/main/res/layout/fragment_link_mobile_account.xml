@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.LinkMobileAccountFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/registration_success" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="Link a mobile account"
+                android:textColor="#083760"
+                android:textSize="18sp" />
+
+            <include layout="@layout/account_warning" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="Select Country" />
+
+            <TextView
+                android:id="@+id/selectCountryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/bg_card_number_edit_text"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:drawableTint="@color/dark_gray_palette_strong"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                tools:targetApi="m" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="Select Network" />
+
+            <TextView
+                android:id="@+id/selectNetworkTextView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/bg_card_number_edit_text"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:drawableTint="@color/dark_gray_palette_strong"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                tools:targetApi="m" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="Phone number" />
+
+            <EditText
+                android:id="@+id/phoneEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="-0.25dp"
+                android:background="@drawable/bg_card_number_edit_text"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:inputType="phone"
+                android:maxLength="14"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="16sp"
+                tools:ignore="LabelFor,NegativeMargin"
+                tools:targetApi="jelly_bean" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="Alias Name" />
+
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="-0.25dp"
+                android:background="@drawable/bg_card_number_edit_text"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:inputType="textPersonName"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="16sp"
+                tools:ignore="LabelFor,NegativeMargin"
+                tools:targetApi="jelly_bean" />
+
+            <Button
+                android:id="@+id/btn_save"
+                style="@style/Tospay.Button.Large"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_16"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="@dimen/default_space_16"
+                android:text="Save and continue" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        layout="@layout/wheel_loading_layout"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</FrameLayout>

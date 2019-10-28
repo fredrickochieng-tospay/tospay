@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_payment_summary">
+
+    <fragment
+        android:id="@+id/navigation_payment_summary"
+        android:name="net.tospay.auth.ui.fragment.PaymentSummaryFragment"
+        android:label="fragment_payment_summary"
+        tools:layout="@layout/fragment_payment_summary">
+        <argument
+            android:name="token"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_payment_summary_to_navigation_login"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_payment_summary_to_navigation_register"
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="net.tospay.auth.ui.fragment.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_register"
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_account_selection"
+            app:destination="@id/navigation_account_selection"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/navigation_payment_summary"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="net.tospay.auth.ui.fragment.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_navigation_register_to_navigation_email_verification"
+            app:destination="@id/navigation_email_verification"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/navigation_payment_summary"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_email_verification"
+        android:name="net.tospay.auth.ui.fragment.EmailVerificationFragment"
+        android:label="fragment_email_verification"
+        tools:layout="@layout/fragment_email_verification">
+        <action
+            android:id="@+id/action_navigation_email_verification_to_navigation_phone_verification"
+            app:destination="@id/navigation_phone_verification"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/navigation_payment_summary"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_phone_verification"
+        android:name="net.tospay.auth.ui.fragment.PhoneVerificationFragment"
+        android:label="fragment_phone_verification"
+        tools:layout="@layout/fragment_phone_verification">
+        <action
+            android:id="@+id/action_navigation_phone_verification_to_navigation_login"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/navigation_login"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_account_selection"
+        android:name="net.tospay.auth.ui.fragment.AccountSelectionFragment"
+        android:label="fragment_account_selection"
+        tools:layout="@layout/fragment_account_selection">
+        <argument
+            android:name="user"
+            app:argType="net.tospay.auth.model.TospayUser"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_navigation_account_selection_to_navigation_link_mobile_account"
+            app:destination="@id/navigation_link_mobile_account"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_link_mobile_account"
+        android:name="net.tospay.auth.ui.fragment.LinkMobileAccountFragment"
+        android:label="LinkMobileAccountFragment"
+        tools:layout="@layout/fragment_link_mobile_account" />
+
+</navigation>

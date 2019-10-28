@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context=".ui.fragment.LoginFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_tospay_logo_original" />
+
+            <include layout="@layout/account_warning" />
+
+            <FrameLayout
+                style="@style/TextInputLayoutContainer"
+                android:layout_marginStart="@dimen/default_space_16"
+                android:layout_marginEnd="@dimen/default_space_16">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailInputLayout"
+                    style="@style/Tospay.TextInputLayout.HintStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/emailEditText"
+                        style="@style/Tospay.TextInputEditText.Style"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="email"
+                        android:hint="@string/email"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:nextFocusRight="@id/passwordEditText"
+                        android:nextFocusDown="@id/passwordEditText"
+                        tools:targetApi="o" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/emailFooter"
+                style="@style/Tospay.TextAppearance.EditText.Footer.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_28"
+                android:layout_marginLeft="@dimen/default_space_28"
+                android:visibility="invisible"
+                tools:text="Enter valid email address"
+                tools:visibility="visible" />
+
+            <FrameLayout
+                style="@style/TextInputLayoutContainer"
+                android:layout_marginStart="@dimen/default_space_16"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_16">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordInputLayout"
+                    style="@style/Tospay.TextInputLayout.HintStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:passwordToggleEnabled="true">
+
+                    <EditText
+                        android:id="@+id/passwordEditText"
+                        style="@style/Tospay.TextInputEditText.Style"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="password"
+                        android:hint="@string/password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword"
+                        tools:targetApi="o" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/passwordFooter"
+                style="@style/Tospay.TextAppearance.EditText.Footer.Error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_28"
+                android:layout_marginLeft="@dimen/default_space_28"
+                android:visibility="invisible"
+                tools:text="Password should be at least 6 characters"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/Tospay.Button.Large"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="70dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginStart="@dimen/default_space_16"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/default_space_16"
+                android:text="@string/log_in" />
+
+            <TextView
+                android:id="@+id/btn_forgot_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/default_space_16"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:text="@string/need_help_signing_in"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="@dimen/default_space_16"
+                android:layout_marginRight="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/borderColor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:fontFamily="@font/proxima_nova_bold"
+                    android:text="@string/or"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/borderColor" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                style="@style/Tospay.Button.Transparent.Border"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_16"
+                android:layout_marginTop="@dimen/default_space_16"
+                android:layout_marginEnd="@dimen/default_space_16"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="@string/sign_up" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <include
+        layout="@layout/wheel_loading_layout"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+</FrameLayout>
+
