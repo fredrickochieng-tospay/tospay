@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">auth</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="need_help_signing_in">Need help signing in?</string>
+    <string name="or">Or</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_account_message">Create account.</string>
+    <string name="create_account">Create account</string>
+    <string name="payment_message">Welcome to Tospay checkout: the secure, faster and easier way to pay. To process this payment, proceed to Sign in or Sign up.</string>
+    <string name="go_back_to">Go back to</string>
+    <string name="payment">Payment</string>
+
+    <string name="email_verification">Email Verification</string>
+    <string name="enter_verification_code">Enter Verification code</string>
+    <string name="email_verification_message">We\'ve just sent a verification code to</string>
+    <string name="send">Send</string>
+    <string name="resend">Resend</string>
+    <string name="resend_message">If you did not receive the code \n  tap below to send</string>
+    <string name="verify_code">Verify Code</string>
+    <string name="required">%1$s is required</string>
+    <string name="please_confirm_password">Please confirm password</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
