@@ -43,6 +43,7 @@ public class Account implements Parcelable, AccountType {
     private boolean verified;
 
     private String accountType;
+    private boolean isChecked;
 
     public Account() {
     }
@@ -57,24 +58,7 @@ public class Account implements Parcelable, AccountType {
         alias = in.readString();
         verified = in.readByte() != 0;
         accountType = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(network);
-        dest.writeString(avatar);
-        dest.writeString(trunc);
-        dest.writeString(state);
-        dest.writeString(note);
-        dest.writeString(alias);
-        dest.writeByte((byte) (verified ? 1 : 0));
-        dest.writeString(accountType);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        isChecked = in.readByte() != 0;
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {
@@ -161,6 +145,14 @@ public class Account implements Parcelable, AccountType {
         this.accountType = accountType;
     }
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     @Override
     public int getType() {
         switch (accountType) {
@@ -177,5 +169,24 @@ public class Account implements Parcelable, AccountType {
                 return -1;
 
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(network);
+        parcel.writeString(avatar);
+        parcel.writeString(trunc);
+        parcel.writeString(state);
+        parcel.writeString(note);
+        parcel.writeString(alias);
+        parcel.writeByte((byte) (verified ? 1 : 0));
+        parcel.writeString(accountType);
+        parcel.writeByte((byte) (isChecked ? 1 : 0));
     }
 }

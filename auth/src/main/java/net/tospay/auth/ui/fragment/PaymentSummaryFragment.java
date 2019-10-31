@@ -21,6 +21,7 @@ import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.databinding.FragmentPaymentSummaryBinding;
 import net.tospay.auth.interfaces.PaymentListener;
+import net.tospay.auth.viewmodel.AccountViewModel;
 import net.tospay.auth.viewmodel.PaymentViewModel;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
@@ -99,7 +100,7 @@ public class PaymentSummaryFragment extends Fragment implements OnPaymentValidat
 
     @Override
     public void onValidationSuccess(PaymentValidationResponse response) {
-        paymentViewModel.isLoading().setValue(false);
+        //paymentViewModel.isLoading().setValue(false);
         paymentViewModel.merchant().setValue(response.getMerchant());
         paymentViewModel.transaction().setValue(response.getTransaction());
 
