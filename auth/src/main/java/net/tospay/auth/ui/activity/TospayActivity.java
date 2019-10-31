@@ -7,40 +7,63 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.TospayException;
+import net.tospay.auth.databinding.ActivityTospayBinding;
 import net.tospay.auth.interfaces.PaymentListener;
-import net.tospay.auth.model.Merchant;
-import net.tospay.auth.model.Payment;
+import net.tospay.auth.ui.base.BaseActivity;
+import net.tospay.auth.viewmodel.PaymentViewModel;
+
+import javax.inject.Inject;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
-
 @SuppressWarnings("ConstantConditions")
-public class TospayAuthClient extends AppCompatActivity implements PaymentListener {
+public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentViewModel>
+        implements PaymentListener {
 
-    private Payment transaction;
-    private Merchant merchant;
-    private String token;
+    @Inject
+    public ViewModelProvider.Factory factory;
+
+    private PaymentViewModel paymentViewModel;
+
+    @Override
+    public int getBindingVariable() {
+        return BR.paymentViewModel;
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_tospay;
+    }
+
+    @Override
+    public PaymentViewModel getViewModel() {
+        paymentViewModel = ViewModelProviders.of(this, factory).get(PaymentViewModel.class);
+        return paymentViewModel;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.auth_activity);
+
+        ActivityTospayBinding binding = getViewDataBinding();
+        binding.setPaymentViewModel(paymentViewModel);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        token = getIntent().getStringExtra(KEY_TOKEN);
-
         Bundle args = new Bundle();
-        args.putString(KEY_TOKEN, token);
+        args.putString(KEY_TOKEN, getIntent().getStringExtra(KEY_TOKEN));
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_graph, args);
@@ -69,11 +92,10 @@ public class TospayAuthClient extends AppCompatActivity implements PaymentListen
         finish();
     }
 
-
     @Override
     public void onPaymentDetails(PaymentValidationResponse response) {
-        this.transaction = response.getTransaction();
-        this.merchant = response.getMerchant();
+        /*this.transaction = response.getTransaction();
+        this.merchant = response.getMerchant();*/
     }
 
     @Override
@@ -86,24 +108,7 @@ public class TospayAuthClient extends AppCompatActivity implements PaymentListen
         finishActivity(exception.getErrorMessage());
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cancel Payment");
-        builder.setMessage("Are you sure you want to cancel this payment?");
-        builder.setCancelable(false);
-        builder.setPositiveButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-        builder.setNegativeButton("Yes", (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-            finishActivity("Payment Canceled");
-        });
-
-        builder.show();*/
-    }
-
-    public String getToken() {
+    /*public String getToken() {
         return token;
     }
 
@@ -113,5 +118,5 @@ public class TospayAuthClient extends AppCompatActivity implements PaymentListen
 
     public Merchant getMerchant() {
         return merchant;
-    }
+    }*/
 }

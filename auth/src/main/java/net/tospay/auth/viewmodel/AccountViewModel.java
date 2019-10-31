@@ -4,7 +4,6 @@ import android.view.View;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.TospayGateway;
@@ -14,12 +13,13 @@ import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.AccountTitle;
-import net.tospay.auth.model.Merchant;
-import net.tospay.auth.model.Payment;
 import net.tospay.auth.model.Wallet;
+import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class AccountViewModel extends BaseViewModel
         implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
@@ -31,6 +31,7 @@ public class AccountViewModel extends BaseViewModel
     private AccountTitle title;
     private List<Account> accountList;
 
+    @Inject
     public AccountViewModel() {
         this.isEmpty = new ObservableBoolean();
     }

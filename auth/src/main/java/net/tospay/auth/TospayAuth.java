@@ -2,7 +2,6 @@ package net.tospay.auth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -24,20 +23,14 @@ import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Token;
 import net.tospay.auth.model.TospayUser;
-import net.tospay.auth.ui.activity.TospayAuthClient;
+import net.tospay.auth.ui.activity.TospayActivity;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
@@ -448,7 +441,7 @@ public class TospayAuth extends Tospay {
         if (getContext() == null)
             throw new RuntimeException("Context can not be null");
 
-        Intent intent = new Intent(getContext(), TospayAuthClient.class);
+        Intent intent = new Intent(getContext(), TospayActivity.class);
         intent.putExtra(KEY_TOKEN, token);
         return intent;
     }

@@ -1,4 +1,4 @@
-package net.tospay.auth.viewmodel;
+package net.tospay.auth.ui.base;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
