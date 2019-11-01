@@ -14,27 +14,19 @@ import net.tospay.auth.api.listeners.ResponseListener;
 import net.tospay.auth.api.listeners.WalletTransactionListener;
 import net.tospay.auth.api.request.MobileAccountVerificationRequest;
 import net.tospay.auth.api.request.MobileRequest;
-import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.api.request.PaymentValidationRequest;
 import net.tospay.auth.api.response.AccountResponse;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.api.response.TospayException;
-import net.tospay.auth.api.response.PaymentValidationResponse;
+import net.tospay.auth.api.response.PaymentResult;
 import net.tospay.auth.api.response.WalletTransactionResponse;
-import net.tospay.auth.api.service.GatewayService;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -228,10 +220,10 @@ public class TospayGateway extends Tospay {
     public void validatePayment(String token, OnPaymentValidationListener listener) {
         TospayClient.getGatewayService(getContext())
                 .validatePayment(new PaymentValidationRequest(token))
-                .enqueue(new Callback<Result<PaymentValidationResponse>>() {
+                .enqueue(new Callback<Result<PaymentResult>>() {
                     @Override
-                    public void onResponse(@NonNull Call<Result<PaymentValidationResponse>> call,
-                                           @NonNull Response<Result<PaymentValidationResponse>> response) {
+                    public void onResponse(@NonNull Call<Result<PaymentResult>> call,
+                                           @NonNull Response<Result<PaymentResult>> response) {
                         if (response.isSuccessful()) {
                             listener.onValidationSuccess(response.body().getData());
                         } else {
@@ -240,7 +232,7 @@ public class TospayGateway extends Tospay {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<Result<PaymentValidationResponse>> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<Result<PaymentResult>> call, @NonNull Throwable t) {
                         listener.onError(new TospayException(t.getMessage(), t));
                     }
                 });

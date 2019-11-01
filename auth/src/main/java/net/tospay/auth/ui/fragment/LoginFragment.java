@@ -165,22 +165,12 @@ public class LoginFragment extends BaseFragment {
             public void onUser(TospayUser user) {
                 touchable(mActivity);
                 loadingProgressBar.setVisibility(View.GONE);
-
                 if (!user.isEmailVerified()) {
-                    navController
-                            .navigate(R.id.navigation_email_verification);
-
+                    navController.navigate(R.id.navigation_email_verification);
                 } else if (!user.isPhoneVerified()) {
-                    navController
-                            .navigate(R.id.navigation_phone_verification);
-
+                    navController.navigate(R.id.navigation_phone_verification);
                 } else {
-
-                    LoginFragmentDirections.ActionNavigationLoginToNavigationAccountSelection
-                            action = LoginFragmentDirections
-                            .actionNavigationLoginToNavigationAccountSelection(user);
-
-                    navController.navigate(action);
+                    navController.navigate(R.id.navigation_account_selection);
                 }
             }
 

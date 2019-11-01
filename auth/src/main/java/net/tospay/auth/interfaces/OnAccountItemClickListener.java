@@ -9,4 +9,6 @@ public interface OnAccountItemClickListener {
     }
 
     void onVerifyClick(View view, AccountType accountType);
+
+    void onAddAccount(int accountType);
 }

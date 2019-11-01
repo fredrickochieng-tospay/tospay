@@ -1,10 +1,13 @@
 package net.tospay.auth.api.service;
 
+import androidx.lifecycle.LiveData;
+
 import net.tospay.auth.api.request.MobileAccountVerificationRequest;
 import net.tospay.auth.api.request.MobileRequest;
 import net.tospay.auth.api.request.PaymentValidationRequest;
 import net.tospay.auth.api.response.AccountResponse;
-import net.tospay.auth.api.response.PaymentValidationResponse;
+import net.tospay.auth.api.response.ApiResponse;
+import net.tospay.auth.api.response.PaymentResult;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.api.response.WalletTransactionResponse;
 import net.tospay.auth.model.Country;
@@ -13,10 +16,10 @@ import net.tospay.auth.model.Network;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -41,11 +44,18 @@ public interface GatewayService {
     Call<Result<AccountResponse>> fetchAccounts();
 
     @POST("v1/validate-payment")
-    Call<Result<PaymentValidationResponse>> validatePayment(@Body PaymentValidationRequest request);
+    Call<Result<PaymentResult>> validatePayment(@Body PaymentValidationRequest request);
 
     @POST("v1/topup")
     Call<Result> topup(@Body Map<String, Object> request);
 
     @GET("v1/wallet-transactions")
     Call<Result<WalletTransactionResponse>> fetchWalletTransactions();
+
+    //----------------------------------------------------------------------------------------------
+    @POST("v1/validate-payment")
+    LiveData<ApiResponse<Result<PaymentResult>>> validate(@Body Map<String, String> request);
+
+    @GET("v1/fetch-accounts")
+    LiveData<ApiResponse<Result<AccountResponse>>> accounts(@Header("Authorization") String bearer);
 }

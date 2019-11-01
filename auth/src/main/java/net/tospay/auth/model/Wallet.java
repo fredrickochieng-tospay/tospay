@@ -118,4 +118,14 @@ public class Wallet implements Parcelable, AccountType {
     public int getType() {
         return AccountType.WALLET;
     }
+
+    @Override
+    public String toString() {
+        return "Wallet{" +
+                "id='" + id + '\'' +
+                ", currency='" + currency + '\'' +
+                ", accountBalance=" + accountBalance +
+                ", lastBalance=" + lastBalance +
+                '}';
+    }
 }

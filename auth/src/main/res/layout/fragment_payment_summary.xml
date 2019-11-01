@@ -10,8 +10,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewmodel"
-            type="net.tospay.auth.viewmodel.PaymentViewModel" />
+            name="summaryViewModel"
+            type="net.tospay.auth.ui.summary.SummaryViewModel" />
 
     </data>
 
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        tools:context=".ui.fragment.PaymentSummaryFragment">
+        tools:context=".ui.summary.PaymentSummaryFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_margin="20dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="@{viewmodel.isLoading ? View.GONE : View.VISIBLE}"
+            android:visibility="@{summaryViewModel.isLoading ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,22 +39,16 @@
                 android:layout_height="100dp"
                 android:layout_marginBottom="10dp"
                 android:contentDescription="@string/app_name"
-                app:imageUrl="@{viewmodel.merchant.avatar}"
+                app:imageUrl="@{summaryViewModel.merchant.avatar}"
                 tools:src="@drawable/ic_loading" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_regular"
-                android:text="@{viewmodel.merchant.name}"
+                android:text="@{summaryViewModel.merchant.name}"
                 android:textSize="25sp"
                 tools:text="Kenya Ports Authority" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_regular"
-                android:text="@{StringUtil.getCurrency(viewmodel.transaction.currency,viewmodel.transaction.amount)}"
+                android:text="@{StringUtil.getCurrency(summaryViewModel.transaction.currency,summaryViewModel.transaction.amount)}"
                 android:textColor="@color/text"
                 android:textSize="20sp"
                 tools:text="KES 12,030.00" />
@@ -84,13 +78,37 @@
                 android:textColor="@color/text"
                 android:textSize="16sp" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:gravity="center"
+                android:text="@string/payment_auth_message"
+                android:textColor="@color/text"
+                android:textSize="16sp"
+                android:visibility="@{summaryViewModel.isLoggedIn ? View.GONE : View.VISIBLE}" />
+
             <Button
                 android:id="@+id/btn_login"
                 style="@style/Tospay.Button.Large"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/sign_in" />
+                android:onClick="@{(view)->summaryViewModel.onClick(view)}"
+                android:text="@string/sign_in"
+                android:visibility="@{summaryViewModel.isLoggedIn ? View.GONE : View.VISIBLE}" />
+
+            <Button
+                android:id="@+id/btn_continue"
+                style="@style/Tospay.Button.Large"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:onClick="@{(view)->summaryViewModel.onClick(view)}"
+                android:text="Continue"
+                android:textAllCaps="false"
+                android:visibility="@{summaryViewModel.isLoggedIn ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,36 +148,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_space_16"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:text="@string/sign_up" />
+                android:onClick="@{(view)->summaryViewModel.onClick(view)}"
+                android:text="@string/sign_up"
+                android:visibility="@{summaryViewModel.isLoggedIn ? View.GONE : View.VISIBLE}" />
 
-            <LinearLayout
-                android:id="@+id/go_back_layout"
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btn_cancel"
+                style="@style/Tospay.Button.White.Border"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="3dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:text="@string/go_back_to" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:text="@{viewmodel.merchant.name}"
-                    android:textColor="@color/colorPrimary"
-                    tools:text="Kenya Ports Authority" />
-
-            </LinearLayout>
+                android:layout_marginTop="@dimen/default_space_16"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:onClick="@{(view)->summaryViewModel.onClick(view)}"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textColor="@color/red_palette_error"
+                android:visibility="@{summaryViewModel.isLoading ? View.GONE : View.VISIBLE}" />
 
         </LinearLayout>
 
@@ -168,7 +172,7 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{viewmodel.isLoading ? View.VISIBLE : View.GONE}"
+            android:visibility="@{summaryViewModel.isLoading ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

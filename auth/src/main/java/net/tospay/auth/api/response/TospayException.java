@@ -2,6 +2,8 @@ package net.tospay.auth.api.response;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -58,6 +60,11 @@ public class TospayException extends IOException {
         this.error = error;
     }
 
+    /**
+     * Converts the error message into a single string
+     *
+     * @return string
+     */
     public String getErrorMessage() {
         if (error != null) {
             if (!error.isEmpty()) {
@@ -72,5 +79,38 @@ public class TospayException extends IOException {
         }
 
         return description;
+    }
+
+    public class Error {
+
+        @SerializedName("code")
+        @Expose
+        private String code;
+
+        @SerializedName("desc")
+        @Expose
+        private String desc;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return desc;
+        }
     }
 }

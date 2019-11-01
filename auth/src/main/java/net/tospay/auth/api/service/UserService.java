@@ -1,5 +1,7 @@
 package net.tospay.auth.api.service;
 
+import androidx.lifecycle.LiveData;
+
 import net.tospay.auth.api.request.LoginRequest;
 import net.tospay.auth.api.request.OtpRequest;
 import net.tospay.auth.api.request.RefreshTokenRequest;
@@ -7,11 +9,13 @@ import net.tospay.auth.api.request.RegisterRequest;
 import net.tospay.auth.api.request.ResendEmailRequest;
 import net.tospay.auth.api.request.VerifyEmailRequest;
 import net.tospay.auth.api.request.VerifyPhoneRequest;
+import net.tospay.auth.api.response.ApiResponse;
 import net.tospay.auth.api.response.QrResponse;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.model.Token;
 import net.tospay.auth.model.TospayUser;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -48,5 +52,8 @@ public interface UserService {
 
     @POST("v3/account/info/qr")
     Call<Result<QrResponse>> qrInfo(@Body Map<String, String> request);
+
+    @POST("v3/user/login")
+    LiveData<ApiResponse<Result<TospayUser>>> login2(@Body LoginRequest request);
 
 }

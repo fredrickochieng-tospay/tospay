@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,26 +15,21 @@
 
     </data>
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
         app:cardCornerRadius="3dp"
-        app:cardElevation="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:cardElevation="3dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="10dp">
@@ -43,89 +40,80 @@
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:contentDescription="@string/app_name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_tospay_logo_transparent" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="1dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.20" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+            <TextView
+                android:id="@+id/networkTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="@{account.network}"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toTopOf="@id/guideline2"
+                app:layout_constraintLeft_toRightOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Visa" />
 
-                    <TextView
-                        android:id="@+id/networkTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/proxima_nova_semibold"
-                        android:text="@{account.network}"
-                        android:textColor="@color/colorPrimary"
-                        tools:text="Visa" />
+            <TextView
+                android:id="@+id/statusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_nova_semibold"
+                android:text="@{account.verified ? `Verified`:`Not verified`}"
+                android:textColor="@color/red_palette_error"
+                android:textSize="12sp"
+                android:visibility="@{account.verified ? View.INVISIBLE:View.VISIBLE}"
+                app:layout_constraintBottom_toTopOf="@id/guideline2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Verified" />
 
-                    <TextView
-                        android:id="@+id/statusTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/proxima_nova_semibold"
-                        android:text="@{account.verified ? `Verified`:`Not verified`}"
-                        android:textColor="@{account.verified ? R.color.green:R.color.red_palette_error}"
-                        android:textSize="12sp"
-                        tools:text="Verified" />
+            <TextView
+                android:id="@+id/truncTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:text="@{String.format(`%s - %s`, account.getAlias(), account.getTrunc())}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/avatarView"
+                app:layout_constraintTop_toBottomOf="@id/guideline2"
+                tools:text="03434" />
 
-                    <ImageView
-                        android:id="@+id/checked_image_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:contentDescription="@string/app_name"
-                        android:visibility="@{account.checked ? View.VISIBLE:View.INVISIBLE}"
-                        app:layout_constraintBottom_toTopOf="@id/cardView"
-                        app:layout_constraintRight_toRightOf="@id/cardView"
-                        app:layout_constraintTop_toTopOf="@id/cardView"
-                        app:layout_insetEdge="top"
-                        app:srcCompat="@drawable/ic_checked"
-                        tools:visibility="visible" />
+            <Button
+                android:id="@+id/btn_verify_phone"
+                style="@style/Tospay.Button.Transparent.Border"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Verify"
+                android:visibility="@{account.verified ? View.GONE:View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/guideline2"
+                tools:visibility="visible" />
 
-                </LinearLayout>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/truncTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:text="@{String.format(`%s - %s`, account.getAlias(), account.getTrunc())}"
-                        android:textSize="12sp"
-                        tools:text="03434" />
-
-                    <Button
-                        android:id="@+id/btn_verify_phone"
-                        style="@style/Tospay.Button.Transparent.Border"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="Verify"
-                        android:visibility="@{account.verified ? View.INVISIBLE:View.VISIBLE}" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 

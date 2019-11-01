@@ -42,8 +42,7 @@ public class Account implements Parcelable, AccountType {
     @Expose
     private boolean verified;
 
-    private String accountType;
-    private boolean isChecked;
+    private int accountType;
 
     public Account() {
     }
@@ -57,8 +56,25 @@ public class Account implements Parcelable, AccountType {
         note = in.readString();
         alias = in.readString();
         verified = in.readByte() != 0;
-        accountType = in.readString();
-        isChecked = in.readByte() != 0;
+        accountType = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(network);
+        dest.writeString(avatar);
+        dest.writeString(trunc);
+        dest.writeString(state);
+        dest.writeString(note);
+        dest.writeString(alias);
+        dest.writeByte((byte) (verified ? 1 : 0));
+        dest.writeInt(accountType);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {
@@ -137,56 +153,31 @@ public class Account implements Parcelable, AccountType {
         this.verified = verified;
     }
 
-    public String getAccountType() {
+    public int getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(String accountType) {
+    public void setAccountType(int accountType) {
         this.accountType = accountType;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
     }
 
     @Override
     public int getType() {
-        switch (accountType) {
-            case "mobile":
-                return AccountType.MOBILE;
-
-            case "card":
-                return AccountType.CARD;
-
-            case "bank":
-                return AccountType.BANK;
-
-            default:
-                return -1;
-
-        }
+        return accountType;
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(network);
-        parcel.writeString(avatar);
-        parcel.writeString(trunc);
-        parcel.writeString(state);
-        parcel.writeString(note);
-        parcel.writeString(alias);
-        parcel.writeByte((byte) (verified ? 1 : 0));
-        parcel.writeString(accountType);
-        parcel.writeByte((byte) (isChecked ? 1 : 0));
+    public String toString() {
+        return "Account{" +
+                "id='" + id + '\'' +
+                ", network='" + network + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", trunc='" + trunc + '\'' +
+                ", state='" + state + '\'' +
+                ", note='" + note + '\'' +
+                ", alias='" + alias + '\'' +
+                ", verified=" + verified +
+                ", accountType=" + accountType +
+                '}';
     }
 }

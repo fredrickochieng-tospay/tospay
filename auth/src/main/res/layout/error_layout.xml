@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/warning_text_view"
-        style="@style/DesignComponent.TextAppearance.Regular.Error"
+        style="@style/Tospay.TextAppearance.Regular.Error"
         android:layout_width="0.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1.0"

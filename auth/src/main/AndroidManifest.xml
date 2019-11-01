@@ -5,11 +5,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:name=".AuthApp">
+    <application android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.activity.TospayActivity"
+            android:name=".ui.main.TospayActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/TospayTheme.NoActionBar" />
     </application>
 
 </manifest>

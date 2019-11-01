@@ -11,7 +11,12 @@
 
         <variable
             name="accountViewModel"
-            type="net.tospay.auth.viewmodel.AccountViewModel" />
+            type="net.tospay.auth.ui.account.AccountViewModel" />
+
+        <variable
+            name="resource"
+            type="net.tospay.auth.remote.Resource" />
+
 
     </data>
 
@@ -19,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        tools:context=".ui.fragment.AccountSelectionFragment">
+        tools:context=".ui.account.AccountSelectionFragment">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -37,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:resource="@{resource}"
                 tools:listitem="@layout/list_item_account_view" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -82,46 +88,6 @@
                 android:textColor="@color/text" />
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_add_account"
-            style="@style/Tospay.Button.Transparent.Border"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="30dp"
-            android:onClick="@{(view)->accountViewModel.onClick(view)}"
-            android:text="@string/add_new_account"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/swipeRefreshLayout" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            style="@style/Tospay.Button.Large"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:enabled="false"
-            android:onClick="@{(view)->accountViewModel.onClick(view)}"
-            android:text="@string/cancel"
-            android:visibility="@{accountViewModel.isEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btn_confirm"
-            style="@style/Tospay.Button.Large"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:enabled="false"
-            android:onClick="@{(view)->accountViewModel.onClick(view)}"
-            android:text="@string/confirm"
-            android:visibility="@{accountViewModel.isEmpty ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

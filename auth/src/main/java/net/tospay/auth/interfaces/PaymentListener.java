@@ -1,12 +1,22 @@
 package net.tospay.auth.interfaces;
 
-import net.tospay.auth.api.response.PaymentValidationResponse;
+import net.tospay.auth.api.response.PaymentResult;
 import net.tospay.auth.api.response.TospayException;
 
 public interface PaymentListener {
-    void onPaymentDetails(PaymentValidationResponse response);
+    default void onPaymentDetails(PaymentResult response) {
 
-    void onPaymentSuccess();
+    }
 
-    void onPaymentFailed(TospayException exception);
+    default void onPaymentSuccess() {
+
+    }
+
+    default void onPaymentFailed(TospayException exception) {
+
+    }
+
+    default void onAccountSelected(AccountType accountType) {
+
+    }
 }

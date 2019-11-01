@@ -2,11 +2,11 @@ package net.tospay.auth.interfaces;
 
 public interface AccountType {
 
-    int WALLET = 101;
-    int MOBILE = 102;
-    int BANK = 103;
-    int CARD = 104;
-    int TITLE = 105;
+    int WALLET = 1;
+    int MOBILE = 2;
+    int BANK = 3;
+    int CARD = 4;
+    int TITLE = 5;
 
     int getType();
 

@@ -3,15 +3,13 @@ package net.tospay.auth;
 import android.content.Context;
 
 import net.tospay.auth.api.listeners.BaseListener;
-import net.tospay.auth.api.response.Error;
 import net.tospay.auth.api.response.TospayException;
-import net.tospay.auth.app.SharedPrefManager;
+import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.utils.Utils;
 
 import java.io.IOException;
 import java.util.Objects;
 
-import io.reactivex.disposables.CompositeDisposable;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 

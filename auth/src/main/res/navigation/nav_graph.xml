@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_payment_summary"
-        android:name="net.tospay.auth.ui.fragment.PaymentSummaryFragment"
+        android:name="net.tospay.auth.ui.summary.PaymentSummaryFragment"
         android:label="fragment_payment_summary"
         tools:layout="@layout/fragment_payment_summary">
         <argument
@@ -102,23 +102,34 @@
 
     <fragment
         android:id="@+id/navigation_account_selection"
-        android:name="net.tospay.auth.ui.fragment.AccountSelectionFragment"
+        android:name="net.tospay.auth.ui.account.AccountSelectionFragment"
         android:label="fragment_account_selection"
         tools:layout="@layout/fragment_account_selection">
-        <argument
-            android:name="user"
-            app:argType="net.tospay.auth.model.TospayUser"
-            app:nullable="true" />
+
         <action
             android:id="@+id/action_navigation_account_selection_to_navigation_link_mobile_account"
             app:destination="@id/navigation_link_mobile_account"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left" />
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_account_selection_to_navigation_link_card_account"
+            app:destination="@id/navigation_link_card_account"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/navigation_link_mobile_account"
         android:name="net.tospay.auth.ui.fragment.LinkMobileAccountFragment"
-        android:label="LinkMobileAccountFragment"
+        android:label="Link Mobile"
         tools:layout="@layout/fragment_link_mobile_account" />
+    <fragment
+        android:id="@+id/navigation_link_card_account"
+        android:name="net.tospay.auth.ui.card.LinkCardFragment"
+        android:label="Link Card"
+        tools:layout="@layout/fragment_link_card" />
 
 </navigation>

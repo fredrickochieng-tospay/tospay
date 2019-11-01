@@ -62,4 +62,12 @@ public class Merchant implements Parcelable {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public String toString() {
+        return "Merchant{" +
+                "name='" + name + '\'' +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
 }

@@ -23,7 +23,7 @@ import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Token;
 import net.tospay.auth.model.TospayUser;
-import net.tospay.auth.ui.activity.TospayActivity;
+import net.tospay.auth.ui.main.TospayActivity;
 
 import java.io.IOException;
 import java.util.HashMap;

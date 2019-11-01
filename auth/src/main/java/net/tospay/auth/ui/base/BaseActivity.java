@@ -1,19 +1,25 @@
 package net.tospay.auth.ui.base;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import dagger.android.support.DaggerAppCompatActivity;
+import net.tospay.auth.ui.main.TospayActivity;
+
 
 public abstract class BaseActivity<DB extends ViewDataBinding,
-        VM extends BaseViewModel> extends DaggerAppCompatActivity {
+        VM extends BaseViewModel> extends AppCompatActivity {
 
     private VM mViewModel;
     private DB mDataBinding;
+
+    public static int LOGIN_RESULT_CODE = 100;
 
     /**
      * Override for set binding variable
@@ -60,5 +66,13 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     protected void onDestroy() {
         mDataBinding.unbind();
         super.onDestroy();
+    }
+
+    /**
+     * Starts MainActivity if Token has Expired
+     */
+    public void openActivityOnTokenExpire() {
+        //todo change activity
+        //startActivityForResult(new Intent(this, TospayActivity.class), LOGIN_RESULT_CODE);
     }
 }
