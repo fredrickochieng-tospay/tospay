@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 
-public class PaymentResult {
+public class PaymentValidationResponse {
 
     @SerializedName("transaction")
     @Expose
@@ -34,7 +34,7 @@ public class PaymentResult {
 
     @Override
     public String toString() {
-        return "PaymentResult{" +
+        return "PaymentValidationResponse{" +
                 "paymentTransaction=" + paymentTransaction +
                 ", merchant=" + merchant +
                 '}';

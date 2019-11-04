@@ -1,9 +1,9 @@
 package net.tospay.auth.api.listeners;
 
-import net.tospay.auth.api.response.PaymentResult;
+import net.tospay.auth.api.response.PaymentValidationResponse;
 
 public interface OnPaymentValidationListener extends BaseListener {
 
-    void onValidationSuccess(PaymentResult response);
+    void onValidationSuccess(PaymentValidationResponse response);
 
 }

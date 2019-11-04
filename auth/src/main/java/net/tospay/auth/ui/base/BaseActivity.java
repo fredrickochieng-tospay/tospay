@@ -1,8 +1,6 @@
 package net.tospay.auth.ui.base;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
@@ -10,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import net.tospay.auth.ui.main.TospayActivity;
+import net.tospay.auth.api.GatewayApiClient;
+import net.tospay.auth.remote.util.AppExecutors;
+import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.utils.SharedPrefManager;
 
 
 public abstract class BaseActivity<DB extends ViewDataBinding,
@@ -18,8 +19,8 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
 
     private VM mViewModel;
     private DB mDataBinding;
-
-    public static int LOGIN_RESULT_CODE = 100;
+    private GatewayRepository mGatewayRepository;
+    private SharedPrefManager mSharedPrefManager;
 
     /**
      * Override for set binding variable
@@ -48,7 +49,11 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppExecutors mAppExecutors = new AppExecutors();
+        mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
+        mSharedPrefManager = SharedPrefManager.getInstance(this);
         performDataBinding();
+        setBearerToken(mSharedPrefManager.getAccessToken());
     }
 
     /**
@@ -74,5 +79,22 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     public void openActivityOnTokenExpire() {
         //todo change activity
         //startActivityForResult(new Intent(this, TospayActivity.class), LOGIN_RESULT_CODE);
+    }
+
+    public GatewayRepository getGatewayRepository() {
+        return mGatewayRepository;
+    }
+
+    public SharedPrefManager getSharedPrefManager() {
+        return mSharedPrefManager;
+    }
+
+    public void setBearerToken(String token) {
+        String bearerToken = "Bearer " + token;
+        mViewModel.setBearerToken(bearerToken);
+    }
+
+    public String getBearerToken() {
+        return mSharedPrefManager.getAccessToken();
     }
 }

@@ -42,6 +42,10 @@ public class PaymentTransaction implements Parcelable {
     @Expose
     private String status;
 
+    @SerializedName("description")
+    @Expose
+    private String description;
+
     public PaymentTransaction() {
     }
 
@@ -57,6 +61,7 @@ public class PaymentTransaction implements Parcelable {
         reason = in.readString();
         externalReference = in.readString();
         status = in.readString();
+        description = in.readString();
     }
 
     @Override
@@ -73,6 +78,7 @@ public class PaymentTransaction implements Parcelable {
         dest.writeString(reason);
         dest.writeString(externalReference);
         dest.writeString(status);
+        dest.writeString(description);
     }
 
     @Override
@@ -156,6 +162,14 @@ public class PaymentTransaction implements Parcelable {
         this.status = status;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "PaymentTransaction{" +
@@ -167,6 +181,7 @@ public class PaymentTransaction implements Parcelable {
                 ", reason='" + reason + '\'' +
                 ", externalReference='" + externalReference + '\'' +
                 ", status='" + status + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ import net.tospay.auth.api.request.PaymentValidationRequest;
 import net.tospay.auth.api.response.AccountResponse;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.api.response.TospayException;
-import net.tospay.auth.api.response.PaymentResult;
+import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.WalletTransactionResponse;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
@@ -220,10 +220,10 @@ public class TospayGateway extends Tospay {
     public void validatePayment(String token, OnPaymentValidationListener listener) {
         TospayClient.getGatewayService(getContext())
                 .validatePayment(new PaymentValidationRequest(token))
-                .enqueue(new Callback<Result<PaymentResult>>() {
+                .enqueue(new Callback<Result<PaymentValidationResponse>>() {
                     @Override
-                    public void onResponse(@NonNull Call<Result<PaymentResult>> call,
-                                           @NonNull Response<Result<PaymentResult>> response) {
+                    public void onResponse(@NonNull Call<Result<PaymentValidationResponse>> call,
+                                           @NonNull Response<Result<PaymentValidationResponse>> response) {
                         if (response.isSuccessful()) {
                             listener.onValidationSuccess(response.body().getData());
                         } else {
@@ -232,7 +232,7 @@ public class TospayGateway extends Tospay {
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<Result<PaymentResult>> call, @NonNull Throwable t) {
+                    public void onFailure(@NonNull Call<Result<PaymentValidationResponse>> call, @NonNull Throwable t) {
                         listener.onError(new TospayException(t.getMessage(), t));
                     }
                 });

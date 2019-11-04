@@ -1,6 +1,7 @@
 package net.tospay.auth.ui.account;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import net.tospay.auth.R;
+import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.OnAccountItemClickListener;
 import net.tospay.auth.interfaces.PaymentListener;
+import net.tospay.auth.model.Account;
+import net.tospay.auth.model.Wallet;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
@@ -24,6 +28,8 @@ import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener {
+
+    private static final String TAG = "AccountSelectionFragmen";
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
@@ -106,6 +112,32 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     public void onAccountType(AccountType accountType) {
         if (mListener != null) {
             mListener.onAccountSelected(accountType);
+
+            PaymentRequest request = new PaymentRequest();
+
+            if (accountType instanceof Wallet) {
+                Wallet wallet = (Wallet) accountType;
+                request.setAccountId(wallet.getId());
+                request.setType("wallet");
+
+            } else {
+                Account account = (Account) accountType;
+                request.setAccountId(account.getId());
+
+                if (account.getType() == AccountType.MOBILE) {
+                    request.setType("mobile");
+
+                } else if (account.getType() == AccountType.CARD) {
+                    request.setType("card");
+                }
+            }
+
+            AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
+                    action = AccountSelectionFragmentDirections
+                    .actionNavigationAccountSelectionToNavigationConfirm(request);
+
+            NavHostFragment.findNavController(this)
+                    .navigate(action);
         }
     }
 

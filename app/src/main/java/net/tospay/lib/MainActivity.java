@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String token = "89657914a49b2a0937c2c2abc9a4f4fa8fca271059f03c6d8cf6b6e3cf53c89ee9529a402ee6cc3d4e06f9e1f594d246ce018b684891af0448fc8c68b6f9330bf9fb6262eeb881a8580d9ce5cb6f02ca4e67d1be41c423eff49d8d881e6b";
+        String token = "95904c1357d604ce68139d9a1350270f7b5e2c2dae5772ff43d700034a8ba33d39fe0c13ae3c072d64e3fb4b93228c256e0ef516d58db750696f2d5a1b44feed3b738e968ae3fbbef36119a86b4b14c3421a5b66092a01cc8123d9d31628";
         Intent intent = TospayAuth.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();

@@ -1,6 +1,5 @@
 package net.tospay.auth.ui.summary;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,16 +11,12 @@ import androidx.navigation.Navigation;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.GatewayApiClient;
-import net.tospay.auth.api.response.PaymentResult;
+import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.databinding.FragmentPaymentSummaryBinding;
-import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-import net.tospay.auth.utils.SharedPrefManager;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
@@ -68,7 +63,7 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         navController = Navigation.findNavController(view);
     }
 
-    private void handleResponse(Resource<PaymentResult> resource) {
+    private void handleResponse(Resource<PaymentValidationResponse> resource) {
         if (resource != null) {
             switch (resource.status) {
                 case ERROR:

@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.api.response.AccountResponse;
 import net.tospay.auth.api.response.ApiResponse;
-import net.tospay.auth.api.response.PaymentResult;
+import net.tospay.auth.api.response.PaymentResponse;
+import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.api.service.GatewayService;
 import net.tospay.auth.interfaces.AccountType;
@@ -18,7 +20,6 @@ import net.tospay.auth.remote.util.NetworkBoundResource;
 import net.tospay.auth.utils.AbsentLiveData;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -45,28 +46,28 @@ public class GatewayRepository {
      * @param param request
      * @return LiveData
      */
-    public LiveData<Resource<PaymentResult>> validate(Map<String, String> param) {
-        return new NetworkBoundResource<PaymentResult, Result<PaymentResult>>(mAppExecutors) {
+    public LiveData<Resource<PaymentValidationResponse>> validate(Map<String, String> param) {
+        return new NetworkBoundResource<PaymentValidationResponse, Result<PaymentValidationResponse>>(mAppExecutors) {
 
-            private PaymentResult resultsDb;
+            private PaymentValidationResponse resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<PaymentResult> item) {
+            protected void saveCallResult(@NonNull Result<PaymentValidationResponse> item) {
                 resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable PaymentResult data) {
+            protected boolean shouldFetch(@Nullable PaymentValidationResponse data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<PaymentResult> loadFromDb() {
+            protected LiveData<PaymentValidationResponse> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<PaymentResult>() {
+                    return new LiveData<PaymentValidationResponse>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -78,12 +79,11 @@ public class GatewayRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<PaymentResult>>> createCall() {
+            protected LiveData<ApiResponse<Result<PaymentValidationResponse>>> createCall() {
                 return mGatewayService.validate(param);
             }
         }.asLiveData();
     }
-
 
     /**
      * Retrieve user accounts
@@ -176,6 +176,50 @@ public class GatewayRepository {
                 return new ArrayList<>();
             }
 
+        }.asLiveData();
+    }
+
+    /**
+     * @param bearerToken - bearer token
+     * @param request     - request
+     * @return LiveData
+     */
+    public LiveData<Resource<PaymentResponse>> pay(String bearerToken, PaymentRequest request) {
+        return new NetworkBoundResource<PaymentResponse, Result<PaymentResponse>>(mAppExecutors) {
+
+            private PaymentResponse resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<PaymentResponse> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable PaymentResponse data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<PaymentResponse> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<PaymentResponse>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<PaymentResponse>>> createCall() {
+                return mGatewayService.pay(bearerToken, request);
+            }
         }.asLiveData();
     }
 }

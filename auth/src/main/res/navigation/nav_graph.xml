@@ -120,6 +120,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_account_selection_to_navigation_confirm"
+            app:destination="@id/navigation_confirm" />
     </fragment>
     <fragment
         android:id="@+id/navigation_link_mobile_account"
@@ -131,5 +134,15 @@
         android:name="net.tospay.auth.ui.card.LinkCardFragment"
         android:label="Link Card"
         tools:layout="@layout/fragment_link_card" />
+    <fragment
+        android:id="@+id/navigation_confirm"
+        android:name="net.tospay.auth.ui.confirm.ConfirmFragment"
+        android:label="Confirm">
+
+        <argument
+            android:name="payment"
+            app:argType="net.tospay.auth.api.request.PaymentRequest" />
+
+    </fragment>
 
 </navigation>
