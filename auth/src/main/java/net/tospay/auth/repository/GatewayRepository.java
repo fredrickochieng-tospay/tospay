@@ -14,6 +14,7 @@ import net.tospay.auth.api.response.PaymentResponse;
 import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.Result;
 import net.tospay.auth.api.response.TransferResponse;
+import net.tospay.auth.api.response.WithdrawResponse;
 import net.tospay.auth.api.service.GatewayService;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
@@ -380,6 +381,45 @@ public class GatewayRepository {
             @Override
             protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
                 return mGatewayService.transfer(bearerToken, param);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<WithdrawResponse>> withdraw(String bearerToken, Map<String, Object> param) {
+        return new NetworkBoundResource<WithdrawResponse, Result<WithdrawResponse>>(mAppExecutors) {
+
+            private WithdrawResponse resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<WithdrawResponse> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable WithdrawResponse data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<WithdrawResponse> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<WithdrawResponse>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<WithdrawResponse>>> createCall() {
+                return mGatewayService.withdraw(bearerToken, param);
             }
         }.asLiveData();
     }

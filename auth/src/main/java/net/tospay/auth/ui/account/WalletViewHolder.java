@@ -15,7 +15,7 @@ public class WalletViewHolder extends RecyclerView.ViewHolder {
     private WalletViewHolder(ListItemWalletViewBinding binding, OnAccountItemClickListener listener) {
         super(binding.getRoot());
         this.binding = binding;
-        binding.getRoot().setOnClickListener(view -> listener.onAccountType(binding.getWallet()));
+        binding.bgLayout.setOnClickListener(view -> listener.onAccountType(binding.getWallet()));
     }
 
     public void onBind(Wallet wallet) {
