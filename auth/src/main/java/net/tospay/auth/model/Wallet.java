@@ -20,7 +20,7 @@ public class Wallet implements Parcelable, AccountType {
     @Expose
     private String currency;
 
-    @SerializedName("account_balance")
+    @SerializedName("balance")
     @Expose
     private Double accountBalance;
 
