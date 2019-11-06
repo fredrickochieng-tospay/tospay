@@ -1,7 +1,6 @@
 package net.tospay.auth.ui.account;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,7 +14,6 @@ import net.tospay.auth.R;
 import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
-import net.tospay.auth.interfaces.OnAccountItemClickListener;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Wallet;

@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.tospay.auth.interfaces.AccountType;
-import net.tospay.auth.interfaces.OnAccountItemClickListener;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.AccountTitle;
 import net.tospay.auth.model.Wallet;

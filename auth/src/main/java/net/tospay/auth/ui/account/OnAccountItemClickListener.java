@@ -1,6 +1,8 @@
-package net.tospay.auth.interfaces;
+package net.tospay.auth.ui.account;
 
 import android.view.View;
+
+import net.tospay.auth.interfaces.AccountType;
 
 public interface OnAccountItemClickListener {
 

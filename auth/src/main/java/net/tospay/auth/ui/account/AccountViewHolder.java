@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.tospay.auth.databinding.ListItemAccountViewBinding;
-import net.tospay.auth.interfaces.OnAccountItemClickListener;
 import net.tospay.auth.model.Account;
 
 public class AccountViewHolder extends RecyclerView.ViewHolder {
