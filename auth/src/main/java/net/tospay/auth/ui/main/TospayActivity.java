@@ -2,8 +2,6 @@ package net.tospay.auth.ui.main;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -82,7 +80,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         args.putString(KEY_TOKEN, paymentToken);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        navController.setGraph(R.navigation.nav_graph, args);
+        navController.setGraph(R.navigation.nav_payment, args);
 
         mViewModel.getTransactionMutableLiveData().observe(this, paymentTransaction ->
                 this.paymentTransaction = paymentTransaction
@@ -157,6 +155,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
                     if (progressDialog != null) {
                         progressDialog.cancel();
                     }
+
                     finishWithError("Transaction timed out");
                 }
             } catch (Exception e) {
@@ -168,7 +167,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     }
 
     private void handleResponse(Resource<PaymentValidationResponse> resource) {
-        Log.e(TAG, "-------------handleResponse: " + resource);
         if (resource != null) {
             switch (resource.status) {
                 case SUCCESS:

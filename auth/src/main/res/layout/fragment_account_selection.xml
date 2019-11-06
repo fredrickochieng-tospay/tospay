@@ -17,7 +17,6 @@
             name="resource"
             type="net.tospay.auth.remote.Resource" />
 
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -26,13 +26,16 @@ import net.tospay.auth.ui.base.BaseFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.tospay.auth.utils.Constants.KEY_IS_FOR_RESULT;
+import static net.tospay.auth.utils.Constants.KEY_SHOW_WALLET;
+
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener {
 
-    private static final String TAG = "AccountSelectionFragmen";
-
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
+
+    private boolean showWallet = true, isForResult = false;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -61,12 +64,17 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding = getViewDataBinding();
         mBinding.setAccountViewModel(mViewModel);
 
+        if (getArguments() != null) {
+            this.showWallet = getArguments().getBoolean(KEY_SHOW_WALLET);
+            this.isForResult = getArguments().getBoolean(KEY_IS_FOR_RESULT);
+        }
+
         List<AccountType> accountTypes = new ArrayList<>();
         AccountAdapter adapter = new AccountAdapter(accountTypes, this);
         mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         mBinding.recyclerView.setAdapter(adapter);
 
-        mViewModel.fetchAccounts();
+        mViewModel.fetchAccounts(showWallet);
         mViewModel.getResourceLiveData().observe(this, this::handleResponse);
     }
 
@@ -112,38 +120,49 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     public void onAccountType(AccountType accountType) {
         if (mListener != null) {
             mListener.onAccountSelected(accountType);
-
-            PaymentRequest request = new PaymentRequest();
-
-            if (accountType instanceof Wallet) {
-                Wallet wallet = (Wallet) accountType;
-                request.setAccountId(wallet.getId());
-                request.setType("wallet");
-
-            } else {
-                Account account = (Account) accountType;
-                request.setAccountId(account.getId());
-
-                if (account.getType() == AccountType.MOBILE) {
-                    request.setType("mobile");
-
-                } else if (account.getType() == AccountType.CARD) {
-                    request.setType("card");
-                }
+            if (!isForResult) {
+                geToSummary(accountType);
             }
-
-            AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
-                    action = AccountSelectionFragmentDirections
-                    .actionNavigationAccountSelectionToNavigationConfirm(request);
-
-            NavHostFragment.findNavController(this)
-                    .navigate(action);
         }
+    }
+
+    private void geToSummary(AccountType accountType) {
+        PaymentRequest request = new PaymentRequest();
+
+        if (accountType instanceof Wallet) {
+            Wallet wallet = (Wallet) accountType;
+            request.setAccountId(wallet.getId());
+            request.setType("wallet");
+
+        } else {
+            Account account = (Account) accountType;
+            request.setAccountId(account.getId());
+
+            if (account.getType() == AccountType.MOBILE) {
+                request.setType("mobile");
+
+            } else if (account.getType() == AccountType.CARD) {
+                request.setType("card");
+
+            }
+        }
+
+        // TODO: 11/6/19 refactor this code
+        /*AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
+                action = AccountSelectionFragmentDirections
+                .actionNavigationAccountSelectionToNavigationConfirm(request);
+
+        NavHostFragment.findNavController(this)
+                .navigate(action);*/
     }
 
     @Override
     public void onVerifyClick(View view, AccountType accountType) {
+        AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
+                action = AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationVerifyMobile((Account) accountType);
 
+        NavHostFragment.findNavController(this)
+                .navigate(action);
     }
 
     @Override

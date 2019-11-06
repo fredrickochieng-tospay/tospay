@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import net.tospay.auth.repository.GatewayRepository;
 import net.tospay.auth.ui.account.AccountViewModel;
+import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
 import net.tospay.auth.ui.confirm.ConfirmViewModel;
 import net.tospay.auth.ui.main.PaymentViewModel;
 import net.tospay.auth.ui.summary.SummaryViewModel;
@@ -36,6 +37,10 @@ public class GatewayViewModelFactory extends ViewModelProvider.NewInstanceFactor
         }else if (modelClass.isAssignableFrom(PaymentViewModel.class)) {
             //noinspection unchecked
             return (T) new PaymentViewModel(gatewayRepository);
+
+        }else if (modelClass.isAssignableFrom(MobileMoneyViewModel.class)) {
+            //noinspection unchecked
+            return (T) new MobileMoneyViewModel(gatewayRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel Class: " + modelClass.getName());

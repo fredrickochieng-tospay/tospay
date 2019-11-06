@@ -1,116 +1,97 @@
 package net.tospay.auth.ui.fragment;
 
-
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.R2;
-import net.tospay.auth.TospayGateway;
-import net.tospay.auth.api.listeners.MobileAccountListener;
-import net.tospay.auth.api.listeners.ResponseListener;
-import net.tospay.auth.api.response.TospayException;
+import net.tospay.auth.databinding.FragmentLinkMobileAccountBinding;
+import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
+import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.ui.account.AccountSelectionFragmentDirections;
+import net.tospay.auth.ui.account.verify.MobileMoneyNavigator;
+import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
+import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.CountryListDialogFragment;
 import net.tospay.auth.ui.dialog.NetworkListDialogFragment;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAccountBinding, MobileMoneyViewModel>
+        implements CountryListDialogFragment.CountrySelectedListener,
+        NetworkListDialogFragment.NetworkSelectedListener, MobileMoneyNavigator {
 
-
-public class LinkMobileAccountFragment extends Fragment implements CountryListDialogFragment.CountrySelectedListener,
-        NetworkListDialogFragment.NetworkSelectedListener, MobileAccountListener {
-
+    private ProgressDialog progressDialog;
     private Country country = null;
     private Network network = null;
 
-    @BindView(R2.id.selectCountryTextView)
-    TextView selectCountryTextView;
+    private FragmentLinkMobileAccountBinding mBinding;
+    private MobileMoneyViewModel viewModel;
 
-    @BindView(R2.id.selectNetworkTextView)
-    TextView selectNetworkTextView;
-
-    @BindView(R2.id.phoneEditText)
-    TextView phoneEditText;
-
-    @BindView(R2.id.nameEditText)
-    TextView nameEditText;
-
-    @BindView(R2.id.warning_layout)
-    ConstraintLayout warning_layout;
-
-    @BindView(R2.id.warning_text_view)
-    TextView warning_text_view;
-
-    @BindView(R2.id.loader)
-    FrameLayout loadingProgressBar;
 
     public LinkMobileAccountFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_link_mobile_account, container, false);
+    public int getBindingVariable() {
+        return BR.mobileMoneyViewModel;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public int getLayoutId() {
+        return R.layout.fragment_link_mobile_account;
+    }
+
+    @Override
+    public MobileMoneyViewModel getViewModel() {
+        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
+        viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
+        return viewModel;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+        mBinding = getViewDataBinding();
+        mBinding.setMobileMoneyViewModel(viewModel);
+        viewModel.setNavigator(this);
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Adding account. Please wait...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
     }
 
-
-    @OnClick(R2.id.btn_save)
-    void save() {
-        if (country == null) {
-            Toast.makeText(getContext(), "Country is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (network == null) {
-            Toast.makeText(getContext(), "Network is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(phoneEditText.getText())) {
-            Toast.makeText(getContext(), "Phone is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        warning_layout.setVisibility(View.GONE);
-        loadingProgressBar.setVisibility(View.VISIBLE);
-
-        TospayGateway.getInstance(getContext())
-                .linkMobile(country, network, phoneEditText.getText().toString(),
-                        nameEditText.getText().toString(), this);
-
+    @Override
+    public void onCountrySelected(Country country) {
+        this.country = country;
+        viewModel.getCountry().setValue(country);
     }
 
-    @OnClick(R2.id.selectCountryTextView)
-    void onSelectCountry() {
+    @Override
+    public void onNetworkSelected(Network network) {
+        this.network = network;
+        viewModel.getNetwork().setValue(network);
+    }
+
+    @Override
+    public void onSelectCountryClick(View view) {
         CountryListDialogFragment.newInstance()
                 .show(getChildFragmentManager(), CountryListDialogFragment.TAG);
     }
 
-    @OnClick(R2.id.selectNetworkTextView)
-    void onSelectNetwork() {
+    @Override
+    public void onNetworkCountryClick(View view) {
         if (country == null) {
-            Toast.makeText(getContext(), "Please select country", Toast.LENGTH_SHORT).show();
+            mBinding.selectCountryTextView.setError("Please select country");
             return;
         }
 
@@ -119,27 +100,61 @@ public class LinkMobileAccountFragment extends Fragment implements CountryListDi
     }
 
     @Override
-    public void onCountrySelected(Country country) {
-        this.country = country;
-        selectCountryTextView.setText(country.getName());
-    }
+    public void onConfirmClick(View view) {
+        mBinding.selectCountryTextView.setError(null);
+        mBinding.selectNetworkTextView.setError(null);
 
-    @Override
-    public void onNetworkSelected(Network network) {
-        this.network = network;
-        selectNetworkTextView.setText(network.getOperator());
-    }
+        if (country == null) {
+            mBinding.selectCountryTextView.setError("Country is required");
+            return;
+        }
 
-    @Override
-    public void onError(TospayException error) {
-        loadingProgressBar.setVisibility(View.GONE);
-        warning_layout.setVisibility(View.VISIBLE);
-        warning_text_view.setText(error.getErrorMessage());
-    }
+        if (network == null) {
+            mBinding.selectNetworkTextView.setError("Network is required");
+            return;
+        }
 
-    @Override
-    public void onAccountAdded(String accountId) {
-        loadingProgressBar.setVisibility(View.GONE);
-        NavHostFragment.findNavController(this).navigateUp();
+        String phone = mBinding.phoneEditText.getText().toString();
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(getContext(), "Phone is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String alias = mBinding.nameEditText.getText().toString();
+
+        progressDialog.show();
+
+        Account account = new Account();
+        account.setAlias(alias);
+        account.setNetwork(network.getOperator());
+        account.setTrunc(phone);
+
+        viewModel.linkAccount(phone, mBinding.nameEditText.getText().toString());
+        viewModel.getMobileResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case SUCCESS:
+                        progressDialog.dismiss();
+
+                        if (resource.data != null) {
+                            account.setId(resource.data.getId());
+                        }
+
+                        AccountSelectionFragmentDirections
+                                .ActionNavigationAccountSelectionToNavigationVerifyMobile action =
+                                AccountSelectionFragmentDirections
+                                        .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
+
+                        NavHostFragment.findNavController(this).navigate(action);
+
+                        break;
+
+                    case ERROR:
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
 }

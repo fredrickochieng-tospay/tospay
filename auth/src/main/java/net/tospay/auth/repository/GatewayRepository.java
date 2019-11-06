@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.api.request.MobileAccountVerificationRequest;
+import net.tospay.auth.api.request.MobileRequest;
 import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.api.response.AccountResponse;
 import net.tospay.auth.api.response.ApiResponse;
+import net.tospay.auth.api.response.MobileResponse;
 import net.tospay.auth.api.response.PaymentResponse;
 import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.Result;
@@ -90,7 +93,7 @@ public class GatewayRepository {
      *
      * @return LiveData
      */
-    public LiveData<Resource<List<AccountType>>> accounts(String bearerToken) {
+    public LiveData<Resource<List<AccountType>>> accounts(String bearerToken, boolean showWallet) {
         return new NetworkBoundResource<List<AccountType>, Result<AccountResponse>>(mAppExecutors) {
 
             private List<AccountType> resultsDb;
@@ -103,12 +106,14 @@ public class GatewayRepository {
                 AccountTitle title;
                 List<Account> accountList;
 
-                //Wallets
-                title = new AccountTitle();
-                title.setName("Wallet Account");
-                title.setAccountType(AccountType.WALLET);
-                accountTypeList.add(title);
-                accountTypeList.addAll(accounts.getWallet());
+                if (showWallet) {
+                    //Wallets
+                    title = new AccountTitle();
+                    title.setName("Wallet Account");
+                    title.setAccountType(AccountType.WALLET);
+                    accountTypeList.add(title);
+                    accountTypeList.addAll(accounts.getWallet());
+                }
 
                 //Mobile Accounts
                 title = new AccountTitle();
@@ -222,4 +227,122 @@ public class GatewayRepository {
             }
         }.asLiveData();
     }
+
+    public LiveData<Resource<MobileResponse>> linkMobileAccount(String bearerToken, MobileRequest request) {
+        return new NetworkBoundResource<MobileResponse, Result<MobileResponse>>(mAppExecutors) {
+
+            private MobileResponse resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<MobileResponse> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable MobileResponse data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<MobileResponse> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<MobileResponse>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<MobileResponse>>> createCall() {
+                return mGatewayService.linkMobileAccount(bearerToken, request);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Result>> resendVerificationCode(String bearerToken, Map<String, Object> param) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mGatewayService.resendVerificationCode(bearerToken, param);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Result>> verifyMobile(String bearerToken, MobileAccountVerificationRequest request) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mGatewayService.verifyMobileAccount(bearerToken, request);
+            }
+        }.asLiveData();
+    }
+
 }

@@ -34,5 +34,6 @@
     <dimen name="zero">0dp</dimen>
     <dimen name="half_dp">0.5dp</dimen>
     <dimen name="edit_text_radius">3dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

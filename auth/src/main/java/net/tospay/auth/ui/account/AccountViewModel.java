@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
@@ -20,13 +21,26 @@ public class AccountViewModel extends BaseViewModel
     private GatewayRepository mGatewayRepository;
     private LiveData<Resource<List<AccountType>>> resourceLiveData;
 
+    public ObservableBoolean enableLoginButton;
+    private ObservableBoolean showWallet;
+
+    private MutableLiveData<String> phone = new MutableLiveData<>();
+
+    public MutableLiveData<String> getPhone() {
+        return phone;
+    }
+
     public AccountViewModel(GatewayRepository mGatewayRepository) {
         this.mGatewayRepository = mGatewayRepository;
         this.isEmpty = new ObservableBoolean();
+        this.showWallet = new ObservableBoolean(true);
+        this.enableLoginButton = new ObservableBoolean(false);
     }
 
-    public void fetchAccounts() {
-        resourceLiveData = mGatewayRepository.accounts((String) getBearerToken().get());
+    public void fetchAccounts(boolean showWallet) {
+        this.showWallet.set(showWallet);
+        String bearerToken = (String) getBearerToken().get();
+        resourceLiveData = mGatewayRepository.accounts(bearerToken, showWallet);
     }
 
     public LiveData<Resource<List<AccountType>>> getResourceLiveData() {
@@ -40,7 +54,7 @@ public class AccountViewModel extends BaseViewModel
 
     @Override
     public void onRefresh() {
-        fetchAccounts();
+        fetchAccounts(showWallet.get());
     }
 
     public ObservableBoolean getIsEmpty() {

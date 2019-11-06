@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import net.tospay.auth.TospayAuth;
+import net.tospay.auth.ui.account.AccountActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,12 +18,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String token = "95904c1357d604ce68139d9a1350270f7b5e2c2dae5772ff43d700034a8ba33d39fe0c13ae3c072d64e3fb4b93228c256e0ef516d58db750696f2d5a1b44feed3b738e968ae3fbbef36119a86b4b14c3421a5b66092a01cc8123d9d31628";
+        String token = "d2d75c6ef0b685a1bff1ecce4fa789552b481bf1554bc3bfd0f0113ee904a135c4ce4c787557d45682f50cf7b8f27ccf3300d9ace8d026af24f9b262edaa97b2283d2202be138299064bc184cd4a1d7bdd1c20ae14efbbd5faf289877515";
         Intent intent = TospayAuth.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();
 
         startActivityForResult(intent, 1);
+
+        //startActivityForResult(new Intent(this, AccountActivity.class), 1);
     }
 
     @Override

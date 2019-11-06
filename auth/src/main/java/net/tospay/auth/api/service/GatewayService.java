@@ -8,6 +8,7 @@ import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.api.request.PaymentValidationRequest;
 import net.tospay.auth.api.response.AccountResponse;
 import net.tospay.auth.api.response.ApiResponse;
+import net.tospay.auth.api.response.MobileResponse;
 import net.tospay.auth.api.response.PaymentResponse;
 import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.Result;
@@ -56,12 +57,36 @@ public interface GatewayService {
 
     //----------------------------------------------------------------------------------------------
     @POST("v1/validate-payment")
-    LiveData<ApiResponse<Result<PaymentValidationResponse>>> validate(@Body Map<String, String> request);
+    LiveData<ApiResponse<Result<PaymentValidationResponse>>> validate(
+            @Body Map<String, String> request
+    );
 
     @GET("v1/fetch-accounts")
-    LiveData<ApiResponse<Result<AccountResponse>>> accounts(@Header("Authorization") String bearer);
+    LiveData<ApiResponse<Result<AccountResponse>>> accounts(
+            @Header("Authorization") String bearer
+    );
 
     @POST("v1/pay")
-    LiveData<ApiResponse<Result<PaymentResponse>>> pay(@Header("Authorization") String bearer,
-                                                       @Body PaymentRequest request);
+    LiveData<ApiResponse<Result<PaymentResponse>>> pay(
+            @Header("Authorization") String bearer,
+            @Body PaymentRequest request
+    );
+
+    @POST("v1/link-mobile")
+    LiveData<ApiResponse<Result<MobileResponse>>> linkMobileAccount(
+            @Header("Authorization") String bearer,
+            @Body MobileRequest request
+    );
+
+    @POST("v1/resend-verify-mobile")
+    LiveData<ApiResponse<Result>> resendVerificationCode(
+            @Header("Authorization") String bearer,
+            @Body Map<String, Object> request
+    );
+
+    @POST("v1/verify-mobile")
+    LiveData<ApiResponse<Result>> verifyMobileAccount(
+            @Header("Authorization") String bearer,
+            @Body MobileAccountVerificationRequest request
+    );
 }
