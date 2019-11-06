@@ -130,7 +130,7 @@ public class GatewayRepository {
                 title.setName("Card Accounts");
                 title.setAccountType(AccountType.CARD);
                 accountTypeList.add(title);
-                accountList = setAccountType(accounts.getBank(), AccountType.CARD);
+                accountList = setAccountType(accounts.getCard(), AccountType.CARD);
                 accountTypeList.addAll(accountList);
 
                 //Bank accounts
@@ -175,6 +175,9 @@ public class GatewayRepository {
                 if (accounts != null) {
                     for (Account account : accounts) {
                         account.setAccountType(accountType);
+                        if (accountType == AccountType.CARD) {
+                            account.setVerified(true);
+                        }
                     }
 
                     return accounts;

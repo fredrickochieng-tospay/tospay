@@ -14,7 +14,7 @@ import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.List;
 
-public class AccountViewModel extends BaseViewModel
+public class AccountViewModel extends BaseViewModel<AccountNavigator>
         implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private ObservableBoolean isEmpty;
@@ -39,7 +39,7 @@ public class AccountViewModel extends BaseViewModel
 
     public void fetchAccounts(boolean showWallet) {
         this.showWallet.set(showWallet);
-        String bearerToken = (String) getBearerToken().get();
+        String bearerToken = getBearerToken().get();
         resourceLiveData = mGatewayRepository.accounts(bearerToken, showWallet);
     }
 
@@ -54,7 +54,7 @@ public class AccountViewModel extends BaseViewModel
 
     @Override
     public void onRefresh() {
-        fetchAccounts(showWallet.get());
+        getNavigator().onRefresh();
     }
 
     public ObservableBoolean getIsEmpty() {

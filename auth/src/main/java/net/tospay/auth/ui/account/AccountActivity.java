@@ -75,8 +75,6 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding, Accoun
 
     @Override
     public void onAccountSelected(AccountType accountType) {
-        Log.e("TAG", "onAccountSelected: " + accountType);
-
         Intent returnIntent = new Intent();
 
         if (accountType instanceof Wallet) {

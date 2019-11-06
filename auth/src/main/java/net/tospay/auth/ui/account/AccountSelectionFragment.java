@@ -28,7 +28,7 @@ import static net.tospay.auth.utils.Constants.KEY_IS_FOR_RESULT;
 import static net.tospay.auth.utils.Constants.KEY_SHOW_WALLET;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
-        implements OnAccountItemClickListener, PaymentListener {
+        implements OnAccountItemClickListener, PaymentListener, AccountNavigator {
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
@@ -72,6 +72,11 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         mBinding.recyclerView.setAdapter(adapter);
 
+        mViewModel.setNavigator(this);
+        fetchAccounts();
+    }
+
+    private void fetchAccounts() {
         mViewModel.fetchAccounts(showWallet);
         mViewModel.getResourceLiveData().observe(this, this::handleResponse);
     }
@@ -176,5 +181,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         .navigate(R.id.navigation_link_card_account);
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchAccounts();
     }
 }

@@ -12,18 +12,19 @@ public class AccountViewHolder extends RecyclerView.ViewHolder {
 
     private ListItemAccountViewBinding binding;
 
-    private AccountViewHolder(ListItemAccountViewBinding binding, OnAccountItemClickListener onAccountTypeSelectedListener) {
+    private AccountViewHolder(ListItemAccountViewBinding binding, OnAccountItemClickListener listener) {
         super(binding.getRoot());
         this.binding = binding;
 
         binding.getRoot().setOnClickListener(view -> {
-            if (binding.getAccount().isVerified()) {
-                onAccountTypeSelectedListener.onAccountType(binding.getAccount());
+            if (binding.getAccount().isVerified()
+                    && binding.getAccount().getState().equalsIgnoreCase("ACTIVE")) {
+                listener.onAccountType(binding.getAccount());
             }
         });
 
         binding.btnVerifyPhone.setOnClickListener(view ->
-                onAccountTypeSelectedListener.onVerifyClick(view, binding.getAccount())
+                listener.onVerifyClick(view, binding.getAccount())
         );
     }
 
@@ -33,11 +34,11 @@ public class AccountViewHolder extends RecyclerView.ViewHolder {
     }
 
     public static AccountViewHolder create(LayoutInflater inflater, ViewGroup parent,
-                                           OnAccountItemClickListener onAccountTypeSelectedListener) {
+                                           OnAccountItemClickListener listener) {
 
         ListItemAccountViewBinding itemAccountViewBinding =
                 ListItemAccountViewBinding.inflate(inflater, parent, false);
 
-        return new AccountViewHolder(itemAccountViewBinding, onAccountTypeSelectedListener);
+        return new AccountViewHolder(itemAccountViewBinding, listener);
     }
 }
