@@ -1,369 +1,305 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.auth.register.RegisterFragment">
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="errorViewModel"
-            type="net.tospay.auth.viewmodel.ErrorViewModel" />
+            name="registerViewModel"
+            type="net.tospay.auth.ui.auth.register.RegisterViewModel" />
 
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        tools:context=".ui.fragment.RegisterFragment">
+        android:layout_height="wrap_content">
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".ui.activities.auth.RegisterActivity">
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_register" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:text="Create Account"
+                android:textSize="20sp" />
+
+            <net.tospay.auth.view.ErrorLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="@{registerViewModel.isError ? View.VISIBLE : View.GONE}"
+                app:error_message="@{registerViewModel.errorMessage}" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/firstNameInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/firstNameEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:drawableStart="@drawable/ic_name"
+                    android:drawableLeft="@drawable/ic_name"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/first_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName|textCapSentences"
+                    android:nextFocusRight="@id/passwordEditText"
+                    android:nextFocusDown="@id/passwordEditText"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp"
+                    tools:targetApi="o" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lastNameInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lastNameEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="Last Name"
+                    android:drawableStart="@drawable/ic_name"
+                    android:drawableLeft="@drawable/ic_name"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/last_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName|textCapSentences"
+                    android:nextFocusRight="@id/passwordEditText"
+                    android:nextFocusDown="@id/passwordEditText"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp"
+                    tools:targetApi="o" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="email"
+                    android:drawableStart="@drawable/ic_email"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusRight="@id/passwordEditText"
+                    android:nextFocusDown="@id/passwordEditText"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp"
+                    tools:targetApi="o" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/selectCountryTextView"
+                style="@style/DesignComponent.EditTextAppearance.Search"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_16"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_country_flag"
+                android:drawableLeft="@drawable/ic_country_flag"
+                android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:gravity="center_vertical"
+                android:hint="Country"
+                android:onClick="@{(view)->registerViewModel.onClick(view)}"
+                android:scrollHorizontally="false"
+                android:singleLine="true"
+                android:text="@{registerViewModel.country.name}"
+                android:textColor="#4F5F8E"
+                android:textColorHint="#979797"
+                android:textSize="15sp"
+                tools:targetApi="m" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phoneInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phoneEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_phone"
+                    android:drawableLeft="@drawable/ic_phone"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/phone_number"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawableLeft="@drawable/ic_password"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp"
+                    tools:targetApi="o" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmPasswordInputLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_8"
+                android:layout_marginEnd="@dimen/default_space_24"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmPasswordEditText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawableLeft="@drawable/ic_password"
+                    android:drawablePadding="@dimen/default_space_8"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:hint="@string/confirm_password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:textColor="#4F5F8E"
+                    android:textColorHint="#979797"
+                    android:textSize="15sp"
+                    tools:targetApi="o" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                style="@style/Tospay.Button.Large"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:onClick="@{(view)->registerViewModel.onClick(view)}"
+                android:text="@string/create_account" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:layout_marginTop="@dimen/default_space_16"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/borderColor" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:gravity="center"
-                    android:padding="20dp"
-                    android:text="@string/create_account_message"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:fontFamily="@font/proxima_nova_bold"
+                    android:text="@string/or"
                     android:textColor="@color/textColor"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
-                <!--suppress AndroidUnknownAttribute -->
-                <include
-                    android:id="@+id/error"
-                    layout="@layout/account_warning"
-                    bind:errorViewModel="@{errorViewModel}"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/firstNameInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/firstNameEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:autofillHints="name"
-                            android:hint="@string/first_name"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName|textCapSentences"
-                            android:nextFocusRight="@id/passwordEditText"
-                            android:nextFocusDown="@id/passwordEditText"
-                            tools:targetApi="o" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/firstNameFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
+                <View
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Enter first name"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/lastNameInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/lastNameEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:autofillHints="name"
-                            android:hint="@string/last_name"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPersonName|textCapSentences"
-                            android:nextFocusRight="@id/passwordEditText"
-                            android:nextFocusDown="@id/passwordEditText"
-                            tools:targetApi="o" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/lastNameFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Enter last name"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/emailInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/emailEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:autofillHints="email"
-                            android:hint="@string/email"
-                            android:imeOptions="actionNext"
-                            android:inputType="textEmailAddress"
-                            android:nextFocusRight="@id/passwordEditText"
-                            android:nextFocusDown="@id/passwordEditText"
-                            tools:targetApi="o" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/emailFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Enter valid email address"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <Spinner
-                        android:id="@+id/spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:padding="10dp" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/phoneInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/phoneEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/phone_number"
-                            android:inputType="phone"
-                            android:padding="10dp"
-                            android:singleLine="true"
-                            android:textColor="#4F5F8E"
-                            android:textColorHint="#979797"
-                            android:textSize="16sp" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/phoneFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Enter a valid phone number"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/passwordInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        app:passwordToggleEnabled="true">
-
-                        <EditText
-                            android:id="@+id/passwordEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:autofillHints="password"
-                            android:hint="@string/password"
-                            android:imeOptions="actionDone"
-                            android:inputType="textPassword"
-                            tools:targetApi="o" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/passwordFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Password should be at least 6 characters"
-                    tools:visibility="visible" />
-
-                <FrameLayout
-                    style="@style/TextInputLayoutContainer"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_8"
-                    android:layout_marginEnd="@dimen/default_space_16">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/confirmPasswordInputLayout"
-                        style="@style/Tospay.TextInputLayout.HintStyle"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        app:passwordToggleEnabled="true">
-
-                        <EditText
-                            android:id="@+id/confirmPasswordEditText"
-                            style="@style/Tospay.TextInputEditText.Style"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:autofillHints="password"
-                            android:hint="@string/confirm_password"
-                            android:imeOptions="actionDone"
-                            android:inputType="textPassword"
-                            tools:targetApi="o" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/confirmPasswordFooter"
-                    style="@style/Tospay.TextAppearance.EditText.Footer.Error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_28"
-                    android:layout_marginLeft="@dimen/default_space_28"
-                    android:visibility="invisible"
-                    tools:text="Password should be at least 6 characters"
-                    tools:visibility="visible" />
-
-                <Button
-                    android:id="@+id/btn_sign_up"
-                    style="@style/Tospay.Button.Large"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="@dimen/default_space_16"
-                    android:onClick="register"
-                    android:text="@string/create_account" />
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/default_space_16"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/borderColor" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:fontFamily="@font/proxima_nova_bold"
-                        android:text="@string/or"
-                        android:textColor="@color/textColor"
-                        android:textSize="16sp" />
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/borderColor" />
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btn_login"
-                    style="@style/Tospay.Button.Transparent.Border"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_16"
-                    android:layout_marginTop="@dimen/default_space_16"
-                    android:layout_marginEnd="@dimen/default_space_16"
-                    android:onClick="login"
-                    android:text="@string/sign_in" />
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/borderColor" />
 
             </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/Tospay.Button.Transparent.Border"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginTop="@dimen/default_space_16"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:onClick="@{(view)->registerViewModel.onClick(view)}"
+                android:text="@string/sign_in" />
 
-        <include
-            android:id="@+id/loading_layout"
-            layout="@layout/wheel_loading_layout"
-            android:visibility="gone"
-            tools:visibility="gone" />
+        </LinearLayout>
 
-    </FrameLayout>
+    </ScrollView>
 
 </layout>

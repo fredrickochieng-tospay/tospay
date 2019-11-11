@@ -26,27 +26,6 @@ import retrofit2.http.POST;
 
 public interface UserService {
 
-    @POST("v3/user/login")
-    Call<Result<TospayUser>> login(@Body LoginRequest request);
-
-    @POST("v3/user/register")
-    Call<Result<TospayUser>> register(@Body RegisterRequest request);
-
-    @POST("v3/user/verify/email")
-    Call<Result> verifyEmail(@Body VerifyEmailRequest request);
-
-    @POST("v3/user/verify/email/resend")
-    Call<Result> resendEmailToken(@Body ResendEmailRequest request);
-
-    @POST("v3/user/verify/phone")
-    Call<Result> verifyPhone(@Body VerifyPhoneRequest request);
-
-    @POST("v3/user/phone/resend")
-    Call<Result> resendOtp(@Body OtpRequest request);
-
-    @GET("v3/user/profile")
-    Call<Result<TospayUser>> user();
-
     @POST("v3/user/token/refresh")
     Call<Result<Token>> refreshToken(@Body RefreshTokenRequest request);
 
@@ -54,6 +33,24 @@ public interface UserService {
     Call<Result<QrResponse>> qrInfo(@Body Map<String, String> request);
 
     @POST("v3/user/login")
-    LiveData<ApiResponse<Result<TospayUser>>> login2(@Body LoginRequest request);
+    LiveData<ApiResponse<Result<TospayUser>>> login(@Body LoginRequest request);
+
+    @POST("v3/user/register")
+    LiveData<ApiResponse<Result<TospayUser>>> register(@Body RegisterRequest request);
+
+    @POST("v3/user/verify/email")
+    LiveData<ApiResponse<Result>> verifyEmail(@Body VerifyEmailRequest request);
+
+    @POST("v3/user/verify/email/resend")
+    LiveData<ApiResponse<Result>> resendEmailToken(@Body ResendEmailRequest request);
+
+    @POST("v3/user/verify/phone")
+    LiveData<ApiResponse<Result>> verifyPhone(@Body VerifyPhoneRequest request);
+
+    @POST("v3/user/phone/resend")
+    LiveData<ApiResponse<Result>> resendOtp(@Body OtpRequest request);
+
+    @GET("v3/user/profile")
+    LiveData<ApiResponse<Result<TospayUser>>> user();
 
 }

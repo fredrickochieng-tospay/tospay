@@ -1,49 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/apk/res/android">
+<layout>
 
     <data>
 
         <variable
-            name="user"
-            type="net.tospay.auth.model.TospayUser" />
-
-        <variable
-            name="errorViewModel"
-            type="net.tospay.auth.viewmodel.ErrorViewModel" />
+            name="phoneViewModel"
+            type="net.tospay.auth.ui.auth.phone.PhoneViewModel" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        tools:context=".ui.fragment.PhoneVerificationFragment">
+        tools:context=".ui.auth.phone.PhoneVerificationFragment">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_24"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_tospay_logo_original" />
-
-            <!--suppress AndroidUnknownAttribute -->
-            <include
-                android:id="@+id/error"
-                layout="@layout/account_warning"
-                bind:errorViewModel="@{errorViewModel}"
-                android:visibility="invisible"
-                tools:visibility="visible" />
+                android:src="@drawable/ic_validate_phone" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:text="@{user.phone}"
+                android:text="@{phoneViewModel.user.phone}"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
                 tools:text="+254712345678" />
@@ -95,52 +83,50 @@
                 android:layout_marginEnd="28dp"
                 android:layout_marginRight="28dp"
                 android:layout_marginBottom="8dp"
+                android:enabled="@{phoneViewModel.enableLoginButton}"
+                android:onClick="@{(view)->phoneViewModel.onClick(view)}"
                 android:text="@string/send"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <LinearLayout
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.971">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/proxima_nova_regular"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-                app:layout_constraintVertical_bias="0.971">
+                android:text="@string/resend_message" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:gravity="center_horizontal"
-                    android:text="@string/resend_message" />
-
-                <Button
-                    android:id="@+id/btn_resend"
-                    style="@style/Tospay.Button.Transparent.Border"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:text="@string/resend"
-                    android:textAllCaps="false"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+            <Button
+                android:id="@+id/btn_resend"
+                style="@style/Tospay.Button.Transparent.Border"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:onClick="@{(view)->phoneViewModel.onClick(view)}"
+                android:text="@string/resend"
+                android:textAllCaps="false"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
-        <include
-            android:id="@+id/loading_layout"
-            layout="@layout/wheel_loading_layout"
-            android:visibility="gone"
-            tools:visibility="gone" />
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

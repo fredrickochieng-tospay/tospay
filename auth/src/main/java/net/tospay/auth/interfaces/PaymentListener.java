@@ -2,6 +2,7 @@ package net.tospay.auth.interfaces;
 
 import net.tospay.auth.api.response.PaymentValidationResponse;
 import net.tospay.auth.api.response.TospayException;
+import net.tospay.auth.model.TospayUser;
 
 public interface PaymentListener {
     default void onPaymentDetails(PaymentValidationResponse response) {
@@ -17,6 +18,10 @@ public interface PaymentListener {
     }
 
     default void onAccountSelected(AccountType accountType) {
+
+    }
+
+    default void onLoginSuccess(TospayUser user) {
 
     }
 }

@@ -34,8 +34,6 @@ import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentViewModel>
         implements PaymentListener {
 
-    private static final String TAG = "TospayActivity";
-
     private PaymentViewModel mViewModel;
     private PaymentTransaction paymentTransaction;
     private Merchant merchant;

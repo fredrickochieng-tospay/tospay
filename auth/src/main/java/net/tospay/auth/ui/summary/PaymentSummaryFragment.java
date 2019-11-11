@@ -109,21 +109,6 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
     }
 
     @Override
-    public void onLogin(View view) {
-        navController.navigate(R.id.navigation_login);
-    }
-
-    @Override
-    public void onSignUp(View view) {
-        navController.navigate(R.id.navigation_register);
-    }
-
-    @Override
-    public void onCancel(View view) {
-        mListener.onPaymentFailed(new TospayException("Canceled"));
-    }
-
-    @Override
     public void onContinue(View view) {
         navController.navigate(R.id.navigation_account_selection);
     }

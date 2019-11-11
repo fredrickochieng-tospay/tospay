@@ -56,18 +56,8 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
     @Override
     public void onClick(View view) {
         int id = view.getId();
-
-        if (id == R.id.btn_login) {
-            getNavigator().onLogin(view);
-
-        } else if (id == R.id.btn_sign_up) {
-            getNavigator().onSignUp(view);
-
-        } else if (id == R.id.btn_continue) {
+        if (id == R.id.btn_continue) {
             getNavigator().onContinue(view);
-
-        } else if (id == R.id.btn_cancel) {
-            getNavigator().onCancel(view);
         }
     }
 }

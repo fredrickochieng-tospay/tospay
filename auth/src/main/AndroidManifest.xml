@@ -7,14 +7,8 @@
 
     <application android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.account.AccountActivity"
-            android:label="@string/title_activity_account"
-            android:parentActivityName=".ui.main.TospayActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.tospay.auth.ui.main.TospayActivity" />
-        </activity>
+            android:name=".ui.auth.AuthActivity"
+            android:theme="@style/TospayTheme.NoActionBar" />
         <activity
             android:name=".ui.main.TospayActivity"
             android:label="@string/app_name"

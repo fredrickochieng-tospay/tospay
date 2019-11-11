@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:bind="http://schemas.android.com/apk/res/android">
+<layout>
 
     <data>
 
         <variable
-            name="user"
-            type="net.tospay.auth.model.TospayUser" />
+            name="emailViewModel"
+            type="net.tospay.auth.ui.auth.email.EmailViewModel" />
 
-        <variable
-            name="errorViewModel"
-            type="net.tospay.auth.viewmodel.ErrorViewModel" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -17,29 +14,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        tools:context=".ui.fragment.EmailVerificationFragment">
+        tools:context=".ui.auth.email.EmailVerificationFragment">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_24"
             android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_tospay_logo_original" />
-
-            <!--suppress AndroidUnknownAttribute -->
-            <include
-                android:id="@+id/error"
-                layout="@layout/account_warning"
-                bind:errorViewModel="@{errorViewModel}"
-                android:visibility="invisible"
-                tools:visibility="visible" />
+                android:src="@drawable/ic_validate_email" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -62,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/proxima_nova_semibold"
-                android:text="@{user.email}"
+                android:text="@{emailViewModel.user.email}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 tools:text="janedoe@gmail.com" />
@@ -81,7 +70,7 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/btn_verify"
+                android:id="@+id/btn_verify_email"
                 style="@style/Tospay.Button.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,45 +80,43 @@
                 android:layout_marginEnd="28dp"
                 android:layout_marginRight="28dp"
                 android:layout_marginBottom="8dp"
+                android:enabled="@{emailViewModel.enableLoginButton}"
+                android:onClick="@{(view)->emailViewModel.onClick(view)}"
                 android:text="@string/verify_code"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:gravity="center_horizontal"
-                    android:text="@string/resend_message" />
-
-                <Button
-                    android:id="@+id/btn_resend"
-                    style="@style/Tospay.Button.Transparent.Border"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:text="@string/resend"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
-        <include
-            android:id="@+id/loading_layout"
-            layout="@layout/wheel_loading_layout"
-            android:visibility="gone"
-            tools:visibility="gone" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:gravity="center_horizontal"
+                android:text="@string/resend_message" />
+
+            <Button
+                android:id="@+id/btn_resend"
+                style="@style/Tospay.Button.Transparent.Border"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:onClick="@{(view)->emailViewModel.onClick(view)}"
+                android:text="@string/resend"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

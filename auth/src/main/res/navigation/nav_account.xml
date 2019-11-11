@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/navigation_link_mobile_account"
-        android:name="net.tospay.auth.ui.fragment.LinkMobileAccountFragment"
+        android:name="net.tospay.auth.ui.account.LinkMobileAccountFragment"
         android:label="Link Mobile"
         tools:layout="@layout/fragment_link_mobile_account" >
 

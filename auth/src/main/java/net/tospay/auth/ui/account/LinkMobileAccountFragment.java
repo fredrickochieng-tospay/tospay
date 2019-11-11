@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.fragment;
+package net.tospay.auth.ui.account;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

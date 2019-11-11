@@ -345,4 +345,32 @@ public class TospayUser implements Parcelable {
     public String getName() {
         return firstname + " " + lastname;
     }
+
+    @Override
+    public String toString() {
+        return "TospayUser{" +
+                "userId='" + userId + '\'' +
+                ", typeId='" + typeId + '\'' +
+                ", email='" + email + '\'' +
+                ", emailVerified=" + emailVerified +
+                ", expiredAt=" + expiredAt +
+                ", token='" + token + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", name='" + name + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", countryName='" + countryName + '\'' +
+                ", language='" + language + '\'' +
+                ", timezone='" + timezone + '\'' +
+                ", phone='" + phone + '\'' +
+                ", currency='" + currency + '\'' +
+                ", phoneVerified=" + phoneVerified +
+                ", profilePic='" + profilePic + '\'' +
+                ", country=" + country +
+                ", address=" + address +
+                ", countryEmoji='" + countryEmoji + '\'' +
+                ", staticQr='" + staticQr + '\'' +
+                '}';
+    }
 }

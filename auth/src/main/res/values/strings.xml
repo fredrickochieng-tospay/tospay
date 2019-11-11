@@ -38,7 +38,6 @@
     <string name="account_message">Add your preferred cards so you can pay when you\'re on the go. Add your bank account so that you can withdraw funds easily.   We\'ll keep your financial information encrypted.</string>
     <string name="account_lists">Bank Account, Cards and Mobile Money</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_into_your_account">Log into your account</string>
     <string name="title_activity_account">AccountActivity</string>
 </resources>

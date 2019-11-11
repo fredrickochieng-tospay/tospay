@@ -14,9 +14,11 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
 import net.tospay.auth.api.GatewayApiClient;
+import net.tospay.auth.api.UserClient;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.repository.UserRepository;
 import net.tospay.auth.utils.SharedPrefManager;
 
 
@@ -28,6 +30,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     private VM mViewModel;
 
     private GatewayRepository mGatewayRepository;
+    private UserRepository mUserRepository;
     private SharedPrefManager mSharedPrefManager;
     public PaymentListener mListener;
 
@@ -73,6 +76,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
+        mUserRepository = new UserRepository(mAppExecutors, UserClient.getInstance());
         mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());
         mViewModel = getViewModel();
@@ -111,6 +115,10 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         return mViewDataBinding;
     }
 
+    public UserRepository getUserRepository() {
+        return mUserRepository;
+    }
+
     public GatewayRepository getGatewayRepository() {
         return mGatewayRepository;
     }
@@ -122,6 +130,12 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     public void openActivityOnTokenExpire() {
         if (mActivity != null) {
             mActivity.openActivityOnTokenExpire();
+        }
+    }
+
+    public void hideKeyboard() {
+        if (mActivity != null) {
+            mActivity.hideKeyBoard();
         }
     }
 }

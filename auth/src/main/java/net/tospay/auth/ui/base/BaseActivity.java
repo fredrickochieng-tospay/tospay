@@ -1,6 +1,10 @@
 package net.tospay.auth.ui.base;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
@@ -11,6 +15,7 @@ import androidx.databinding.ViewDataBinding;
 import net.tospay.auth.api.GatewayApiClient;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.utils.NetworkUtils;
 import net.tospay.auth.utils.SharedPrefManager;
 
 
@@ -96,5 +101,27 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
 
     public String getBearerToken() {
         return mSharedPrefManager.getAccessToken();
+    }
+
+    /**
+     * Hides KeyBoard
+     */
+    public void hideKeyBoard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            }
+        }
+    }
+
+    /**
+     * Check if network is connected
+     *
+     * @return true|false
+     */
+    public boolean isNetworkConnected() {
+        return NetworkUtils.isNetworkAvailable(getApplicationContext());
     }
 }
