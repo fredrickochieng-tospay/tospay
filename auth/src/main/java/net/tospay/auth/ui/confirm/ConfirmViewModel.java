@@ -6,12 +6,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
-import net.tospay.auth.api.request.PaymentRequest;
-import net.tospay.auth.api.response.PaymentResponse;
+import net.tospay.auth.remote.request.PaymentRequest;
+import net.tospay.auth.remote.response.PaymentResponse;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 public class ConfirmViewModel extends BaseViewModel<ConfirmNavigator> implements View.OnClickListener {

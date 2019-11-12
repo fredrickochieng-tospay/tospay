@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
 apply plugin: "androidx.navigation.safeargs"
 
 buildscript {
@@ -8,7 +7,6 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.0'
         def nav_version = "2.1.0"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
@@ -50,7 +48,6 @@ project.ext {
     retrofitAdapterVersion = "2.3.0"
     retrofitVersion = "2.3.0"
     glideVersion = "4.9.0"
-    butterKnifeVersion = "10.2.0"
     navVersion = "2.1.0"
 }
 
@@ -88,12 +85,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$project.okHttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$project.okHttpVersion"
 
-    //ButterKnife
-    implementation "com.jakewharton:butterknife:$project.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$project.butterKnifeVersion"
-
     //Glide image library
     implementation "com.github.bumptech.glide:glide:$project.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$project.glideVersion"
-
 }

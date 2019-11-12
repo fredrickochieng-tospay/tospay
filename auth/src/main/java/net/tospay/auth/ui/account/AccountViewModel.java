@@ -9,7 +9,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.List;

@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
-import net.tospay.auth.api.response.PaymentValidationResponse;
+import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.HashMap;
@@ -25,7 +25,6 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
     private LiveData<Resource<PaymentValidationResponse>> responseLiveData;
     private MutableLiveData<Merchant> merchantMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<PaymentTransaction> transactionMutableLiveData = new MutableLiveData<>();
-    private ObservableBoolean isLoggedIn = new ObservableBoolean(false);
 
     public SummaryViewModel(GatewayRepository repository) {
         this.repository = repository;
@@ -47,10 +46,6 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
 
     public MutableLiveData<PaymentTransaction> transaction() {
         return transactionMutableLiveData;
-    }
-
-    public ObservableBoolean getIsLoggedIn() {
-        return isLoggedIn;
     }
 
     @Override

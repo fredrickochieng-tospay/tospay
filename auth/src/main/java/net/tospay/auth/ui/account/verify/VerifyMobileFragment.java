@@ -1,30 +1,21 @@
 package net.tospay.auth.ui.account.verify;
 
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.response.Result;
 import net.tospay.auth.databinding.FragmentVerifyMobileBinding;
 import net.tospay.auth.model.Account;
-import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-
-import org.w3c.dom.Text;
-
 
 public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBinding, MobileMoneyViewModel>
         implements MobileMoneyNavigator {

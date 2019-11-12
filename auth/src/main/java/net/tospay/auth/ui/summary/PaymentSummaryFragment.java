@@ -1,8 +1,11 @@
 package net.tospay.auth.ui.summary;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,11 +14,12 @@ import androidx.navigation.Navigation;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.response.PaymentValidationResponse;
-import net.tospay.auth.api.response.TospayException;
+import net.tospay.auth.remote.response.PaymentValidationResponse;
+import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.databinding.FragmentPaymentSummaryBinding;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
@@ -40,7 +44,6 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         }
     }
 
-
     @Override
     public void onDestroy() {
         mBinding.unbind();
@@ -50,17 +53,26 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
         mBinding = getViewDataBinding();
         mViewModel = getViewModel();
         mViewModel.setNavigator(this);
-
-        mViewModel.getIsLoggedIn().set(!getSharedPrefManager().isTokenExpiredOrAlmost());
-
         mBinding.setSummaryViewModel(mViewModel);
+        validateToken();
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                mListener.onPaymentFailed(new TospayException("Transaction canceled"));
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(callback);
+    }
+
+    private void validateToken() {
         mViewModel.validate(token);
         mViewModel.getResponseLiveData().observe(this, this::handleResponse);
-
-        navController = Navigation.findNavController(view);
     }
 
     private void handleResponse(Resource<PaymentValidationResponse> resource) {
@@ -87,6 +99,10 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
                         mListener.onPaymentDetails(resource.data);
                     }
                     break;
+
+                case RE_AUTHENTICATE:
+                    startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
+                    break;
             }
         }
     }
@@ -111,5 +127,15 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
     @Override
     public void onContinue(View view) {
         navController.navigate(R.id.navigation_account_selection);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                validateToken();
+            }
+        }
     }
 }

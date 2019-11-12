@@ -7,12 +7,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
-import net.tospay.auth.api.request.ResendEmailRequest;
-import net.tospay.auth.api.request.VerifyEmailRequest;
-import net.tospay.auth.api.response.Result;
+import net.tospay.auth.remote.request.ResendEmailRequest;
+import net.tospay.auth.remote.request.VerifyEmailRequest;
+import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.UserRepository;
+import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 public class EmailViewModel extends BaseViewModel<EmailNavigator> implements View.OnClickListener {

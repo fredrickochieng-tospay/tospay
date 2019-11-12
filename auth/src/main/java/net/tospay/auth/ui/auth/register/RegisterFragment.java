@@ -24,12 +24,12 @@ import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-import net.tospay.auth.ui.dialog.CountryListDialogFragment;
+import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.utils.EmailValidator;
 
 
 public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, RegisterViewModel>
-        implements RegisterNavigation, CountryListDialogFragment.CountrySelectedListener {
+        implements RegisterNavigation, CountryDialog.CountrySelectedListener {
 
     private RegisterViewModel mViewModel;
 
@@ -302,8 +302,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
     @Override
     public void onSelectCountry(View view) {
-        CountryListDialogFragment.newInstance()
-                .show(getChildFragmentManager(), CountryListDialogFragment.TAG);
+        CountryDialog.newInstance().show(getChildFragmentManager(), CountryDialog.TAG);
     }
 
     @Override

@@ -2,20 +2,18 @@ package net.tospay.auth.ui.account.verify;
 
 import android.view.View;
 
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
-import net.tospay.auth.TospayGateway;
-import net.tospay.auth.api.request.MobileAccountVerificationRequest;
-import net.tospay.auth.api.request.MobileRequest;
-import net.tospay.auth.api.response.MobileResponse;
-import net.tospay.auth.api.response.Result;
+import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
+import net.tospay.auth.remote.request.MobileRequest;
+import net.tospay.auth.remote.response.MobileResponse;
+import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.HashMap;

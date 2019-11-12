@@ -7,10 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
-import net.tospay.auth.api.request.LoginRequest;
+import net.tospay.auth.remote.request.LoginRequest;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.UserRepository;
+import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 public class LoginViewModel extends BaseViewModel<LoginNavigator> implements View.OnClickListener {

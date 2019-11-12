@@ -1,24 +1,28 @@
 package net.tospay.auth.ui.account;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.request.PaymentRequest;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.request.PaymentRequest;
+import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 
 import java.util.ArrayList;
@@ -143,29 +147,38 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
             if (account.getType() == AccountType.MOBILE) {
                 request.setType("mobile");
-
             } else if (account.getType() == AccountType.CARD) {
                 request.setType("card");
-
             }
         }
 
-        // TODO: 11/6/19 refactor this code
-        /*AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
+        AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
                 action = AccountSelectionFragmentDirections
                 .actionNavigationAccountSelectionToNavigationConfirm(request);
 
-        NavHostFragment.findNavController(this)
-                .navigate(action);*/
+        NavHostFragment.findNavController(this).navigate(action);
     }
 
     @Override
     public void onVerifyClick(View view, AccountType accountType) {
         AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
-                action = AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationVerifyMobile((Account) accountType);
+                action = AccountSelectionFragmentDirections
+                .actionNavigationAccountSelectionToNavigationVerifyMobile((Account) accountType);
 
-        NavHostFragment.findNavController(this)
-                .navigate(action);
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                reloadBearerToken();
+                fetchAccounts();
+            } else {
+                mListener.onPaymentFailed(new TospayException("Invalid credentials"));
+            }
+        }
     }
 
     @Override

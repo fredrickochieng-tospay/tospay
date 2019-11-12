@@ -1,6 +1,7 @@
 package net.tospay.auth.ui.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
-import net.tospay.auth.api.GatewayApiClient;
-import net.tospay.auth.api.UserClient;
+import net.tospay.auth.remote.GatewayApiClient;
+import net.tospay.auth.remote.UserClient;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.remote.util.AppExecutors;
-import net.tospay.auth.repository.GatewayRepository;
-import net.tospay.auth.repository.UserRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.utils.SharedPrefManager;
 
 
@@ -92,6 +94,10 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         return mSharedPrefManager.getAccessToken();
     }
 
+    public void reloadBearerToken() {
+        setBearerToken(getBearerToken());
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,10 +111,6 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         mViewDataBinding.setVariable(getBindingVariable(), mViewModel);
         mViewDataBinding.setLifecycleOwner(this);
         mViewDataBinding.executePendingBindings();
-    }
-
-    public BaseActivity getBaseActivity() {
-        return mActivity;
     }
 
     public DB getViewDataBinding() {
@@ -128,9 +130,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     }
 
     public void openActivityOnTokenExpire() {
-        if (mActivity != null) {
-            mActivity.openActivityOnTokenExpire();
-        }
+        startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
     }
 
     public void hideKeyboard() {

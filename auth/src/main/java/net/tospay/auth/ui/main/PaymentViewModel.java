@@ -3,12 +3,12 @@ package net.tospay.auth.ui.main;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import net.tospay.auth.api.response.PaymentValidationResponse;
+import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.HashMap;

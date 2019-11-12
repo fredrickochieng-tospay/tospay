@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/proxima_nova_semibold"
-                    android:text="Account Details"
+                    android:text="Link Mobile Account"
                     android:textColor="#083760"
                     android:textSize="18sp" />
 

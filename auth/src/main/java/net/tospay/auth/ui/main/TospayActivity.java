@@ -1,11 +1,11 @@
 package net.tospay.auth.ui.main;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,14 +17,14 @@ import androidx.navigation.Navigation;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.response.PaymentValidationResponse;
-import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.databinding.ActivityTospayBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.response.PaymentValidationResponse;
+import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
 
@@ -70,6 +70,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("TosPay");
 
         paymentToken = getIntent().getStringExtra(KEY_TOKEN);
         mViewModel.getPaymentTokenLiveData().setValue(paymentToken);
@@ -107,7 +108,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_close) {
-            finishWithError(null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Cancel Transaction");
+            builder.setMessage("Are you sure you want to cancel this transaction?");
+            builder.setPositiveButton("Close", (dialogInterface, i) -> dialogInterface.dismiss());
+            builder.setNegativeButton("Continue", (dialogInterface, i) -> finishWithError(null));
+            builder.show();
             return true;
         }
 
@@ -173,7 +179,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
                         switch (paymentTransaction.getStatus()) {
                             case "PROCESSING":
                             case "CREATED":
-                                handler.postDelayed(runnable, 3000);
+                                handler.postDelayed(runnable, 5000);
                                 count++;
                                 break;
 

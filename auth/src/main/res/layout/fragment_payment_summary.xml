@@ -37,7 +37,7 @@
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:contentDescription="@string/app_name"
                 app:imageUrl="@{summaryViewModel.merchant.avatar}"
                 tools:src="@drawable/ic_loading" />
@@ -78,16 +78,6 @@
                 android:textColor="@color/text"
                 android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center"
-                android:text="@string/payment_auth_message"
-                android:textColor="@color/text"
-                android:textSize="16sp"
-                android:visibility="@{summaryViewModel.isLoggedIn ? View.GONE : View.VISIBLE}" />
-
             <Button
                 android:id="@+id/btn_continue"
                 style="@style/Tospay.Button.Large"
@@ -97,8 +87,7 @@
                 android:fontFamily="@font/proxima_nova_regular"
                 android:onClick="@{(view)->summaryViewModel.onClick(view)}"
                 android:text="Continue"
-                android:textAllCaps="false"
-                android:visibility="@{summaryViewModel.isLoggedIn ? View.VISIBLE : View.GONE}" />
+                android:textAllCaps="false" />
 
         </LinearLayout>
 

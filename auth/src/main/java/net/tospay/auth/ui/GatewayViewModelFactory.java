@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import net.tospay.auth.repository.GatewayRepository;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.account.AccountViewModel;
 import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
 import net.tospay.auth.ui.confirm.ConfirmViewModel;
+import net.tospay.auth.ui.dialog.country.CountryViewModel;
+import net.tospay.auth.ui.dialog.network.NetworkViewModel;
 import net.tospay.auth.ui.main.PaymentViewModel;
 import net.tospay.auth.ui.summary.SummaryViewModel;
 
@@ -34,13 +36,21 @@ public class GatewayViewModelFactory extends ViewModelProvider.NewInstanceFactor
             //noinspection unchecked
             return (T) new ConfirmViewModel(gatewayRepository);
 
-        }else if (modelClass.isAssignableFrom(PaymentViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(PaymentViewModel.class)) {
             //noinspection unchecked
             return (T) new PaymentViewModel(gatewayRepository);
 
-        }else if (modelClass.isAssignableFrom(MobileMoneyViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(MobileMoneyViewModel.class)) {
             //noinspection unchecked
             return (T) new MobileMoneyViewModel(gatewayRepository);
+
+        } else if (modelClass.isAssignableFrom(CountryViewModel.class)) {
+            //noinspection unchecked
+            return (T) new CountryViewModel(gatewayRepository);
+
+        } else if (modelClass.isAssignableFrom(NetworkViewModel.class)) {
+            //noinspection unchecked
+            return (T) new NetworkViewModel(gatewayRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel Class: " + modelClass.getName());

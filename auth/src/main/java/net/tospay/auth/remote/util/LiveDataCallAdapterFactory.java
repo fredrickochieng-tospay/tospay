@@ -4,7 +4,7 @@ package net.tospay.auth.remote.util;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import net.tospay.auth.api.response.ApiResponse;
+import net.tospay.auth.remote.response.ApiResponse;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;

@@ -76,7 +76,6 @@ public class LinkCardFragment extends BaseFragment<FragmentLinkCardBinding, Link
         String token = getBearerToken();
         url = "http://secure.benkinet.com/skap/" + token;
 
-
         final WebSettings webSettings = mBinding.webView.getSettings();
         webSettings.setAllowFileAccess(false);
         webSettings.setBuiltInZoomControls(false);

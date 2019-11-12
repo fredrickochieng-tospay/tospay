@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -141,6 +142,15 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         mProgressDialog.setCanceledOnTouchOutside(false);
 
         navController = Navigation.findNavController(view);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                mListener.onLoginFailed();
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(callback);
     }
 
     /**

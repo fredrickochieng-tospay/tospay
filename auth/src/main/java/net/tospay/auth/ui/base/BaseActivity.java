@@ -1,6 +1,5 @@
 package net.tospay.auth.ui.base;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
@@ -12,12 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import net.tospay.auth.api.GatewayApiClient;
+import net.tospay.auth.remote.GatewayApiClient;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.util.AppExecutors;
-import net.tospay.auth.repository.GatewayRepository;
-import net.tospay.auth.utils.NetworkUtils;
 import net.tospay.auth.utils.SharedPrefManager;
-
 
 public abstract class BaseActivity<DB extends ViewDataBinding,
         VM extends BaseViewModel> extends AppCompatActivity {
@@ -25,7 +22,6 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     private VM mViewModel;
     private DB mDataBinding;
     private GatewayRepository mGatewayRepository;
-    private SharedPrefManager mSharedPrefManager;
 
     /**
      * Override for set binding variable
@@ -56,7 +52,7 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
         mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
-        mSharedPrefManager = SharedPrefManager.getInstance(this);
+        SharedPrefManager mSharedPrefManager = SharedPrefManager.getInstance(this);
         performDataBinding();
         setBearerToken(mSharedPrefManager.getAccessToken());
     }
@@ -78,29 +74,13 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
         super.onDestroy();
     }
 
-    /**
-     * Starts MainActivity if Token has Expired
-     */
-    public void openActivityOnTokenExpire() {
-        //todo change activity
-        //startActivityForResult(new Intent(this, TospayActivity.class), LOGIN_RESULT_CODE);
-    }
-
     public GatewayRepository getGatewayRepository() {
         return mGatewayRepository;
-    }
-
-    public SharedPrefManager getSharedPrefManager() {
-        return mSharedPrefManager;
     }
 
     public void setBearerToken(String token) {
         String bearerToken = "Bearer " + token;
         mViewModel.setBearerToken(bearerToken);
-    }
-
-    public String getBearerToken() {
-        return mSharedPrefManager.getAccessToken();
     }
 
     /**
@@ -114,14 +94,5 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
                 imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
             }
         }
-    }
-
-    /**
-     * Check if network is connected
-     *
-     * @return true|false
-     */
-    public boolean isNetworkConnected() {
-        return NetworkUtils.isNetworkAvailable(getApplicationContext());
     }
 }

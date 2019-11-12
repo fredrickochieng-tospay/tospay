@@ -1,24 +1,17 @@
 package net.tospay.auth.ui.confirm;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.api.request.PaymentRequest;
-import net.tospay.auth.api.response.PaymentResponse;
-import net.tospay.auth.api.response.TospayException;
 import net.tospay.auth.databinding.FragmentConfirmBinding;
-import net.tospay.auth.remote.Resource;
-import net.tospay.auth.remote.Status;
+import net.tospay.auth.remote.request.PaymentRequest;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.main.TospayActivity;
@@ -69,14 +62,10 @@ public class ConfirmFragment extends BaseFragment<FragmentConfirmBinding, Confir
 
     @Override
     public void onConfirm(View view) {
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Making payment. Please wait...");
         progressDialog.show();
 
         mViewModel.pay();
         mViewModel.getResourceLiveData().observe(this, resource -> {
-            Log.e("TAG", "onConfirm: "+resource );
             if (resource != null) {
                 switch (resource.status) {
                     case ERROR:
@@ -85,12 +74,6 @@ public class ConfirmFragment extends BaseFragment<FragmentConfirmBinding, Confir
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
                         Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case LOADING:
-                        progressDialog.dismiss();
-                        mViewModel.setIsLoading(true);
-                        mViewModel.setIsError(false);
                         break;
 
                     case SUCCESS:

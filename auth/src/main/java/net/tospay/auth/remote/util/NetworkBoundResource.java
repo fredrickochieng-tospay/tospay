@@ -7,7 +7,7 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
-import net.tospay.auth.api.response.ApiResponse;
+import net.tospay.auth.remote.response.ApiResponse;
 import net.tospay.auth.remote.Resource;
 
 import java.util.Objects;

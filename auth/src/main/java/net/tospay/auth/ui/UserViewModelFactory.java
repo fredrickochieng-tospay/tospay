@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import net.tospay.auth.repository.UserRepository;
+import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.ui.auth.email.EmailViewModel;
 import net.tospay.auth.ui.auth.login.LoginViewModel;
 import net.tospay.auth.ui.auth.phone.PhoneViewModel;

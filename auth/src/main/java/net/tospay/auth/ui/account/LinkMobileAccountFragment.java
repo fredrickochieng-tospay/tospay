@@ -17,16 +17,14 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.ui.GatewayViewModelFactory;
-import net.tospay.auth.ui.account.AccountSelectionFragmentDirections;
 import net.tospay.auth.ui.account.verify.MobileMoneyNavigator;
 import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
 import net.tospay.auth.ui.base.BaseFragment;
-import net.tospay.auth.ui.dialog.CountryListDialogFragment;
-import net.tospay.auth.ui.dialog.NetworkListDialogFragment;
+import net.tospay.auth.ui.dialog.country.CountryDialog;
+import net.tospay.auth.ui.dialog.network.NetworkDialog;
 
 public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAccountBinding, MobileMoneyViewModel>
-        implements CountryListDialogFragment.CountrySelectedListener,
-        NetworkListDialogFragment.NetworkSelectedListener, MobileMoneyNavigator {
+        implements CountryDialog.CountrySelectedListener, NetworkDialog.NetworkSelectedListener, MobileMoneyNavigator {
 
     private ProgressDialog progressDialog;
     private Country country = null;
@@ -84,8 +82,8 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public void onSelectCountryClick(View view) {
-        CountryListDialogFragment.newInstance()
-                .show(getChildFragmentManager(), CountryListDialogFragment.TAG);
+        CountryDialog.newInstance()
+                .show(getChildFragmentManager(), CountryDialog.TAG);
     }
 
     @Override
@@ -95,8 +93,8 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
             return;
         }
 
-        NetworkListDialogFragment.newInstance(Integer.valueOf(country.getId()))
-                .show(getChildFragmentManager(), NetworkListDialogFragment.TAG);
+        NetworkDialog.newInstance(Integer.valueOf(country.getId()))
+                .show(getChildFragmentManager(), NetworkDialog.TAG);
     }
 
     @Override
