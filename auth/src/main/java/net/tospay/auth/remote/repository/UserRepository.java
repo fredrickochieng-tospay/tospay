@@ -279,7 +279,7 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<TospayUser>> getUserInfo(SharedPrefManager sharedPrefManager) {
+    public LiveData<Resource<TospayUser>> getUserInfo(String bearerToken, SharedPrefManager sharedPrefManager) {
         return new NetworkBoundResource<TospayUser, Result<TospayUser>>(mAppExecutors) {
 
             private TospayUser resultsDb;
@@ -325,12 +325,12 @@ public class UserRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<TospayUser>>> createCall() {
-                return mUserService.user();
+                return mUserService.user(bearerToken);
             }
         }.asLiveData();
     }
 
-    public LiveData<Resource<Token>> refreshToken(SharedPrefManager sharedPrefManager, RefreshTokenRequest request) {
+    public LiveData<Resource<Token>> refreshToken(String bearerToken, SharedPrefManager sharedPrefManager, RefreshTokenRequest request) {
         return new NetworkBoundResource<Token, Result<Token>>(mAppExecutors) {
 
             private Token resultsDb;
@@ -374,12 +374,12 @@ public class UserRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<Token>>> createCall() {
-                return mUserService.refreshToken(request);
+                return mUserService.refreshToken(bearerToken, request);
             }
         }.asLiveData();
     }
 
-    public LiveData<Resource<QrResponse>> qrInfo(String result) {
+    public LiveData<Resource<QrResponse>> qrInfo(String bearerToken, String result) {
         Map<String, String> request = new HashMap<>();
         request.put("qr", result);
 
@@ -416,7 +416,7 @@ public class UserRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<QrResponse>>> createCall() {
-                return mUserService.qrInfo(request);
+                return mUserService.qrInfo(bearerToken, request);
             }
         }.asLiveData();
     }

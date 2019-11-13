@@ -19,6 +19,7 @@ import java.util.Map;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface UserService {
@@ -42,12 +43,18 @@ public interface UserService {
     LiveData<ApiResponse<Result>> resendOtp(@Body OtpRequest request);
 
     @GET("v3/user/profile")
-    LiveData<ApiResponse<Result<TospayUser>>> user();
+    LiveData<ApiResponse<Result<TospayUser>>> user(@Header("Authorization") String bearer);
 
     @POST("v3/user/token/refresh")
-    LiveData<ApiResponse<Result<Token>>> refreshToken(@Body RefreshTokenRequest request);
+    LiveData<ApiResponse<Result<Token>>> refreshToken(
+            @Header("Authorization") String bearer,
+            @Body RefreshTokenRequest request
+    );
 
     @POST("v3/account/info/qr")
-    LiveData<ApiResponse<Result<QrResponse>>> qrInfo(@Body Map<String, String> request);
+    LiveData<ApiResponse<Result<QrResponse>>> qrInfo(
+            @Header("Authorization") String bearer,
+            @Body Map<String, String> request
+    );
 
 }
