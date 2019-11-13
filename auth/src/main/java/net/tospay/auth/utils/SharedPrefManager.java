@@ -16,9 +16,9 @@ import java.util.Date;
  */
 public class SharedPrefManager {
 
-    private static final String TAG = SharedPrefManager.class.getSimpleName();
     private static final String PREF_ACTIVE_USER = "pref_active_user";
     private static final String KEY_TOKEN_EXPIRY = "token_expiry";
+    private static final String KEY_REFRESHED_TOKEN = "token";
 
     private static SharedPreferences sharedPref;
     private Context context;
@@ -140,8 +140,18 @@ public class SharedPrefManager {
             long diff = date.getTime() - Calendar.getInstance().getTime().getTime();
             long seconds = diff / 1000;
             long minutes = seconds / 60;
-            Log.e(TAG, "minutes: " + minutes);
             return diff < 5;
         }
+    }
+
+    public String getRefreshedToken() {
+        SharedPreferences prefs = getSettings();
+        return prefs.getString(KEY_REFRESHED_TOKEN, null);
+    }
+
+    public void setRefreshedToken(String refreshedToken) {
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(KEY_REFRESHED_TOKEN, refreshedToken);
+        editor.apply();
     }
 }
