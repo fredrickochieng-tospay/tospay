@@ -93,4 +93,10 @@ public interface GatewayService {
     LiveData<ApiResponse<Result<WalletTransactionResponse>>> fetchWalletTransactions(
             @Header("Authorization") String bearer
     );
+
+    @POST("v1/firebase-token")
+    LiveData<ApiResponse<Result>> saveFcmToken(
+            @Header("Authorization") String bearer,
+            @Body Map<String, String> request
+    );
 }

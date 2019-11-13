@@ -42,7 +42,6 @@ android {
 project.ext {
     rxJavaVersion = "2.1.0"
     rxAndroidVersion = "2.1.1"
-    retrofitVersion = "2.1.0"
     okHttpVersion = "3.4.1"
     gsonVersion = "2.8.0"
     retrofitAdapterVersion = "2.3.0"

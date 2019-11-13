@@ -32,6 +32,13 @@ public class Tospay {
     }
 
     /**
+     * Logs out user
+     */
+    public void signOut() {
+        SharedPrefManager.getInstance(context).setActiveUser(null);
+    }
+
+    /**
      * sets payment validation token
      *
      * @param token - validation token
