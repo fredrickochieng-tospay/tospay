@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModelProvider;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.ui.auth.email.EmailViewModel;
 import net.tospay.auth.ui.auth.login.LoginViewModel;
+import net.tospay.auth.ui.auth.forgot.ForgotPasswordViewModel;
 import net.tospay.auth.ui.auth.phone.PhoneViewModel;
 import net.tospay.auth.ui.auth.register.RegisterViewModel;
+import net.tospay.auth.ui.auth.reset.ResetPasswordViewModel;
 
 public class UserViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
@@ -36,6 +38,14 @@ public class UserViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(PhoneViewModel.class)) {
             //noinspection unchecked
             return (T) new PhoneViewModel(userRepository);
+
+        } else if (modelClass.isAssignableFrom(ForgotPasswordViewModel.class)) {
+            //noinspection unchecked
+            return (T) new ForgotPasswordViewModel(userRepository);
+
+        } else if (modelClass.isAssignableFrom(ResetPasswordViewModel.class)) {
+            //noinspection unchecked
+            return (T) new ResetPasswordViewModel(userRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel Class: " + modelClass.getName());

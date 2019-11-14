@@ -42,6 +42,12 @@ public interface UserService {
     @POST("v3/user/verify/phone/resend")
     LiveData<ApiResponse<Result>> resendOtp(@Body OtpRequest request);
 
+    @POST("v3/user/password/forgot")
+    LiveData<ApiResponse<Result>> forgotPassword(@Body Map<String, String> request);
+
+    @POST("v3/user/password/reset")
+    LiveData<ApiResponse<Result>> resetPassword(@Body Map<String, String> request);
+
     @GET("v3/user/profile")
     LiveData<ApiResponse<Result<TospayUser>>> user(@Header("Authorization") String bearer);
 

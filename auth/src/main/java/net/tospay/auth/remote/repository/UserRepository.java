@@ -279,6 +279,94 @@ public class UserRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<Result>> forgotPassword(String email) {
+
+        Map<String, String> request = new HashMap<>();
+        request.put("email", email);
+
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mUserService.forgotPassword(request);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Result>> resetPassword(String email, String verificationCode, String password) {
+
+        Map<String, String> request = new HashMap<>();
+        request.put("email", email);
+        request.put("verification_code", verificationCode);
+        request.put("password", password);
+
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mUserService.resetPassword(request);
+            }
+        }.asLiveData();
+    }
+
     public LiveData<Resource<TospayUser>> getUserInfo(String bearerToken, SharedPrefManager sharedPrefManager) {
         return new NetworkBoundResource<TospayUser, Result<TospayUser>>(mAppExecutors) {
 

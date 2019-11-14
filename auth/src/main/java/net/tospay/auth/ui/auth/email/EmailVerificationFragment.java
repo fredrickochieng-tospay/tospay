@@ -120,7 +120,7 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
                         mProgressDialog.dismiss();
 
                         NavHostFragment.findNavController(this)
-                                .popBackStack(R.id.navigation_phone_verification, false);
+                                .navigate(EmailVerificationFragmentDirections.actionNavigationEmailVerificationToNavigationPhoneVerification());
                         break;
                 }
             }

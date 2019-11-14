@@ -16,31 +16,31 @@ import net.tospay.auth.ui.auth.AuthActivity;
 public class MainActivity extends AppCompatActivity implements BiometricCallback {
 
 
-    BiometricManager mBiometricManager;
+    //BiometricManager mBiometricManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBiometricManager = new BiometricManager.BiometricBuilder(MainActivity.this)
+        /*mBiometricManager = new BiometricManager.BiometricBuilder(MainActivity.this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
                 .setDescription(getString(R.string.biometric_description))
                 .setNegativeButtonText(getString(R.string.biometric_negative_button_text))
-                .build();
+                .build();*/
 
         //start authentication
         //mBiometricManager.authenticate(MainActivity.this);
 
-        /*String token = "8e462013bc77cd8da4d1af5cbcfeba9dd4df9208a7f29a59c0a06dd20e6af9eafc31c78b682117b135076b124fa47b1e2b741c7f3ccb0f6c8cb3712c578d34dda262c59568042f6891ecb8fc6741cef574dc277cecf99c86cbeafdcc6745";
+        /*String token = "543001b407b1f8aee898b32fb5e26b564fb03224a977d0d62bc292f26ac0a765367e6c1d97dfe983b2a0b620312f952e1153c809b02b72aed97b6f5e161fca1a69994737a8fcaeb350dfb6602e6feab2733470e20890c78cb55ef3ffb5d9";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();
 
         startActivityForResult(intent, 1);*/
 
-        //startActivityForResult(new Intent(this, AuthActivity.class), 1);
+        startActivityForResult(new Intent(this, AuthActivity.class), 1);
     }
 
     @Override

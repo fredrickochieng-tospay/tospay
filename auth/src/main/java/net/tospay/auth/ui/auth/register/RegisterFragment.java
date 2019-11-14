@@ -287,8 +287,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
                     TospayUser user = resource.data;
                     getSharedPrefManager().setActiveUser(user);
 
-                    NavHostFragment.findNavController(this)
-                            .popBackStack(R.id.navigation_email_verification, false);
+                    NavHostFragment.findNavController(this).navigate(RegisterFragmentDirections.actionNavigationRegisterToNavigationEmailVerification());
 
                     break;
             }

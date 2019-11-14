@@ -45,6 +45,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.BaseBottomSheetDialog);
         this.countryList = new ArrayList<>();
         this.adapter = new CountryAdapter(countryList);
     }

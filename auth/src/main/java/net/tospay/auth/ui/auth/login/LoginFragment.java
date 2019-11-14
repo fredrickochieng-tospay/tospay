@@ -5,19 +5,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
-import androidx.navigation.NavHostController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -27,7 +21,6 @@ import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentLoginBinding;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
@@ -218,16 +211,19 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     mViewModel.setIsError(false);
 
                     TospayUser user = resource.data;
-                    getSharedPrefManager().setActiveUser(user);
 
-                    if (!user.isEmailVerified()) {
-                        navController.navigate(R.id.navigation_email_verification);
+                    if (user != null) {
+                        getSharedPrefManager().setActiveUser(user);
 
-                    } else if (!user.isPhoneVerified()) {
-                        navController.navigate(R.id.navigation_phone_verification);
+                        if (!user.isEmailVerified()) {
+                            navController.navigate(R.id.navigation_email_verification);
 
-                    } else {
-                        mListener.onLoginSuccess(user);
+                        } else if (!user.isPhoneVerified()) {
+                            navController.navigate(R.id.navigation_phone_verification);
+
+                        } else {
+                            mListener.onLoginSuccess(user);
+                        }
                     }
 
                     break;
@@ -237,11 +233,11 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public void signUp(View view) {
-        navController.navigate(R.id.navigation_register);
+        navController.navigate(LoginFragmentDirections.actionNavigationLoginToNavigationRegister());
     }
 
     @Override
     public void forgotPassword(View view) {
-
+        navController.navigate(LoginFragmentDirections.actionNavigationLoginToNavigationForgotPassword());
     }
 }
