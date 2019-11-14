@@ -9,21 +9,36 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import net.tospay.auth.Tospay;
+import net.tospay.auth.biometric.BiometricCallback;
+import net.tospay.auth.biometric.BiometricManager;
 import net.tospay.auth.ui.auth.AuthActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BiometricCallback {
+
+
+    BiometricManager mBiometricManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String token = "2e4048ce36b2030754599d72ab015dbac4d532e3d0afcc28f84c071859ba3c797bcd67b20b6eeff1af82f62c766cf5c2bc19b05b4e6905e6846e474b99965991e5232dbb5e2aa3ebfde3df21184311f7478215891d9f66b2e26aef104fb0";
+        mBiometricManager = new BiometricManager.BiometricBuilder(MainActivity.this)
+                .setTitle(getString(R.string.biometric_title))
+                .setSubtitle(getString(R.string.biometric_subtitle))
+                .setDescription(getString(R.string.biometric_description))
+                .setNegativeButtonText(getString(R.string.biometric_negative_button_text))
+                .build();
+
+        //start authentication
+        //mBiometricManager.authenticate(MainActivity.this);
+
+        /*String token = "8e462013bc77cd8da4d1af5cbcfeba9dd4df9208a7f29a59c0a06dd20e6af9eafc31c78b682117b135076b124fa47b1e2b741c7f3ccb0f6c8cb3712c578d34dda262c59568042f6891ecb8fc6741cef574dc277cecf99c86cbeafdcc6745";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();
 
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, 1);*/
 
         //startActivityForResult(new Intent(this, AuthActivity.class), 1);
     }
@@ -46,5 +61,55 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onSdkVersionNotSupported() {
+
+    }
+
+    @Override
+    public void onBiometricAuthenticationNotSupported() {
+
+    }
+
+    @Override
+    public void onBiometricAuthenticationNotAvailable() {
+
+    }
+
+    @Override
+    public void onBiometricAuthenticationPermissionNotGranted() {
+
+    }
+
+    @Override
+    public void onBiometricAuthenticationInternalError(String error) {
+
+    }
+
+    @Override
+    public void onAuthenticationFailed() {
+
+    }
+
+    @Override
+    public void onAuthenticationCancelled() {
+
+    }
+
+    @Override
+    public void onAuthenticationSuccessful() {
+
+    }
+
+    @Override
+    public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+
+    }
+
+    @Override
+    public void onAuthenticationError(int errorCode, CharSequence errString) {
+
     }
 }

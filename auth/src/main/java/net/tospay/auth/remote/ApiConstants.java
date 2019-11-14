@@ -23,4 +23,9 @@ public class ApiConstants {
      * Gateway Endpoint
      */
     public static final String GATEWAY_BASE_URL = "https://apigw.tospay.net/api/";
+
+    /**
+     * Notification Endpoint
+     */
+    public static final String NOTIFICATION_URL = "https://taar.tospay.net";
 }

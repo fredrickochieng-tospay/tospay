@@ -87,4 +87,7 @@ dependencies {
     //Glide image library
     implementation "com.github.bumptech.glide:glide:$project.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$project.glideVersion"
+
+    //sockets
+    implementation 'com.github.nkzawa:socket.io-client:0.6.0'
 }

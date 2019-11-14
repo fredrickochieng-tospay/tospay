@@ -22,6 +22,7 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     private VM mViewModel;
     private DB mDataBinding;
     private GatewayRepository mGatewayRepository;
+    private SharedPrefManager mSharedPrefManager;
 
     /**
      * Override for set binding variable
@@ -52,7 +53,7 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
         mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
-        SharedPrefManager mSharedPrefManager = SharedPrefManager.getInstance(this);
+        mSharedPrefManager = SharedPrefManager.getInstance(this);
         performDataBinding();
         setBearerToken(mSharedPrefManager.getAccessToken());
     }
@@ -78,9 +79,17 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
         return mGatewayRepository;
     }
 
+    public SharedPrefManager getSharedPrefManager() {
+        return mSharedPrefManager;
+    }
+
     public void setBearerToken(String token) {
         String bearerToken = "Bearer " + token;
         mViewModel.setBearerToken(bearerToken);
+    }
+
+    public String getAccessToken() {
+        return mSharedPrefManager.getAccessToken();
     }
 
     /**

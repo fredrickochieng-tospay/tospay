@@ -86,4 +86,13 @@ public class Token implements Parcelable {
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "expiredAt=" + expiredAt +
+                ", token='" + token + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
+    }
 }

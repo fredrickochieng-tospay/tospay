@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,6 +16,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.ActivityTospayBinding;
@@ -22,17 +27,28 @@ import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
+import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
 
+import java.net.URISyntaxException;
+
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
 @SuppressWarnings("ConstantConditions")
 public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentViewModel>
         implements PaymentListener {
+
+    private static final String TAG = "TospayActivity";
+    private Socket mSocket;
+
+    private Emitter.Listener onNewMessage = args -> {
+        String jsonStr = args[0].toString();
+        Log.e(TAG, ": " + jsonStr);
+    };
 
     private PaymentViewModel mViewModel;
     private PaymentTransaction paymentTransaction;
@@ -97,6 +113,19 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
             dialogInterface.dismiss();
             finishWithError("Transaction canceled");
         });
+
+        try {
+            IO.Options mOptions = new IO.Options();
+            if (getAccessToken() != null) {
+                mOptions.query = "token=" + getAccessToken();
+                mSocket = IO.socket(ApiConstants.NOTIFICATION_URL, mOptions);
+            }
+        } catch (URISyntaxException e) {
+            Log.e(TAG, "sockets: ", e);
+        }
+
+        mSocket.on("notify", onNewMessage);
+        mSocket.connect();
     }
 
     @Override
@@ -228,5 +257,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
 
     public String getPaymentToken() {
         return paymentToken;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSocket.disconnect();
+        mSocket.off("notify", onNewMessage);
     }
 }
