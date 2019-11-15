@@ -509,19 +509,17 @@ public class GatewayRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<Result>> topup(String bearerToken, String type, String accountId,
-                                            String amount, String currency) {
-
-        Map<String, Object> request = new HashMap<>();
-        request.put("type", type);
+    public LiveData<Resource<Result>> topup(String bearerToken, String type, String accountId, String amount) {
 
         Map<String, String> account = new HashMap<>();
         account.put("id", accountId);
-        request.put("account", account);
 
         Map<String, String> transaction = new HashMap<>();
-        transaction.put("currency", currency);
         transaction.put("amount", amount);
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("type", type);
+        request.put("account", account);
         request.put("transaction", transaction);
 
         return new NetworkBoundResource<Result, Result>(mAppExecutors) {
