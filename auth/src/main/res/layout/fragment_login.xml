@@ -86,7 +86,7 @@
                     android:textColor="#4F5F8E"
                     android:textColorHighlight="@color/colorPrimary"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -116,7 +116,7 @@
                     android:textColor="#4F5F8E"
                     android:textColorHighlight="@color/colorPrimary"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>

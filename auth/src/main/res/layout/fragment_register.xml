@@ -74,7 +74,7 @@
                     android:nextFocusDown="@id/passwordEditText"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -103,7 +103,7 @@
                     android:nextFocusDown="@id/passwordEditText"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -132,7 +132,7 @@
                     android:nextFocusDown="@id/passwordEditText"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -162,7 +162,7 @@
                 android:text="@{registerViewModel.country.name}"
                 android:textColor="#4F5F8E"
                 android:textColorHint="#979797"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 tools:targetApi="m" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -186,7 +186,7 @@
                     android:singleLine="true"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -212,7 +212,7 @@
                     android:inputType="textPassword"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -240,7 +240,7 @@
                     android:inputType="textPassword"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>

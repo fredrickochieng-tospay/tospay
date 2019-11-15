@@ -67,11 +67,24 @@ public class SharedPrefManager {
     /**
      * Request access token
      *
-     * @return
+     * @return - token
      */
     public String getAccessToken() {
         if (getActiveUser() != null) {
             return getActiveUser().getToken();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns user bearer refresh token
+     *
+     * @return -token
+     */
+    public String getBearerRefreshToken() {
+        if (getActiveUser() != null) {
+            return getActiveUser().getRefreshToken();
         }
 
         return null;

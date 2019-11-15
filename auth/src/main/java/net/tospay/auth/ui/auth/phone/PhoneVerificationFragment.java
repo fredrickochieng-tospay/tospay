@@ -119,7 +119,12 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
                         tospayUser.setPhoneVerified(true);
                         getSharedPrefManager().setActiveUser(tospayUser);
                         mProgressDialog.dismiss();
-                        mListener.onLoginSuccess(tospayUser);
+
+                        NavHostFragment
+                                .findNavController(this).navigate(
+                                PhoneVerificationFragmentDirections
+                                        .actionNavigationPhoneVerificationToNavigationLogin());
+
                         break;
                 }
             }
