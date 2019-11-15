@@ -31,9 +31,10 @@ public class GatewayApiClient {
      * @return HttpLoggingInterceptor
      */
     private static HttpLoggingInterceptor loggingInterceptor() {
-        return new HttpLoggingInterceptor().
+        /*return new HttpLoggingInterceptor().
                 setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY
-                        : HttpLoggingInterceptor.Level.NONE);
+                        : HttpLoggingInterceptor.Level.NONE);*/
+        return new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
     }
 
     /**
