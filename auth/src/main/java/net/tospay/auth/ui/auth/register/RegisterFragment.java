@@ -301,7 +301,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
     @Override
     public void onSelectCountry(View view) {
-        CountryDialog.newInstance().show(getChildFragmentManager(), CountryDialog.TAG);
+        CountryDialog.newInstance(false).show(getChildFragmentManager(), CountryDialog.TAG);
     }
 
     @Override

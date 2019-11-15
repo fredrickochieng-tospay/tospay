@@ -22,8 +22,8 @@ public class CountryViewModel extends BaseViewModel {
         return resourceLiveData;
     }
 
-    public void countries() {
+    public void countries(boolean isOperators) {
         setIsLoading(true);
-        resourceLiveData = gatewayRepository.countries();
+        resourceLiveData = gatewayRepository.countries(isOperators);
     }
 }

@@ -32,14 +32,21 @@ import java.util.List;
 public class CountryDialog extends BottomSheetDialogFragment {
 
     public static final String TAG = CountryDialog.class.getSimpleName();
+    private static final String KEY_MOBILE_OPERATORS = "mobile_operators";
 
     private DialogCountryBinding mBinding;
     private CountrySelectedListener mListener;
     private List<Country> countryList;
     private CountryAdapter adapter;
+    private boolean isMobileOperators = true;
 
-    public static CountryDialog newInstance() {
-        return new CountryDialog();
+    public static CountryDialog newInstance(boolean isMobileOperators) {
+        CountryDialog fragment = new CountryDialog();
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_MOBILE_OPERATORS, isMobileOperators);
+
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -48,6 +55,10 @@ public class CountryDialog extends BottomSheetDialogFragment {
         setStyle(STYLE_NORMAL, R.style.BaseBottomSheetDialog);
         this.countryList = new ArrayList<>();
         this.adapter = new CountryAdapter(countryList);
+
+        if (getArguments() != null) {
+            isMobileOperators = getArguments().getBoolean(KEY_MOBILE_OPERATORS);
+        }
     }
 
     @Nullable
@@ -68,7 +79,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
         mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         mBinding.recyclerView.setAdapter(adapter);
 
-        mViewModel.countries();
+        mViewModel.countries(isMobileOperators);
         mViewModel.getResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {

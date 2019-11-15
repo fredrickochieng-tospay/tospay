@@ -31,6 +31,9 @@ public interface GatewayService {
     @GET("v1/allowed-countries")
     LiveData<ApiResponse<Result<List<Country>>>> countries();
 
+    @GET("v1/mobile-countries")
+    LiveData<ApiResponse<Result<List<Country>>>> mobileCountries();
+
     @GET("v1/mobile-operators/{countryId}")
     LiveData<ApiResponse<Result<List<Network>>>> networks(
             @Header("Authorization") String bearer,

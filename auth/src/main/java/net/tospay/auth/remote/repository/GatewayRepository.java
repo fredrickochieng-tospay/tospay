@@ -49,7 +49,7 @@ public class GatewayRepository {
         this.mAppExecutors = mAppExecutors;
     }
 
-    public LiveData<Resource<List<Country>>> countries() {
+    public LiveData<Resource<List<Country>>> countries(boolean isOperators) {
         return new NetworkBoundResource<List<Country>, Result<List<Country>>>(mAppExecutors) {
 
             private List<Country> resultsDb;
@@ -83,7 +83,11 @@ public class GatewayRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<List<Country>>>> createCall() {
-                return mGatewayService.countries();
+                if (isOperators) {
+                    return mGatewayService.mobileCountries();
+                } else {
+                    return mGatewayService.countries();
+                }
             }
         }.asLiveData();
     }

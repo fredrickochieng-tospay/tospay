@@ -82,7 +82,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public void onSelectCountryClick(View view) {
-        CountryDialog.newInstance()
+        CountryDialog.newInstance(true)
                 .show(getChildFragmentManager(), CountryDialog.TAG);
     }
 
