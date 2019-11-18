@@ -517,14 +517,11 @@ public class GatewayRepository {
 
         Map<String, String> account = new HashMap<>();
         account.put("id", accountId);
-
-        Map<String, String> transaction = new HashMap<>();
-        transaction.put("amount", amount);
+        account.put("type", type);
 
         Map<String, Object> request = new HashMap<>();
-        request.put("type", type);
         request.put("account", account);
-        request.put("transaction", transaction);
+        request.put("amount", amount);
 
         return new NetworkBoundResource<Result, Result>(mAppExecutors) {
 

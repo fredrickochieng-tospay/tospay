@@ -386,6 +386,7 @@ public class UserRepository {
                 user.setCountryCode(serverUser.getCountryCode());
                 user.setPhone(serverUser.getPhone());
                 user.setProfilePic(serverUser.getProfilePic());
+                user.setAddress(serverUser.getAddress());
 
                 sharedPrefManager.setActiveUser(user);
 
