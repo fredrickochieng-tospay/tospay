@@ -5,7 +5,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.model.Address;
+import net.tospay.auth.remote.request.AddressRequest;
 import net.tospay.auth.remote.request.LoginRequest;
+import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.request.OtpRequest;
 import net.tospay.auth.remote.request.RefreshTokenRequest;
 import net.tospay.auth.remote.request.RegisterRequest;
@@ -505,6 +508,55 @@ public class UserRepository {
             @Override
             protected LiveData<ApiResponse<Result<QrResponse>>> createCall() {
                 return mUserService.qrInfo(bearerToken, request);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Result>> updateAddress(String bearerToken, SharedPrefManager sharedPrefManager, AddressRequest request) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                Address address = new Address();
+                address.setCity(request.getCity());
+                address.setState(request.getState());
+                address.setPostalAddress(request.getPostalAddress());
+                address.setPostalCode(request.getPostalCode());
+
+                TospayUser user = sharedPrefManager.getActiveUser();
+                user.setAddress(address);
+                sharedPrefManager.setActiveUser(user);
+
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mUserService.updateAddress(bearerToken, request);
             }
         }.asLiveData();
     }

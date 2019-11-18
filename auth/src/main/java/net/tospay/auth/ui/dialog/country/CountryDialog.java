@@ -76,7 +76,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
         CountryViewModel mViewModel = ViewModelProviders.of(this, factory).get(CountryViewModel.class);
 
         mBinding.setCountryViewModel(mViewModel);
-        mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.HORIZONTAL));
         mBinding.recyclerView.setAdapter(adapter);
 
         mViewModel.countries(isMobileOperators);
