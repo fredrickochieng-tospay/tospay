@@ -11,7 +11,6 @@ import net.tospay.auth.remote.request.ResendEmailRequest;
 import net.tospay.auth.remote.request.VerifyEmailRequest;
 import net.tospay.auth.remote.request.VerifyPhoneRequest;
 import net.tospay.auth.remote.response.ApiResponse;
-import net.tospay.auth.remote.response.QrResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.model.Token;
 import net.tospay.auth.model.TospayUser;
