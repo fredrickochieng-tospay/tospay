@@ -186,12 +186,12 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         switch (accountType) {
             case AccountType.MOBILE:
                 NavHostFragment.findNavController(this)
-                        .navigate(R.id.navigation_link_mobile_account);
+                        .navigate(AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationLinkMobileAccount());
                 break;
 
             case AccountType.CARD:
                 NavHostFragment.findNavController(this)
-                        .navigate(R.id.navigation_link_card_account);
+                        .navigate(AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationLinkCardAccount());
                 break;
         }
     }

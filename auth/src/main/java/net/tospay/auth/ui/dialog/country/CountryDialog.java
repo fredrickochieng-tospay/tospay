@@ -25,6 +25,7 @@ import net.tospay.auth.model.Country;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.utils.SharedPrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
     private List<Country> countryList;
     private CountryAdapter adapter;
     private boolean isMobileOperators = true;
+    private CountryViewModel mViewModel;
 
     public static CountryDialog newInstance(boolean isMobileOperators) {
         CountryDialog fragment = new CountryDialog();
@@ -73,11 +75,14 @@ public class CountryDialog extends BottomSheetDialogFragment {
         AppExecutors mAppExecutors = new AppExecutors();
         GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);
-        CountryViewModel mViewModel = ViewModelProviders.of(this, factory).get(CountryViewModel.class);
+        mViewModel = ViewModelProviders.of(this, factory).get(CountryViewModel.class);
 
         mBinding.setCountryViewModel(mViewModel);
         mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), DividerItemDecoration.HORIZONTAL));
         mBinding.recyclerView.setAdapter(adapter);
+
+        SharedPrefManager mSharedPrefManager = SharedPrefManager.getInstance(view.getContext());
+        setBearerToken(mSharedPrefManager.getAccessToken());
 
         mViewModel.countries(isMobileOperators);
         mViewModel.getResourceLiveData().observe(this, resource -> {
@@ -100,6 +105,11 @@ public class CountryDialog extends BottomSheetDialogFragment {
                 }
             }
         });
+    }
+
+    public void setBearerToken(String token) {
+        String bearerToken = "Bearer " + token;
+        mViewModel.setBearerToken(bearerToken);
     }
 
     @Override

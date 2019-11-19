@@ -147,7 +147,7 @@
                 android:onClick="@{(view)->loginViewModel.onClick(view)}"
                 android:text="Forgot Password?"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="normal" />
 
             <LinearLayout

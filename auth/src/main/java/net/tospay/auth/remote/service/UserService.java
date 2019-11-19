@@ -59,7 +59,7 @@ public interface UserService {
     );
 
     @POST("v3/account/info/qr")
-    LiveData<ApiResponse<Result<QrResponse>>> qrInfo(
+    LiveData<ApiResponse<Result<TospayUser>>> qrInfo(
             @Header("Authorization") String bearer,
             @Body Map<String, String> request
     );

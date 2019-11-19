@@ -6,9 +6,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
 import net.tospay.auth.model.Address;
+import net.tospay.auth.model.Token;
+import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.request.AddressRequest;
 import net.tospay.auth.remote.request.LoginRequest;
-import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.request.OtpRequest;
 import net.tospay.auth.remote.request.RefreshTokenRequest;
 import net.tospay.auth.remote.request.RegisterRequest;
@@ -16,12 +18,8 @@ import net.tospay.auth.remote.request.ResendEmailRequest;
 import net.tospay.auth.remote.request.VerifyEmailRequest;
 import net.tospay.auth.remote.request.VerifyPhoneRequest;
 import net.tospay.auth.remote.response.ApiResponse;
-import net.tospay.auth.remote.response.QrResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.model.Token;
-import net.tospay.auth.model.TospayUser;
-import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.util.NetworkBoundResource;
 import net.tospay.auth.utils.AbsentLiveData;
@@ -471,31 +469,31 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<QrResponse>> qrInfo(String bearerToken, String result) {
+    public LiveData<Resource<TospayUser>> qrInfo(String bearerToken, String result) {
         Map<String, String> request = new HashMap<>();
         request.put("qr", result);
 
-        return new NetworkBoundResource<QrResponse, Result<QrResponse>>(mAppExecutors) {
+        return new NetworkBoundResource<TospayUser, Result<TospayUser>>(mAppExecutors) {
 
-            private QrResponse resultsDb;
+            private TospayUser resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<QrResponse> item) {
+            protected void saveCallResult(@NonNull Result<TospayUser> item) {
                 resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable QrResponse data) {
+            protected boolean shouldFetch(@Nullable TospayUser data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<QrResponse> loadFromDb() {
+            protected LiveData<TospayUser> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<QrResponse>() {
+                    return new LiveData<TospayUser>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -507,7 +505,7 @@ public class UserRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<QrResponse>>> createCall() {
+            protected LiveData<ApiResponse<Result<TospayUser>>> createCall() {
                 return mUserService.qrInfo(bearerToken, request);
             }
         }.asLiveData();
