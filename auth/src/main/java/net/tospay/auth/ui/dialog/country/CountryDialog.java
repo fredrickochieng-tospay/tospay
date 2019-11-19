@@ -19,12 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.tospay.auth.R;
-import net.tospay.auth.remote.GatewayApiClient;
+import net.tospay.auth.remote.ApiConstants;
+import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.databinding.DialogCountryBinding;
 import net.tospay.auth.model.Country;
+import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.utils.CountryFlagUtils;
 import net.tospay.auth.utils.SharedPrefManager;
 
 import java.util.ArrayList;
@@ -73,7 +76,8 @@ public class CountryDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         AppExecutors mAppExecutors = new AppExecutors();
-        GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class, ApiConstants.GATEWAY_BASE_URL);
+        GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);
         mViewModel = ViewModelProviders.of(this, factory).get(CountryViewModel.class);
 
@@ -136,10 +140,12 @@ public class CountryDialog extends BottomSheetDialogFragment {
     private class ViewHolder extends RecyclerView.ViewHolder {
 
         final TextView text;
+        final TextView countryFlag;
 
         ViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_country_view, parent, false));
             text = itemView.findViewById(R.id.text);
+            countryFlag = itemView.findViewById(R.id.countryFlag);
             itemView.setOnClickListener(v -> {
                 if (mListener != null) {
                     mListener.onCountrySelected(countryList.get(getAdapterPosition()));
@@ -167,6 +173,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Country country = countryList.get(position);
             holder.text.setText(country.getName());
+            holder.countryFlag.setText(CountryFlagUtils.flag(country.getIso()));
         }
 
         @Override

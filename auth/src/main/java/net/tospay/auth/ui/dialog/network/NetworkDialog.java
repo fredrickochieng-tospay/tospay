@@ -19,9 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.tospay.auth.R;
-import net.tospay.auth.remote.GatewayApiClient;
 import net.tospay.auth.databinding.DialogNetworkBinding;
 import net.tospay.auth.model.Network;
+import net.tospay.auth.remote.ApiConstants;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.GatewayViewModelFactory;
@@ -62,7 +64,11 @@ public class NetworkDialog extends BottomSheetDialogFragment {
         }
 
         AppExecutors mAppExecutors = new AppExecutors();
-        GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
+
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class,
+                ApiConstants.GATEWAY_BASE_URL);
+
+        GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);
         mViewModel = ViewModelProviders.of(this, factory).get(NetworkViewModel.class);
 

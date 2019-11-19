@@ -14,12 +14,14 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
-import net.tospay.auth.remote.GatewayApiClient;
-import net.tospay.auth.remote.UserClient;
 import net.tospay.auth.interfaces.PaymentListener;
-import net.tospay.auth.remote.util.AppExecutors;
+import net.tospay.auth.remote.ApiConstants;
+import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.service.GatewayService;
+import net.tospay.auth.remote.service.UserService;
+import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.utils.SharedPrefManager;
 
@@ -78,8 +80,15 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
-        mUserRepository = new UserRepository(mAppExecutors, UserClient.getInstance());
-        mGatewayRepository = new GatewayRepository(mAppExecutors, GatewayApiClient.getInstance());
+
+        UserService userService =
+                ServiceGenerator.createService(UserService.class, ApiConstants.USER_BASE_URL);
+        mUserRepository = new UserRepository(mAppExecutors, userService);
+
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class,
+                ApiConstants.GATEWAY_BASE_URL);
+        mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
+
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());
         mViewModel = getViewModel();
         setBearerToken(mSharedPrefManager.getAccessToken());

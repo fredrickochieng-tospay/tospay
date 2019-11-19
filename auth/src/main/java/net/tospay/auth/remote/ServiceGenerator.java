@@ -1,10 +1,5 @@
 package net.tospay.auth.remote;
 
-import androidx.annotation.NonNull;
-
-import net.tospay.auth.BuildConfig;
-import net.tospay.auth.remote.service.GatewayService;
-import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.remote.util.LiveDataCallAdapterFactory;
 import net.tospay.auth.remote.util.RequestInterceptor;
 
@@ -18,10 +13,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static net.tospay.auth.remote.ApiConstants.CONNECT_TIMEOUT;
 import static net.tospay.auth.remote.ApiConstants.READ_TIMEOUT;
-import static net.tospay.auth.remote.ApiConstants.USER_BASE_URL;
 import static net.tospay.auth.remote.ApiConstants.WRITE_TIMEOUT;
 
-public class UserClient {
+public class ServiceGenerator {
 
     /**
      * Logs network requests
@@ -55,26 +49,27 @@ public class UserClient {
     /**
      * Creates an instance of retrofit
      *
-     * @param okHttpClient - OkHttpClient
      * @return Retrofit
      */
-    private static Retrofit retrofitClient(@NonNull OkHttpClient okHttpClient) {
+    private static Retrofit retrofitClient(String url) {
         return new Retrofit.Builder()
-                .baseUrl(USER_BASE_URL)
-                .client(okHttpClient)
+                .baseUrl(url)
+                .client(okHttpClient(loggingInterceptor()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 
-
     /**
      * Creates the client instance
      *
-     * @return GatewayService
+     * @param serviceClass - interface class
+     * @param url          - request url
+     * @param <S>          -interface class
+     * @return S
      */
-    public static UserService getInstance() {
-        return retrofitClient(okHttpClient(loggingInterceptor())).create(UserService.class);
+    public static <S> S createService(Class<S> serviceClass, String url) {
+        return retrofitClient(url).create(serviceClass);
     }
 }
