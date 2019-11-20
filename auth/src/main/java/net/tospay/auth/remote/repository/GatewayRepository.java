@@ -13,7 +13,6 @@ import net.tospay.auth.remote.response.MobileResponse;
 import net.tospay.auth.remote.response.PaymentResponse;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
-import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.response.WalletTransactionResponse;
 import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.interfaces.AccountType;
@@ -435,27 +434,27 @@ public class GatewayRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<TransferResponse>> transfer(String bearerToken, Map<String, Object> param) {
-        return new NetworkBoundResource<TransferResponse, Result<TransferResponse>>(mAppExecutors) {
-            private TransferResponse resultsDb;
+    public LiveData<Resource<Result>> transfer(String bearerToken, Map<String, Object> param) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+            private Result resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<TransferResponse> item) {
-                resultsDb = item.getData();
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable TransferResponse data) {
+            protected boolean shouldFetch(@Nullable Result data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<TransferResponse> loadFromDb() {
+            protected LiveData<Result> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<TransferResponse>() {
+                    return new LiveData<Result>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -467,7 +466,7 @@ public class GatewayRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
+            protected LiveData<ApiResponse<Result>> createCall() {
                 return mGatewayService.transfer(bearerToken, param);
             }
         }.asLiveData();

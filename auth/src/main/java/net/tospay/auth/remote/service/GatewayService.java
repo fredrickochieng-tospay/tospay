@@ -11,7 +11,6 @@ import net.tospay.auth.remote.response.MobileResponse;
 import net.tospay.auth.remote.response.PaymentResponse;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
-import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.response.WalletTransactionResponse;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
@@ -76,7 +75,7 @@ public interface GatewayService {
     );
 
     @POST("v1/transfer")
-    LiveData<ApiResponse<Result<TransferResponse>>> transfer(
+    LiveData<ApiResponse<Result>> transfer(
             @Header("Authorization") String bearer,
             @Body Map<String, Object> request
     );
