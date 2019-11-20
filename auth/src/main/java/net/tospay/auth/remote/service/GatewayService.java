@@ -13,7 +13,6 @@ import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.response.WalletTransactionResponse;
-import net.tospay.auth.remote.response.WithdrawResponse;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 
@@ -83,7 +82,7 @@ public interface GatewayService {
     );
 
     @POST("v1/withdraw")
-    LiveData<ApiResponse<Result<WithdrawResponse>>> withdraw(
+    LiveData<ApiResponse<Result>> withdraw(
             @Header("Authorization") String bearer,
             @Body Map<String, Object> request
     );

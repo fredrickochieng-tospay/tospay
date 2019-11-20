@@ -15,7 +15,6 @@ import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.response.WalletTransactionResponse;
-import net.tospay.auth.remote.response.WithdrawResponse;
 import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
@@ -474,28 +473,28 @@ public class GatewayRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<WithdrawResponse>> withdraw(String bearerToken, Map<String, Object> param) {
-        return new NetworkBoundResource<WithdrawResponse, Result<WithdrawResponse>>(mAppExecutors) {
+    public LiveData<Resource<Result>> withdraw(String bearerToken, Map<String, Object> param) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
 
-            private WithdrawResponse resultsDb;
+            private Result resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<WithdrawResponse> item) {
-                resultsDb = item.getData();
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable WithdrawResponse data) {
+            protected boolean shouldFetch(@Nullable Result data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<WithdrawResponse> loadFromDb() {
+            protected LiveData<Result> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<WithdrawResponse>() {
+                    return new LiveData<Result>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -507,7 +506,7 @@ public class GatewayRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<WithdrawResponse>>> createCall() {
+            protected LiveData<ApiResponse<Result>> createCall() {
                 return mGatewayService.withdraw(bearerToken, param);
             }
         }.asLiveData();

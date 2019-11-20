@@ -49,7 +49,6 @@ public class CountryDialog extends BottomSheetDialogFragment {
         CountryDialog fragment = new CountryDialog();
         Bundle args = new Bundle();
         args.putBoolean(KEY_MOBILE_OPERATORS, isMobileOperators);
-
         fragment.setArguments(args);
         return fragment;
     }
