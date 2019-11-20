@@ -45,7 +45,6 @@ public class ApiResponse<T> {
                     message = response.errorBody().string();
                     TospayException exception = getTospayException(message);
                     message = exception.getErrorMessage();
-                    Log.e(TAG, "ApiResponse: " + message);
                 } catch (IOException ignored) {
                     Log.e(TAG, "error while parsing response: ", ignored);
                 }

@@ -44,6 +44,8 @@ public class TospayUser implements Parcelable {
     @Expose
     private String lastname;
 
+    @SerializedName("name")
+    @Expose
     private String name;
 
     @SerializedName("country_code")
