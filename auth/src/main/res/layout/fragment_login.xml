@@ -42,6 +42,7 @@
                 android:layout_marginEnd="@dimen/default_space_24"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:text="Welcome!"
+                android:textColor="#0e5faa"
                 android:textSize="20sp" />
 
             <TextView
@@ -51,7 +52,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="@dimen/default_space_24"
                 android:fontFamily="@font/proxima_nova_regular"
-                android:text="@string/log_into_your_account" />
+                android:text="@string/log_into_your_account"
+                android:textColor="#0ea9ca"
+                android:textSize="17sp" />
 
             <net.tospay.auth.view.ErrorLayout
                 android:layout_width="match_parent"
@@ -127,7 +130,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_space_16"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/default_space_24"
                 android:layout_marginEnd="@dimen/default_space_16"
                 android:enabled="@{loginViewModel.enableLoginButton}"
                 android:onClick="@{(view)->loginViewModel.onClick(view)}"
