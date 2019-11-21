@@ -244,10 +244,6 @@ public class TospayUser implements Parcelable {
         this.lastname = lastname;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCountryCode() {
         return countryCode;
     }
@@ -344,7 +340,15 @@ public class TospayUser implements Parcelable {
         this.staticQr = staticQr;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
+        if (firstname == null && lastname == null) {
+            return name;
+        }
+
         return firstname + " " + lastname;
     }
 

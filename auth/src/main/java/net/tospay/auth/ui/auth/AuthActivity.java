@@ -46,7 +46,6 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
 
     @Override
     public void onLoginFailed() {
-        Log.e("TAG", "onLoginFailed: ");
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
