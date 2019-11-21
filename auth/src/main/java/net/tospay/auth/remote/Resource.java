@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import static net.tospay.auth.remote.Status.ERROR;
 import static net.tospay.auth.remote.Status.LOADING;
-import static net.tospay.auth.remote.Status.LOGOUT;
 import static net.tospay.auth.remote.Status.RE_AUTHENTICATE;
 import static net.tospay.auth.remote.Status.SUCCESS;
 
@@ -49,12 +48,8 @@ public class Resource<T> {
         return new Resource<>(LOADING, data, null);
     }
 
-    public static <T> Resource<T> reAuthenticate(String msg,@Nullable T data) {
+    public static <T> Resource<T> reAuthenticate(String msg, @Nullable T data) {
         return new Resource<>(RE_AUTHENTICATE, data, msg);
-    }
-
-    public static <T> Resource<T> logout(@Nullable T data) {
-        return new Resource<>(LOGOUT, data, null);
     }
 
     @Override

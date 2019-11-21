@@ -72,6 +72,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                     result.addSource(dbSource,
                             newData -> setValue(Resource
                                     .reAuthenticate(response.errorMessage, newData)));
+
                 } else {
                     result.addSource(dbSource,
                             newData -> setValue(Resource

@@ -11,5 +11,4 @@ public enum Status {
     ERROR,
     LOADING,
     RE_AUTHENTICATE,
-    LOGOUT
 }

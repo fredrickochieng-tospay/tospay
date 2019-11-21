@@ -39,19 +39,25 @@ public class ApiResponse<T> {
             body = response.body();
             errorMessage = null;
         } else {
-            String message = null;
-            if (response.errorBody() != null) {
-                try {
-                    message = response.errorBody().string();
-                    TospayException exception = getTospayException(message);
-                    message = exception.getErrorMessage();
-                } catch (IOException ignored) {
-                    Log.e(TAG, "error while parsing response: ", ignored);
-                }
-            }
 
-            if (message == null || message.trim().length() == 0) {
-                message = response.message();
+            String message = null;
+            if (response.code() == 502) {
+                message = "Oop! Service is currently down. Please try again later.";
+            } else {
+
+                if (response.errorBody() != null) {
+                    try {
+                        message = response.errorBody().string();
+                        TospayException exception = getTospayException(message);
+                        message = exception.getErrorMessage();
+                    } catch (IOException ignored) {
+                        Log.e(TAG, "error while parsing response: ", ignored);
+                    }
+                }
+
+                if (message == null || message.trim().length() == 0) {
+                    message = response.message();
+                }
             }
 
             errorMessage = message;
