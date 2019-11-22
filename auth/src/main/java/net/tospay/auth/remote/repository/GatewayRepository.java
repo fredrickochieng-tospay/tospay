@@ -192,10 +192,10 @@ public class GatewayRepository {
                 AccountTitle title;
                 List<Account> accountList;
 
+                //Wallets
                 if (showWallet) {
-                    //Wallets
                     title = new AccountTitle();
-                    title.setName("Wallet Account");
+                    title.setName("myWallet Accounts");
                     title.setAccountType(AccountType.WALLET);
                     accountTypeList.add(title);
                     accountTypeList.addAll(accounts.getWallet());
