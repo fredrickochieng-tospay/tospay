@@ -25,7 +25,7 @@ public final class BindingUtils {
 
         RequestOptions options = new RequestOptions()
                 .placeholder(R.drawable.ic_loading)
-                .error(R.drawable.ic_tospay_logo_original);
+                .error(R.drawable.ic_placeholder);
 
         Glide.with(context)
                 .setDefaultRequestOptions(options)
@@ -45,7 +45,7 @@ public final class BindingUtils {
             imageView.setImageResource(R.drawable.ic_bank);
 
         } else {
-            imageView.setImageResource(R.drawable.ic_loading);
+            imageView.setImageResource(R.drawable.ic_placeholder);
         }
     }
 
