@@ -9,7 +9,7 @@
 
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,107 +17,113 @@
         tools:context=".ui.auth.email.EmailVerificationFragment">
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_space_24"
-            android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_validate_email" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/proxima_nova_bold"
-                android:text="@string/enter_verification_code"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/proxima_nova_regular"
                 android:gravity="center_horizontal"
-                android:text="@string/email_verification_message" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/emailTextView"
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_validate_email" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/proxima_nova_bold"
+                    android:text="@string/enter_verification_code"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:gravity="center_horizontal"
+                    android:text="@string/email_verification_message" />
+
+                <TextView
+                    android:id="@+id/emailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/proxima_nova_semibold"
+                    android:text="@{emailViewModel.user.email}"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp"
+                    tools:text="janedoe@gmail.com" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/codeEditText"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:gravity="center"
+                    android:hint="Enter code"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:textAllCaps="true"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/btn_verify_email"
+                    style="@style/Tospay.Button.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginBottom="8dp"
+                    android:enabled="@{emailViewModel.enableLoginButton}"
+                    android:onClick="@{(view)->emailViewModel.onClick(view)}"
+                    android:text="@string/verify_code"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/proxima_nova_semibold"
-                android:text="@{emailViewModel.user.email}"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                tools:text="janedoe@gmail.com" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/codeEditText"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center"
-                android:hint="Enter code"
-                android:inputType="number"
-                android:maxLength="6"
-                android:textAllCaps="true"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btn_verify_email"
-                style="@style/Tospay.Button.Large"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginLeft="28dp"
+                android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="28dp"
-                android:layout_marginRight="28dp"
-                android:layout_marginBottom="8dp"
-                android:enabled="@{emailViewModel.enableLoginButton}"
-                android:onClick="@{(view)->emailViewModel.onClick(view)}"
-                android:text="@string/verify_code"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:gravity="center_horizontal"
+                    android:text="@string/resend_message" />
+
+                <Button
+                    android:id="@+id/btn_resend"
+                    style="@style/Tospay.Button.Transparent.Border"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:onClick="@{(view)->emailViewModel.onClick(view)}"
+                    android:text="@string/resend"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center_horizontal"
-                android:text="@string/resend_message" />
-
-            <Button
-                android:id="@+id/btn_resend"
-                style="@style/Tospay.Button.Transparent.Border"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:onClick="@{(view)->emailViewModel.onClick(view)}"
-                android:text="@string/resend"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </ScrollView>
 
 </layout>

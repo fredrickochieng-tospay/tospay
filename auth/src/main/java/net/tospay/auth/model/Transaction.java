@@ -7,9 +7,13 @@ import java.util.Date;
 
 public class Transaction {
 
-    @SerializedName("id")
+    @SerializedName("transactionId")
     @Expose
-    private String id;
+    private String transactionId;
+
+    @SerializedName("transactionTransferId")
+    @Expose
+    private String transactionTransferId;
 
     @SerializedName("type")
     @Expose
@@ -19,51 +23,47 @@ public class Transaction {
     @Expose
     private String sourceChannel;
 
-    @SerializedName("requested_amount")
+    @SerializedName("amount")
     @Expose
-    private String requestedAmount;
+    private Double amount;
 
-    @SerializedName("requested_currency")
+    @SerializedName("currency")
     @Expose
-    private String requestedCurrency;
+    private String currency;
 
-    @SerializedName("collected_amount")
+    @SerializedName("charge")
     @Expose
-    private String collectedAmount;
+    private String charge;
 
-    @SerializedName("collected_currency")
+    @SerializedName("date_created")
     @Expose
-    private String collectedCurrency;
+    private String dateCreated;
 
-    @SerializedName("state")
+    @SerializedName("date_updated")
     @Expose
-    private String state;
+    private String dateUpdated;
 
-    @SerializedName("date")
+    @SerializedName("status")
     @Expose
-    private Date date;
-
-    @SerializedName("profile_pic")
-    @Expose
-    private String profilePic;
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    @SerializedName("transfer_type")
-    @Expose
-    private String transferType;
+    private String status;
 
     public Transaction() {
     }
 
-    public String getId() {
-        return id;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getTransactionTransferId() {
+        return transactionTransferId;
+    }
+
+    public void setTransactionTransferId(String transactionTransferId) {
+        this.transactionTransferId = transactionTransferId;
     }
 
     public String getType() {
@@ -82,75 +82,51 @@ public class Transaction {
         this.sourceChannel = sourceChannel;
     }
 
-    public String getRequestedAmount() {
-        return requestedAmount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setRequestedAmount(String requestedAmount) {
-        this.requestedAmount = requestedAmount;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
-    public String getRequestedCurrency() {
-        return requestedCurrency;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setRequestedCurrency(String requestedCurrency) {
-        this.requestedCurrency = requestedCurrency;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
-    public String getCollectedAmount() {
-        return collectedAmount;
+    public String getCharge() {
+        return charge;
     }
 
-    public void setCollectedAmount(String collectedAmount) {
-        this.collectedAmount = collectedAmount;
+    public void setCharge(String charge) {
+        this.charge = charge;
     }
 
-    public String getCollectedCurrency() {
-        return collectedCurrency;
+    public String getDateCreated() {
+        return dateCreated;
     }
 
-    public void setCollectedCurrency(String collectedCurrency) {
-        this.collectedCurrency = collectedCurrency;
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public String getState() {
-        return state;
+    public String getDateUpdated() {
+        return dateUpdated;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public Date getDate() {
-        return date;
+    public String getStatus() {
+        return status;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTransferType() {
-        return transferType;
-    }
-
-    public void setTransferType(String transferType) {
-        this.transferType = transferType;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

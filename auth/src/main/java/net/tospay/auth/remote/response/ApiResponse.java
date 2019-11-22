@@ -63,7 +63,6 @@ public class ApiResponse<T> {
             errorMessage = message;
             body = null;
         }
-
     }
 
     /**

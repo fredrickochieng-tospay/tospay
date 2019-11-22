@@ -19,6 +19,8 @@ public class SharedPrefManager {
     private static final String PREF_ACTIVE_USER = "pref_active_user";
     private static final String KEY_TOKEN_EXPIRY = "token_expiry";
     private static final String KEY_REFRESHED_TOKEN = "token";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PASSWORD = "password";
 
     private static SharedPreferences sharedPref;
     private Context context;
@@ -124,6 +126,30 @@ public class SharedPrefManager {
     public void save(String name, boolean value) {
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putBoolean(name, value);
+        editor.apply();
+    }
+
+    /**
+     * Read stored value
+     *
+     * @param name - key
+     * @param def  - default value
+     * @return boolean
+     */
+    public String read(String name, String def) {
+        SharedPreferences prefs = getSettings();
+        return prefs.getString(name, def);
+    }
+
+    /**
+     * save shared pref data
+     *
+     * @param name  - key
+     * @param value - value
+     */
+    public void save(String name, String value) {
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(name, value);
         editor.apply();
     }
 

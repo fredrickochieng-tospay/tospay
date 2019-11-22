@@ -24,6 +24,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
+import net.tospay.auth.utils.SharedPrefManager;
 
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>
         implements LoginNavigator {
@@ -35,6 +36,9 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     private EditText passwordEditText;
     private ProgressDialog mProgressDialog;
     private NavController navController;
+
+    private String email;
+    private String password;
 
     @Override
     public int getBindingVariable() {
@@ -179,8 +183,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public void login(View view) {
-        String email = emailEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
+        email = emailEditText.getText().toString();
+        password = passwordEditText.getText().toString();
 
         mViewModel.getEmail().setValue(email);
         mViewModel.getPassword().setValue(password);
@@ -214,6 +218,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
                     if (user != null) {
                         getSharedPrefManager().setActiveUser(user);
+                        getSharedPrefManager().save(SharedPrefManager.KEY_EMAIL, email);
+                        getSharedPrefManager().save(SharedPrefManager.KEY_PASSWORD, password);
 
                         if (!user.isEmailVerified()) {
                             navController.navigate(R.id.navigation_email_verification);
