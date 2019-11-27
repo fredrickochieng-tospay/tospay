@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
+import net.tospay.auth.utils.NetworkUtils;
 import net.tospay.auth.utils.SharedPrefManager;
 
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>
@@ -192,8 +194,12 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         hideKeyboard();
         mProgressDialog.show();
 
-        mViewModel.login();
-        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            mViewModel.login();
+            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        } else {
+            Toast.makeText(view.getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void handleResponse(Resource<TospayUser> resource) {

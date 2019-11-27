@@ -134,6 +134,7 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
+                reloadBearerToken();
                 validateToken();
             }
         }

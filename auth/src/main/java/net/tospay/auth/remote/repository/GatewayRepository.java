@@ -135,7 +135,7 @@ public class GatewayRepository {
      * @param param request
      * @return LiveData
      */
-    public LiveData<Resource<PaymentValidationResponse>> validate(Map<String, String> param) {
+    public LiveData<Resource<PaymentValidationResponse>> validate(String bearerToken, Map<String, String> param) {
         return new NetworkBoundResource<PaymentValidationResponse, Result<PaymentValidationResponse>>(mAppExecutors) {
 
             private PaymentValidationResponse resultsDb;
@@ -169,7 +169,7 @@ public class GatewayRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<PaymentValidationResponse>>> createCall() {
-                return mGatewayService.validate(param);
+                return mGatewayService.validate(bearerToken, param);
             }
         }.asLiveData();
     }

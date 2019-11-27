@@ -48,7 +48,7 @@ public class PaymentViewModel extends BaseViewModel {
     public void checkTransactionStatus(String token) {
         Map<String, String> param = new HashMap<>();
         param.put("token", token);
-        responseLiveData = gatewayRepository.validate(param);
+        responseLiveData = gatewayRepository.validate((String) getBearerToken().get(), param);
     }
 
     public LiveData<Resource<PaymentValidationResponse>> getResponseLiveData() {

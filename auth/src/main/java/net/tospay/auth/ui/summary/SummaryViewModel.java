@@ -33,7 +33,7 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
     public void validate(String token) {
         Map<String, String> param = new HashMap<>();
         param.put("token", token);
-        responseLiveData = repository.validate(param);
+        responseLiveData = repository.validate(getBearerToken().get(), param);
     }
 
     public LiveData<Resource<PaymentValidationResponse>> getResponseLiveData() {

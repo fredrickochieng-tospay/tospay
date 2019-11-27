@@ -42,6 +42,7 @@ public interface GatewayService {
 
     @POST("v1/validate-payment")
     LiveData<ApiResponse<Result<PaymentValidationResponse>>> validate(
+            @Header("Authorization") String bearer,
             @Body Map<String, String> request
     );
 
