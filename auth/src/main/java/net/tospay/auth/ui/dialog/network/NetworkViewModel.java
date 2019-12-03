@@ -22,8 +22,8 @@ public class NetworkViewModel extends BaseViewModel {
         return resourceLiveData;
     }
 
-    public void networks(int countryId) {
+    public void networks(String iso) {
         setIsLoading(true);
-        resourceLiveData = gatewayRepository.networks((String) getBearerToken().get(), countryId);
+        resourceLiveData = gatewayRepository.networks((String) getBearerToken().get(), iso);
     }
 }

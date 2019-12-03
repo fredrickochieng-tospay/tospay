@@ -90,7 +90,7 @@ public class GatewayRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<List<Network>>> networks(String bearerToken, int countryId) {
+    public LiveData<Resource<List<Network>>> networks(String bearerToken, String iso) {
         return new NetworkBoundResource<List<Network>, Result<List<Network>>>(mAppExecutors) {
 
             private List<Network> resultsDb;
@@ -124,7 +124,7 @@ public class GatewayRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<List<Network>>>> createCall() {
-                return mGatewayService.networks(bearerToken, countryId);
+                return mGatewayService.networks(bearerToken, iso);
             }
         }.asLiveData();
     }

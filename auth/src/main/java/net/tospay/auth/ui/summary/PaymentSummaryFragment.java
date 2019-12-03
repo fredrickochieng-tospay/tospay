@@ -1,6 +1,9 @@
 package net.tospay.auth.ui.summary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +24,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.utils.NetworkUtils;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
@@ -58,7 +62,8 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         mViewModel = getViewModel();
         mViewModel.setNavigator(this);
         mBinding.setSummaryViewModel(mViewModel);
-        validateToken();
+
+        validatePaymentToken();
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -70,9 +75,28 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         requireActivity().getOnBackPressedDispatcher().addCallback(callback);
     }
 
-    private void validateToken() {
-        mViewModel.validate(token);
-        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+    private void showNetworkErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Connection Failed");
+        builder.setMessage(getString(R.string.internet_error));
+        builder.setPositiveButton("Retry", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            validatePaymentToken();
+        });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            mListener.onPaymentFailed(new TospayException("Transaction canceled"));
+        });
+        builder.show();
+    }
+
+    private void validatePaymentToken() {
+        if (NetworkUtils.isNetworkAvailable(getContext())) {
+            mViewModel.validatePaymentToken(token);
+            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        } else {
+            showNetworkErrorDialog();
+        }
     }
 
     private void handleResponse(Resource<PaymentValidationResponse> resource) {
@@ -135,7 +159,7 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
         if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
-                validateToken();
+                validatePaymentToken();
             }
         }
     }

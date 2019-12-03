@@ -15,7 +15,6 @@ import net.tospay.auth.ui.base.BaseViewModel;
 
 public class LoginViewModel extends BaseViewModel<LoginNavigator> implements View.OnClickListener {
 
-    public ObservableBoolean enableLoginButton;
     private MutableLiveData<String> mEmail;
     private MutableLiveData<String> mPassword;
     private UserRepository userRepository;
@@ -23,7 +22,6 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> implements Vie
 
     public LoginViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.enableLoginButton = new ObservableBoolean(false);
         this.mEmail = new MutableLiveData<>();
         this.mPassword = new MutableLiveData<>();
     }

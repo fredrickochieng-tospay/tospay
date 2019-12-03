@@ -119,13 +119,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
             if (getAccessToken() != null) {
                 mOptions.query = "token=" + getAccessToken();
                 mSocket = IO.socket(ApiConstants.NOTIFICATION_URL, mOptions);
+                mSocket.on("notify", onNewMessage);
+                mSocket.connect();
             }
         } catch (URISyntaxException e) {
             Log.e(TAG, "sockets: ", e);
         }
-
-        mSocket.on("notify", onNewMessage);
-        mSocket.connect();
     }
 
     @Override
@@ -262,7 +261,9 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSocket.disconnect();
-        mSocket.off("notify", onNewMessage);
+        if (mSocket != null) {
+            mSocket.disconnect();
+            mSocket.off("notify", onNewMessage);
+        }
     }
 }

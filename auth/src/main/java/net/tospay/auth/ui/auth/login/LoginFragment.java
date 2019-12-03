@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -31,6 +33,7 @@ import net.tospay.auth.utils.SharedPrefManager;
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>
         implements LoginNavigator {
 
+    private FragmentLoginBinding mBinding;
     private LoginViewModel mViewModel;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
@@ -71,6 +74,11 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
             if (!TextUtils.isEmpty(s)) {
                 if (isEmailValid(s.toString())) {
                     emailInputLayout.setErrorEnabled(false);
@@ -80,11 +88,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     emailInputLayout.setError(getString(R.string.invalid_email));
                 }
             }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            validateInputs();
         }
     };
 
@@ -100,18 +103,20 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() < 6) {
-                passwordInputLayout.setErrorEnabled(true);
-                passwordInputLayout.setError(getString(R.string.invalid_password));
-            } else {
-                passwordInputLayout.setErrorEnabled(false);
-                passwordInputLayout.setError(null);
-            }
+
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            validateInputs();
+            if (!TextUtils.isEmpty(s)) {
+                if (s.length() < 6) {
+                    passwordInputLayout.setErrorEnabled(true);
+                    passwordInputLayout.setError(getString(R.string.invalid_password));
+                } else {
+                    passwordInputLayout.setErrorEnabled(false);
+                    passwordInputLayout.setError(null);
+                }
+            }
         }
     };
 
@@ -119,7 +124,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FragmentLoginBinding mBinding = getViewDataBinding();
+        mBinding = getViewDataBinding();
         mBinding.setLoginViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
@@ -132,13 +137,17 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         emailEditText.addTextChangedListener(emailTextWatcher);
         passwordEditText.addTextChangedListener(passwordTextWatcher);
 
-        validateInputs();
-
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Authenticating. Please wait...");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setCanceledOnTouchOutside(false);
+
+        if (getSharedPrefManager().read(SharedPrefManager.KEY_REMEMBER_ME, false)) {
+            if (getSharedPrefManager().getActiveUser() != null) {
+                emailEditText.setText(getSharedPrefManager().getActiveUser().getEmail());
+            }
+        }
 
         navController = Navigation.findNavController(view);
 
@@ -150,17 +159,9 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(callback);
-    }
 
-    /**
-     * Checks if email and password are valid to enable login button
-     */
-    private void validateInputs() {
-        if (isEmailValid(emailEditText.getText().toString()) && isPasswordValid(passwordEditText.getText().toString())) {
-            mViewModel.enableLoginButton.set(true);
-        } else {
-            mViewModel.enableLoginButton.set(false);
-        }
+        mBinding.rememberMeCheckbox.setOnCheckedChangeListener((compoundButton, b) ->
+                getSharedPrefManager().save(SharedPrefManager.KEY_REMEMBER_ME, b));
     }
 
     /**
@@ -185,6 +186,19 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
     @Override
     public void login(View view) {
+        emailInputLayout.setError(null);
+        passwordInputLayout.setError(null);
+
+        if (!isEmailValid(emailEditText.getText().toString())) {
+            emailInputLayout.setError(getString(R.string.invalid_email));
+            return;
+        }
+
+        if (!isPasswordValid(passwordEditText.getText().toString())) {
+            passwordInputLayout.setError(getString(R.string.invalid_password));
+            return;
+        }
+
         email = emailEditText.getText().toString();
         password = passwordEditText.getText().toString();
 
@@ -192,13 +206,13 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         mViewModel.getPassword().setValue(password);
 
         hideKeyboard();
-        mProgressDialog.show();
 
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             mViewModel.login();
             mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+
         } else {
-            Toast.makeText(view.getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -206,12 +220,16 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         if (resource != null) {
             switch (resource.status) {
                 case ERROR:
+
+                case RE_AUTHENTICATE:
+                    passwordEditText.setText(null);
                     mProgressDialog.dismiss();
                     mViewModel.setIsError(true);
                     mViewModel.setErrorMessage(resource.message);
                     break;
 
                 case LOADING:
+                    mProgressDialog.show();
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;

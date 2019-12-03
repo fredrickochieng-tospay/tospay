@@ -1,11 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="partner_logo">@style/PartnerLogoStyle</item>
+        <item name="partner_banner">@style/PartnerBannerStyle</item>
+    </style>
+
+    <style name="PartnerLogoStyle">
+        <item name="android:src">@mipmap/ic_launcher</item>
+    </style>
+
+    <style name="PartnerBannerStyle">
+        <item name="android:src">@drawable/header</item>
     </style>
 
 </resources>

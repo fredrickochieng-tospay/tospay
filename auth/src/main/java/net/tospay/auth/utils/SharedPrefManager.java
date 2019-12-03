@@ -16,6 +16,7 @@ import java.util.Date;
  */
 public class SharedPrefManager {
 
+    public static final String KEY_REMEMBER_ME = "remember_me";
     private static final String PREF_ACTIVE_USER = "pref_active_user";
     private static final String KEY_TOKEN_EXPIRY = "token_expiry";
     private static final String KEY_REFRESHED_TOKEN = "token";

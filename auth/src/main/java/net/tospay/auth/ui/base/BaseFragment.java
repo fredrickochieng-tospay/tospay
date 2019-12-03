@@ -81,12 +81,10 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
 
-        UserService userService =
-                ServiceGenerator.createService(UserService.class, ApiConstants.USER_BASE_URL);
+        UserService userService = ServiceGenerator.createService(UserService.class);
         mUserRepository = new UserRepository(mAppExecutors, userService);
 
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class,
-                ApiConstants.GATEWAY_BASE_URL);
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
         mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
 
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());

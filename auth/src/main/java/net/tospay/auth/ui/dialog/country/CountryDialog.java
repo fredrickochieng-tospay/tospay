@@ -75,7 +75,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         AppExecutors mAppExecutors = new AppExecutors();
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class, ApiConstants.GATEWAY_BASE_URL);
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
         GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);
         mViewModel = ViewModelProviders.of(this, factory).get(CountryViewModel.class);

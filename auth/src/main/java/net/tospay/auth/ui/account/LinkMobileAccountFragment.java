@@ -93,8 +93,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
             return;
         }
 
-        NetworkDialog.newInstance(Integer.valueOf(country.getId()))
-                .show(getChildFragmentManager(), NetworkDialog.TAG);
+        NetworkDialog.newInstance(country.getIso()).show(getChildFragmentManager(), NetworkDialog.TAG);
     }
 
     @Override

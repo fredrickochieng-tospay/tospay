@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="net.tospay.auth">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -7,14 +8,11 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
-    <application android:usesCleartextTraffic="true">
-        <activity
-            android:name=".ui.auth.AuthActivity"
-            android:theme="@style/TospayTheme.NoActionBar" />
-        <activity
-            android:name=".ui.main.TospayActivity"
-            android:label="@string/app_name"
-            android:theme="@style/TospayTheme.NoActionBar" />
+    <application
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity android:name=".ui.auth.AuthActivity" />
+        <activity android:name=".ui.main.TospayActivity" />
     </application>
 
 </manifest>

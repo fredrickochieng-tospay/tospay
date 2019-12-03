@@ -30,9 +30,11 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
         this.repository = repository;
     }
 
-    public void validate(String token) {
+    public void validatePaymentToken(String token) {
         Map<String, String> param = new HashMap<>();
         param.put("token", token);
+
+        setIsLoading(true);
         responseLiveData = repository.validate(getBearerToken().get(), param);
     }
 

@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Tospay</string>
-    <string name="log_in">Log In</string>
+    <string name="log_in">Login</string>
     <string name="sign_up">Sign Up</string>
-    <string name="invalid_email">Not a valid email</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="invalid_password">Password must be greater than 5 characters</string>
     <string name="need_help_signing_in">Need help signing in?</string>
     <string name="or">Or</string>
     <string name="first_name">First name</string>
@@ -40,4 +40,9 @@
 
     <string name="log_into_your_account">Log into your account</string>
     <string name="biometric_failed">Fingerprint not recognized</string>
+    <string name="internet_error">Please check your internet connection and try again.</string>
+    <string name="welcome">Welcome!</string>
+    <string name="remember_me">Remember Me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>

@@ -1,7 +1,7 @@
 package net.tospay.auth.remote;
 
 import net.tospay.auth.remote.util.LiveDataCallAdapterFactory;
-import net.tospay.auth.remote.util.RequestInterceptor;
+import net.tospay.auth.remote.interceptor.RequestInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -51,9 +51,9 @@ public class ServiceGenerator {
      *
      * @return Retrofit
      */
-    private static Retrofit retrofitClient(String url) {
+    private static Retrofit retrofitClient() {
         return new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(ApiConstants.BASE_URL)
                 .client(okHttpClient(loggingInterceptor()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
@@ -65,11 +65,10 @@ public class ServiceGenerator {
      * Creates the client instance
      *
      * @param serviceClass - interface class
-     * @param url          - request url
      * @param <S>          -interface class
      * @return S
      */
-    public static <S> S createService(Class<S> serviceClass, String url) {
-        return retrofitClient(url).create(serviceClass);
+    public static <S> S createService(Class<S> serviceClass) {
+        return retrofitClient().create(serviceClass);
     }
 }

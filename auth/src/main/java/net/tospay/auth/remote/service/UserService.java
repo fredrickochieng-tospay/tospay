@@ -22,36 +22,39 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
+/**
+ * User Authentication Endpoints
+ */
 public interface UserService {
 
-    @POST("v3/user/login")
+    @POST("v1/auth/user/signin")
     LiveData<ApiResponse<Result<TospayUser>>> login(@Body LoginRequest request);
 
-    @POST("v3/user/register")
+    @POST("v1/auth/user/signup")
     LiveData<ApiResponse<Result<TospayUser>>> register(@Body RegisterRequest request);
 
-    @POST("v3/user/verify/email")
+    @POST("v1/auth/user/verify/email")
     LiveData<ApiResponse<Result>> verifyEmail(@Body VerifyEmailRequest request);
 
-    @POST("v3/user/verify/email/resend")
+    @POST("v1/auth/user/resend-email")
     LiveData<ApiResponse<Result>> resendEmailToken(@Body ResendEmailRequest request);
 
-    @POST("v3/user/verify/phone")
+    @POST("v1/auth/user/verify-phone")
     LiveData<ApiResponse<Result>> verifyPhone(@Body VerifyPhoneRequest request);
 
-    @POST("v3/user/verify/phone/resend")
+    @POST("v1/auth/user/resend-phone")
     LiveData<ApiResponse<Result>> resendOtp(@Body OtpRequest request);
 
-    @POST("v3/user/password/forgot")
+    @POST("v1/auth/user/forgot-password")
     LiveData<ApiResponse<Result>> forgotPassword(@Body Map<String, String> request);
 
-    @POST("v3/user/password/reset")
+    @POST("v1/auth/user/reset-password")
     LiveData<ApiResponse<Result>> resetPassword(@Body Map<String, String> request);
 
-    @GET("v3/user/profile")
+    @GET("v1/auth/user/profile")
     LiveData<ApiResponse<Result<TospayUser>>> user(@Header("Authorization") String bearer);
 
-    @POST("v3/user/token/refresh")
+    @POST("v1/auth/user/refresh-token")
     LiveData<ApiResponse<Result<Token>>> refreshToken(
             @Header("Authorization") String bearer,
             @Body RefreshTokenRequest request
@@ -63,7 +66,7 @@ public interface UserService {
             @Body Map<String, String> request
     );
 
-    @POST("v3/user/profile/update")
+    @POST("v3/user/update-profile")
     LiveData<ApiResponse<Result>> updateAddress(
             @Header("Authorization") String bearer,
             @Body AddressRequest addressRequest);

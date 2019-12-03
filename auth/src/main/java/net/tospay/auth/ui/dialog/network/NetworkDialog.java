@@ -35,19 +35,19 @@ import java.util.List;
 public class NetworkDialog extends BottomSheetDialogFragment {
 
     public static final String TAG = NetworkDialog.class.getSimpleName();
-    private static final String ARG_ITEM_COUNTRY_ID = "item_country_id";
+    private static final String ARG_ITEM_ISO = "iso";
 
     private DialogNetworkBinding mBinding;
     private NetworkSelectedListener mListener;
-    private int countryId;
+    private String iso;
     private List<Network> networks;
     private NetworkAdapter adapter;
     private NetworkViewModel mViewModel;
 
-    public static NetworkDialog newInstance(int countryId) {
+    public static NetworkDialog newInstance(String iso) {
         final NetworkDialog fragment = new NetworkDialog();
         final Bundle args = new Bundle();
-        args.putInt(ARG_ITEM_COUNTRY_ID, countryId);
+        args.putString(ARG_ITEM_ISO, iso);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,13 +60,12 @@ public class NetworkDialog extends BottomSheetDialogFragment {
         this.adapter = new NetworkAdapter(networks);
 
         if (getArguments() != null) {
-            countryId = getArguments().getInt(ARG_ITEM_COUNTRY_ID);
+            iso = getArguments().getString(ARG_ITEM_ISO);
         }
 
         AppExecutors mAppExecutors = new AppExecutors();
 
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class,
-                ApiConstants.GATEWAY_BASE_URL);
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
 
         GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);
@@ -96,7 +95,7 @@ public class NetworkDialog extends BottomSheetDialogFragment {
         mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         mBinding.recyclerView.setAdapter(adapter);
 
-        mViewModel.networks(countryId);
+        mViewModel.networks(iso);
         mViewModel.getResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {

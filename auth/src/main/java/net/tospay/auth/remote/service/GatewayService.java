@@ -26,18 +26,18 @@ import retrofit2.http.Path;
 
 public interface GatewayService {
 
-    @GET("v1/allowed-countries")
+    @GET("v1/config/countries")
     LiveData<ApiResponse<Result<List<Country>>>> countries();
 
-    @GET("v1/mobile-countries")
+    @GET("v1/config/mobile-countries")
     LiveData<ApiResponse<Result<List<Country>>>> mobileCountries(
             @Header("Authorization") String bearer
     );
 
-    @GET("v1/mobile-operators/{countryId}")
+    @GET("v1/config/mobile-operators/{iso}")
     LiveData<ApiResponse<Result<List<Network>>>> networks(
             @Header("Authorization") String bearer,
-            @Path("countryId") Integer countryId
+            @Path("iso") String iso
     );
 
     @POST("v1/validate-payment")

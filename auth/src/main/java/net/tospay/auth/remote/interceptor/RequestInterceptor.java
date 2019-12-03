@@ -1,4 +1,4 @@
-package net.tospay.auth.remote.util;
+package net.tospay.auth.remote.interceptor;
 
 
 import androidx.annotation.NonNull;
