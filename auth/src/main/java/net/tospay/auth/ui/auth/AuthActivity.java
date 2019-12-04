@@ -2,29 +2,15 @@ package net.tospay.auth.ui.auth;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
-
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import net.tospay.auth.R;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
-import net.tospay.auth.utils.AppBarStateChangeListener;
 import net.tospay.auth.utils.SharedPrefManager;
 
 public class AuthActivity extends AppCompatActivity implements PaymentListener {
