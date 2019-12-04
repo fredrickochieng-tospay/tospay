@@ -56,8 +56,8 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
         mBinding.setResetPasswordViewModel(mViewModel);
         mViewModel.setNavigator(this);
         mBinding.codeEditText.addTextChangedListener(otpTextWatcher);
-        String email = ResetPasswordFragmentArgs.fromBundle(getArguments()).getEmail();
 
+        String email = ResetPasswordFragmentArgs.fromBundle(getArguments()).getEmail();
 
         passwordEditText = mBinding.passwordEditText;
         passwordInputLayout = mBinding.passwordInputLayout;

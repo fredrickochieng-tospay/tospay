@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="net.tospay.auth.ui.auth.login.LoginFragment"
-        android:label="LoginFragment"
+        android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_navigation_login_to_navigation_register"
@@ -43,7 +43,7 @@
     <fragment
         android:id="@+id/navigation_register"
         android:name="net.tospay.auth.ui.auth.register.RegisterFragment"
-        android:label="fragment_register"
+        android:label="Register"
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_navigation_register_to_navigation_email_verification"
@@ -59,7 +59,7 @@
     <fragment
         android:id="@+id/navigation_email_verification"
         android:name="net.tospay.auth.ui.auth.email.EmailVerificationFragment"
-        android:label="fragment_email_verification"
+        android:label="Email Verification"
         tools:layout="@layout/fragment_email_verification">
         <action
             android:id="@+id/action_navigation_email_verification_to_navigation_phone_verification"
@@ -75,7 +75,7 @@
     <fragment
         android:id="@+id/navigation_phone_verification"
         android:name="net.tospay.auth.ui.auth.phone.PhoneVerificationFragment"
-        android:label="fragment_phone_verification"
+        android:label="Phone Verification"
         tools:layout="@layout/fragment_phone_verification">
         <action
             android:id="@+id/action_navigation_phone_verification_to_navigation_login"
