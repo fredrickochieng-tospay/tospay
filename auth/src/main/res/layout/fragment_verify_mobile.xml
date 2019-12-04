@@ -72,7 +72,7 @@
                 android:inputType="number"
                 android:maxLength="6"
                 android:textAllCaps="true"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btn_verify_phone"

@@ -25,6 +25,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_16"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
             android:paddingBottom="@dimen/default_space_24">
@@ -34,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="@dimen/default_space_24"
-                android:layout_marginTop="@dimen/default_space_16"
                 android:layout_marginEnd="@dimen/default_space_24"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:text="@string/create_account"
