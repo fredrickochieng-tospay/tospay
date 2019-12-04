@@ -205,8 +205,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         mViewModel.getEmail().setValue(email);
         mViewModel.getPassword().setValue(password);
 
-        hideKeyboard();
-
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             mViewModel.login();
             mViewModel.getResponseLiveData().observe(this, this::handleResponse);
@@ -220,8 +218,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         if (resource != null) {
             switch (resource.status) {
                 case ERROR:
-
-                case RE_AUTHENTICATE:
                     passwordEditText.setText(null);
                     mProgressDialog.dismiss();
                     mViewModel.setIsError(true);
@@ -229,6 +225,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     break;
 
                 case LOADING:
+                    hideKeyboard();
                     mProgressDialog.show();
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
@@ -239,7 +236,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                     mViewModel.setIsError(false);
 
                     TospayUser user = resource.data;
-
                     if (user != null) {
                         getSharedPrefManager().setActiveUser(user);
                         getSharedPrefManager().save(SharedPrefManager.KEY_EMAIL, email);
@@ -247,10 +243,8 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
                         if (!user.isEmailVerified()) {
                             navController.navigate(R.id.navigation_email_verification);
-
                         } else if (!user.isPhoneVerified()) {
                             navController.navigate(R.id.navigation_phone_verification);
-
                         } else {
                             mListener.onLoginSuccess(user);
                         }

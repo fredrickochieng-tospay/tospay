@@ -14,24 +14,68 @@
 
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:paddingBottom="@dimen/default_space_24">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_register" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    style="?partner_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@color/colorPrimary" />
+
+                <ImageView
+                    style="?partner_logo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="@dimen/default_space_24"
+                    android:layout_marginLeft="@dimen/default_space_24"
+                    android:contentDescription="@string/app_name"
+                    app:layout_constraintBottom_toTopOf="@id/curved_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_tospay_logo_original" />
+
+                <View
+                    android:id="@+id/curved_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/background_top_curved"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/illustration_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_register"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,7 +84,8 @@
                 android:layout_marginStart="@dimen/default_space_24"
                 android:layout_marginEnd="@dimen/default_space_24"
                 android:fontFamily="@font/proxima_nova_regular"
-                android:text="Create Account"
+                android:text="@string/create_account"
+                android:textColor="#0e5faa"
                 android:textSize="20sp" />
 
             <net.tospay.auth.view.ErrorLayout
@@ -145,6 +190,7 @@
                 android:layout_marginStart="@dimen/default_space_24"
                 android:layout_marginTop="@dimen/default_space_16"
                 android:layout_marginEnd="@dimen/default_space_24"
+                android:layout_marginBottom="@dimen/default_space_8"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_country_flag"
                 android:drawableLeft="@drawable/ic_country_flag"
@@ -155,7 +201,7 @@
                 android:focusableInTouchMode="false"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:gravity="center_vertical"
-                android:hint="Country"
+                android:hint="@string/country"
                 android:onClick="@{(view)->registerViewModel.onClick(view)}"
                 android:scrollHorizontally="false"
                 android:singleLine="true"
@@ -251,55 +297,13 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_space_24"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/default_space_24"
                 android:layout_marginEnd="@dimen/default_space_24"
                 android:onClick="@{(view)->registerViewModel.onClick(view)}"
                 android:text="@string/create_account" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_space_16"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/borderColor" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:fontFamily="@font/proxima_nova_bold"
-                    android:text="@string/or"
-                    android:textColor="@color/textColor"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@color/borderColor" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_login"
-                style="@style/Tospay.Button.Transparent.Border"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_space_24"
-                android:layout_marginTop="@dimen/default_space_16"
-                android:layout_marginEnd="@dimen/default_space_24"
-                android:onClick="@{(view)->registerViewModel.onClick(view)}"
-                android:text="@string/sign_in" />
-
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </layout>

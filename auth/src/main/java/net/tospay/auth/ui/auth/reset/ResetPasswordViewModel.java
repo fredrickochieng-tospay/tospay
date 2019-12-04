@@ -15,7 +15,6 @@ import net.tospay.auth.ui.base.BaseViewModel;
 public class ResetPasswordViewModel extends BaseViewModel<ResetPasswordNavigator> implements View.OnClickListener {
 
     private MutableLiveData<String> mEmail;
-    public ObservableBoolean enableLoginButton;
     private final UserRepository userRepository;
 
     private LiveData<Resource<Result>> resetResourceLiveData;
@@ -23,7 +22,6 @@ public class ResetPasswordViewModel extends BaseViewModel<ResetPasswordNavigator
 
     public ResetPasswordViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.enableLoginButton = new ObservableBoolean(false);
         this.mEmail = new MutableLiveData<>();
     }
 

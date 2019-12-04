@@ -13,13 +13,17 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentEmailVerificationBinding;
 import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-
+import net.tospay.auth.utils.NetworkUtils;
 
 public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerificationBinding, EmailViewModel>
         implements EmailNavigator {
@@ -92,50 +96,49 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
 
     @Override
     public void onVerifyClick(View view) {
-        hideKeyboard();
-
-        mProgressDialog.setMessage("Verifying OTP. Please wait...");
-        mProgressDialog.show();
-
         String code = mBinding.codeEditText.getText().toString();
-        mViewModel.verify(code);
-        mViewModel.getVerifyResourceLiveData().observe(this, resource -> {
-            if (resource != null) {
-                switch (resource.status) {
-                    case ERROR:
-                        mProgressDialog.dismiss();
-                        mViewModel.setIsError(true);
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
 
-                    case LOADING:
-                        mViewModel.setIsLoading(true);
-                        mViewModel.setIsError(false);
-                        break;
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            mViewModel.verify(code);
+            mViewModel.getVerifyResourceLiveData().observe(this, this::handleResponse);
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
+    }
 
-                    case SUCCESS:
-                        mViewModel.setIsError(false);
-                        tospayUser.setEmailVerified(true);
-                        getSharedPrefManager().setActiveUser(tospayUser);
-                        mProgressDialog.dismiss();
+    private void handleResponse(Resource<Result> resource) {
+        if (resource != null) {
+            switch (resource.status) {
+                case ERROR:
+                    mProgressDialog.dismiss();
+                    mViewModel.setIsError(true);
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    break;
 
-                        NavHostFragment.findNavController(this)
-                                .navigate(EmailVerificationFragmentDirections.actionNavigationEmailVerificationToNavigationPhoneVerification());
-                        break;
-                }
+                case LOADING:
+                    hideKeyboard();
+                    mProgressDialog.setMessage("Verifying OTP. Please wait...");
+                    mProgressDialog.show();
+                    mViewModel.setIsLoading(true);
+                    mViewModel.setIsError(false);
+                    break;
+
+                case SUCCESS:
+                    mViewModel.setIsError(false);
+                    tospayUser.setEmailVerified(true);
+                    getSharedPrefManager().setActiveUser(tospayUser);
+                    mProgressDialog.dismiss();
+
+                    NavHostFragment.findNavController(this)
+                            .navigate(EmailVerificationFragmentDirections.actionNavigationEmailVerificationToNavigationPhoneVerification());
+                    break;
             }
-        });
+        }
     }
 
     @Override
     public void onResendClick(View view) {
-        hideKeyboard();
-
         mBinding.codeEditText.setText(null);
-
-        mProgressDialog.setMessage("Resending OTP. Please wait...");
-        mProgressDialog.show();
-
         mViewModel.resend();
         mViewModel.getResendResourceLiveData().observe(this, resource -> {
             if (resource != null) {
@@ -149,6 +152,9 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
                     case LOADING:
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
+                        hideKeyboard();
+                        mProgressDialog.setMessage("Resending OTP. Please wait...");
+                        mProgressDialog.show();
                         break;
 
                     case SUCCESS:

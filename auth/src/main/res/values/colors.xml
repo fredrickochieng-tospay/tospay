@@ -17,7 +17,6 @@
 
     <color name="card_text_color">#FFFFFF</color>
     <color name="card_label_color">#D4D9DC</color>
-    <color name="card_cvv_color">#383838</color>
 
     <color name="highlight_light">#33ffffff</color>
     <color name="gray_palette_strong">#fff0f1f2</color>

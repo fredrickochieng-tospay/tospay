@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="emailViewModel"
@@ -9,11 +13,12 @@
 
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
+        android:background="@color/white"
         tools:context=".ui.auth.email.EmailVerificationFragment">
 
         <LinearLayout
@@ -21,25 +26,63 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    style="?partner_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@color/colorPrimary" />
+
+                <ImageView
+                    style="?partner_logo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_marginStart="@dimen/default_space_24"
+                    android:layout_marginLeft="@dimen/default_space_24"
+                    android:contentDescription="@string/app_name"
+                    app:layout_constraintBottom_toTopOf="@id/curved_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/ic_tospay_logo_original" />
+
+                <View
+                    android:id="@+id/curved_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/background_top_curved"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <LinearLayout
-                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_validate_email" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/proxima_nova_bold"
                     android:text="@string/enter_verification_code"
+                    android:textColor="#0e5faa"
                     android:textSize="16sp" />
 
                 <TextView
@@ -60,14 +103,23 @@
                     android:textSize="18sp"
                     tools:text="janedoe@gmail.com" />
 
+                <net.tospay.auth.view.ErrorLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_space_24"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="@dimen/default_space_24"
+                    android:visibility="@{emailViewModel.isError ? View.VISIBLE : View.GONE}"
+                    app:error_message="@{emailViewModel.errorMessage}" />
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/codeEditText"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="@dimen/default_space_16"
                     android:fontFamily="@font/proxima_nova_regular"
                     android:gravity="center"
-                    android:hint="Enter code"
+                    android:hint="@string/enter_code"
                     android:inputType="number"
                     android:maxLength="6"
                     android:textAllCaps="true"

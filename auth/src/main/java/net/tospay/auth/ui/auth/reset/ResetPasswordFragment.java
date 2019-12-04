@@ -96,7 +96,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
         @Override
         public void afterTextChanged(Editable s) {
-            validateInputs();
         }
     };
 
@@ -108,7 +107,7 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (!TextUtils.isEmpty(charSequence)) {
+            /*if (!TextUtils.isEmpty(charSequence)) {
                 if (charSequence.length() >= 6) {
                     mViewModel.enableLoginButton.set(true);
                 } else {
@@ -116,7 +115,7 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
                 }
             } else {
                 mViewModel.enableLoginButton.set(false);
-            }
+            }*/
         }
 
         @Override
@@ -124,18 +123,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
         }
     };
-
-    /**
-     * Checks if email and password are valid to enable login button
-     */
-    private void validateInputs() {
-        if (isPasswordValid(passwordEditText.getText().toString())) {
-            mViewModel.enableLoginButton.set(true);
-        } else {
-            mViewModel.enableLoginButton.set(false);
-        }
-    }
-
 
     /**
      * Validates user email
@@ -150,9 +137,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
     @Override
     public void onResetPasswordClick(View view) {
-        hideKeyboard();
-        mProgressDialog.setMessage("Resending verification code. Please wait...");
-        mProgressDialog.show();
 
         mViewModel.reset(mBinding.codeEditText.getText().toString(), mBinding.passwordEditText.getText().toString());
         mViewModel.getResetResourceLiveData().observe(this, resource -> {
@@ -166,6 +150,9 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
                         break;
 
                     case LOADING:
+                        hideKeyboard();
+                        mProgressDialog.setMessage("Resending verification code. Please wait...");
+                        mProgressDialog.show();
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;

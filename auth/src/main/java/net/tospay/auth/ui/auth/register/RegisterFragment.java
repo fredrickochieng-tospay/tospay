@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -26,12 +27,14 @@ import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.utils.EmailValidator;
+import net.tospay.auth.utils.NetworkUtils;
 
 
 public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, RegisterViewModel>
         implements RegisterNavigation, CountryDialog.CountrySelectedListener {
 
     private RegisterViewModel mViewModel;
+    private FragmentRegisterBinding mBinding;
 
     private EditText firstNameEditText;
     private TextInputLayout firstNameInputLayout;
@@ -78,7 +81,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentRegisterBinding mBinding = getViewDataBinding();
+        mBinding = getViewDataBinding();
 
         mBinding.setRegisterViewModel(mViewModel);
         mViewModel.setNavigator(this);
@@ -178,12 +181,14 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() < 6) {
-                    passwordInputLayout.setErrorEnabled(true);
-                    passwordInputLayout.setError(getString(R.string.invalid_password));
-                } else {
-                    passwordInputLayout.setErrorEnabled(false);
-                    passwordInputLayout.setError(null);
+                if (!TextUtils.isEmpty(s)) {
+                    if (s.length() < 6) {
+                        passwordInputLayout.setErrorEnabled(true);
+                        passwordInputLayout.setError(getString(R.string.invalid_password));
+                    } else {
+                        passwordInputLayout.setErrorEnabled(false);
+                        passwordInputLayout.setError(null);
+                    }
                 }
             }
 
@@ -261,9 +266,12 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         String password = passwordEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
 
-        mProgressDialog.show();
-        mViewModel.register(firstName, lastName, email, password, phone, country);
-        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        if (NetworkUtils.isNetworkAvailable(getContext())) {
+            mViewModel.register(firstName, lastName, email, password, phone, country);
+            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void handleResponse(Resource<TospayUser> resource) {
@@ -276,6 +284,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
                     break;
 
                 case LOADING:
+                    mProgressDialog.show();
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;

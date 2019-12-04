@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -26,11 +27,13 @@ import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
+import net.tospay.auth.utils.NetworkUtils;
 
 public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordBinding, ForgotPasswordViewModel>
         implements ForgotPasswordNavigator {
 
     private ForgotPasswordViewModel mViewModel;
+    private FragmentForgotPasswordBinding mBinding;
     private TextInputLayout emailInputLayout;
     private EditText emailEditText;
     private ProgressDialog mProgressDialog;
@@ -78,34 +81,20 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
 
         @Override
         public void afterTextChanged(Editable s) {
-            validateInputs();
         }
     };
-
-    /**
-     * Checks if email and password are valid to enable login button
-     */
-    private void validateInputs() {
-        if (isEmailValid(emailEditText.getText().toString())) {
-            mViewModel.enableLoginButton.set(true);
-        } else {
-            mViewModel.enableLoginButton.set(false);
-        }
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FragmentForgotPasswordBinding mBinding = getViewDataBinding();
+        mBinding = getViewDataBinding();
         mBinding.setForgotPasswordViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
         emailEditText = mBinding.emailEditText;
         emailInputLayout = mBinding.emailInputLayout;
         emailEditText.addTextChangedListener(emailTextWatcher);
-
-        validateInputs();
 
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Send verification code. Please wait...");
@@ -128,14 +117,22 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
 
     @Override
     public void onForgotPasswordClick(View view) {
+        emailInputLayout.setError(null);
+
         String email = emailEditText.getText().toString();
+        if (!isEmailValid(email)) {
+            emailInputLayout.setError(getString(R.string.invalid_email));
+            return;
+        }
+
         mViewModel.getEmail().setValue(email);
 
-        hideKeyboard();
-        mProgressDialog.show();
-
-        mViewModel.forgotPassword();
-        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        if (NetworkUtils.isNetworkAvailable(getContext())) {
+            mViewModel.forgotPassword();
+            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     private void handleResponse(Resource<Result> resource) {
@@ -145,10 +142,11 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
                     mProgressDialog.dismiss();
                     mViewModel.setIsError(true);
                     mViewModel.setErrorMessage(resource.message);
-                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
                     break;
 
                 case LOADING:
+                    hideKeyboard();
+                    mProgressDialog.show();
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;
