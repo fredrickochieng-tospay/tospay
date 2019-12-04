@@ -52,7 +52,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/navigation_payment_summary"
+            app:popUpTo="@id/navigation_login"
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -68,7 +68,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/navigation_payment_summary"
+            app:popUpTo="@id/navigation_login"
             app:popUpToInclusive="true" />
     </fragment>
 

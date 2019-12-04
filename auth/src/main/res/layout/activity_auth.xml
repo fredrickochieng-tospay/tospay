@@ -62,6 +62,17 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/illustration_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="150dp"
+                    android:contentDescription="@string/app_name"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/ic_login"
+                    app:layout_constraintBottom_toBottomOf="@id/curved_view"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
