@@ -3,9 +3,13 @@ package net.tospay.auth.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import net.tospay.auth.R;
@@ -13,17 +17,20 @@ import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.utils.SharedPrefManager;
 
-public class AuthActivity extends AppCompatActivity implements PaymentListener {
+public class AuthActivity extends AppCompatActivity implements PaymentListener, NavController.OnDestinationChangedListener {
 
     public static final int REQUEST_CODE_LOGIN = 100;
-
+    private ImageView illustrationIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+        illustrationIV = findViewById(R.id.illustration_view);
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_auth);
+        navController.addOnDestinationChangedListener(this);
 
         TospayUser tospayUser = SharedPrefManager.getInstance(this).getActiveUser();
         if (tospayUser != null) {
@@ -49,5 +56,24 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
+    }
+
+    @Override
+    public void onDestinationChanged(@NonNull NavController controller,
+                                     @NonNull NavDestination destination,
+                                     @Nullable Bundle arguments) {
+
+        if (destination.getId() == R.id.navigation_login) {
+            illustrationIV.setImageResource(R.drawable.ic_login);
+
+        } else if (destination.getId() == R.id.navigation_register) {
+            illustrationIV.setImageResource(R.drawable.ic_register);
+
+        } else if (destination.getId() == R.id.navigation_forgot_password) {
+            illustrationIV.setImageResource(R.drawable.ic_forgot_password);
+
+        } else {
+            illustrationIV.setImageResource(R.drawable.ic_login);
+        }
     }
 }
