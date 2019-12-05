@@ -3,6 +3,8 @@ package net.tospay.auth.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -21,12 +23,16 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
 
     public static final int REQUEST_CODE_LOGIN = 100;
     private ImageView illustrationIV;
+    private   Animation view_fade_in,view_fade_out;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         illustrationIV = findViewById(R.id.illustration_view);
+
+        view_fade_in = AnimationUtils.loadAnimation(this,R.anim.view_fade_in);
+        view_fade_out = AnimationUtils.loadAnimation(this,R.anim.view_fade_out);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_auth);
@@ -62,17 +68,18 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
     public void onDestinationChanged(@NonNull NavController controller,
                                      @NonNull NavDestination destination,
                                      @Nullable Bundle arguments) {
-
         if (destination.getId() == R.id.navigation_login) {
+            illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_login);
 
         } else if (destination.getId() == R.id.navigation_register) {
+            illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_register);
-
         } else if (destination.getId() == R.id.navigation_forgot_password) {
+            illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_forgot_password);
-
         } else {
+            illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_login);
         }
     }

@@ -15,93 +15,367 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        tools:context=".ui.summary.PaymentSummaryFragment">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".ScrollingActivity">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="@{summaryViewModel.isLoading ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible">
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginBottom="20dp"
-                android:contentDescription="@string/app_name"
-                app:imageUrl="@{summaryViewModel.merchant.avatar}"
-                tools:src="@drawable/ic_loading" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:text="@{summaryViewModel.merchant.name}"
-                android:textSize="25sp"
-                tools:text="Kenya Ports Authority" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/proxima_nova_semibold"
-                android:text="@string/payment"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:text="@{StringUtil.getCurrency(summaryViewModel.transaction.currency,summaryViewModel.transaction.amount)}"
-                android:textColor="@color/text"
-                android:textSize="20sp"
-                tools:text="KES 12,030.00" />
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/lay1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center"
-                android:text="@string/payment_message"
-                android:textColor="@color/text"
-                android:textSize="16sp" />
+                android:weightSum="4">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2">
+
+                    <TextView
+                        android:id="@+id/pay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:padding="16dp"
+                        android:text="@string/pay"
+                        android:textSize="@dimen/text_size_header_medium"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:id="@+id/mama"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/pay">
+
+                        <TextView
+                            android:id="@+id/tex"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="16dp"
+                            android:text="@string/mama_rocks"
+                            android:textSize="@dimen/text_size_header_large"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/mama"
+                        android:hint="@string/paydetails"
+                        android:padding="16dp"
+                        android:textSize="@dimen/text_size_header_medium" />
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2">
+
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="16dp"
+                        android:src="@drawable/ic_tospay_logo_original" />
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lay1"
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@color/card_bg_color"
+                app:cardCornerRadius="32dp"
+                app:cardElevation="16dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/texttlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <TextView
+                                android:id="@+id/order"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_weight="2"
+                                android:text="Order total: "
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                            <TextView
+                                android:id="@+id/orderValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/order"
+                                android:layout_weight="2"
+                                android:text="KES  30,000.00"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/texttlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/texttlay1"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <TextView
+                                android:id="@+id/charge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_weight="2"
+                                android:text="Charge: "
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                            <TextView
+                                android:id="@+id/chargeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/charge"
+                                android:layout_weight="2"
+                                android:text="KES  30,000.00"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/lastRev"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/texttlay2"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <TextView
+                                android:id="@+id/grand"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_weight="2"
+                                android:text="Order total: "
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                            <TextView
+                                android:id="@+id/grandValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/grand"
+                                android:layout_weight="2"
+                                android:text="KES  30,000.00"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/blay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/lastRev"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2">
+
+                            <TextView
+                                android:id="@+id/amountTextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="Amount total"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/amountTextView"
+                                android:ellipsize="marquee"
+                                android:padding="16dp"
+                                android:text="USD 350.00"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_large"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3">
+
+                            <ImageView
+                                android:id="@+id/icon"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:src="@drawable/ic_trending_up_black_24dp" />
+
+                            <TextView
+                                android:id="@+id/textRate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/icon"
+                                android:text="FX RATE 100.20"
+                                android:textColor="@color/deep_dark_blue"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/textRate"
+                                android:text="USD 350.00"
+                                android:textColor="@color/green"
+                                android:textSize="@dimen/text_size_header_medium" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/blay"
+                        android:layout_margin="16dp">
+
+                        <ImageView
+                            android:id="@+id/calenderIcon"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_calendar_icon" />
+
+                        <TextView
+                            android:id="@+id/date_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:layout_toRightOf="@id/calenderIcon"
+                            android:text="Tue, 24 Dec 2019 | 11.59PM"
+                            android:textColor="@color/deep_dark_blue"
+                            android:textSize="@dimen/text_size_header_medium" />
+
+
+                        <ImageView
+                            android:id="@+id/bcase"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_below="@id/calenderIcon"
+                            android:padding="6dp"
+                            android:src="@drawable/ic_payment_details_icon" />
+
+                        <TextView
+                            android:id="@+id/PaymentDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/calenderIcon"
+                            android:layout_margin="16dp"
+                            android:layout_toRightOf="@id/bcase"
+                            android:text="Payment details"
+                            android:textColor="@color/deep_dark_blue"
+                            android:textSize="@dimen/text_size_header_medium" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/bcase"
+                            android:layout_toRightOf="@id/bcase">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:padding="16dp"
+                                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod  "
+                                android:textColor="@color/deep_dark_blue" />
+
+                        </RelativeLayout>
+
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
 
             <Button
                 android:id="@+id/btn_continue"
-                style="@style/Tospay.Button.Large"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:onClick="@{(view)->summaryViewModel.onClick(view)}"
-                android:text="Continue"
-                android:textAllCaps="false" />
+                android:layout_below="@id/cardView"
+                android:layout_margin="16dp"
+                android:background="@drawable/card_rounded"
+                android:padding="16dp"
+                android:text="Send payment"
+                android:textColor="@color/white" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{summaryViewModel.isLoading ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </layout>
