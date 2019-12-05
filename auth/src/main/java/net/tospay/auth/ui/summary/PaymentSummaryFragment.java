@@ -106,7 +106,8 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
                     mViewModel.setIsLoading(false);
                     mViewModel.setIsError(true);
                     mViewModel.setErrorMessage(resource.message);
-                    mListener.onPaymentFailed(new TospayException(resource.message));
+                    //mListener.onPaymentFailed(new TospayException(resource.message));
+
                     break;
 
                 case LOADING:

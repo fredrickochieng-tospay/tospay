@@ -7,10 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -19,6 +25,8 @@ import androidx.navigation.Navigation;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
@@ -33,6 +41,7 @@ import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
+import net.tospay.auth.ui_listener.AppBarStateChangeListener;
 
 import java.net.URISyntaxException;
 
@@ -44,6 +53,9 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
 
     private static final String TAG = "TospayActivity";
     private Socket mSocket;
+    private AppBarLayout collapsingToolbarLayout;
+
+    private MenuItem closeMenuItem;
 
     private Emitter.Listener onNewMessage = args -> {
         String jsonStr = args[0].toString();
@@ -59,6 +71,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     private Runnable runnable;
     private int count = 0;
     private ProgressDialog progressDialog;
+    private Animation animation;
 
     @Override
     public int getBindingVariable() {
@@ -82,11 +95,33 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         super.onCreate(savedInstanceState);
         ActivityTospayBinding binding = getViewDataBinding();
         binding.setPaymentViewModel(mViewModel);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("TosPay");
+        animation = AnimationUtils.loadAnimation(this,R.anim.view_fade_in);
+
+
+        collapsingToolbarLayout = findViewById(R.id.app_bar);
+        collapsingToolbarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state) {
+                Log.d("STATE", state.name());
+                Log.d(TAG, "onStateChanged: "+appBarLayout.getScaleY());
+
+                if (state.name().equalsIgnoreCase("COLLAPSED")) {
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    closeMenuItem.setVisible(true);
+
+                } else if (state.name().equalsIgnoreCase("EXPANDED")) {
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+                } else if (state.name().equalsIgnoreCase("IDLE")) {
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                }
+            }
+        });
 
         paymentToken = getIntent().getStringExtra(KEY_TOKEN);
         mViewModel.getPaymentTokenLiveData().setValue(paymentToken);
@@ -130,11 +165,14 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.auth_menu, menu);
+        super.onCreateOptionsMenu(menu);
+        closeMenuItem = menu.findItem(R.id.action_close);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         if (item.getItemId() == R.id.action_close) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Cancel Transaction");
