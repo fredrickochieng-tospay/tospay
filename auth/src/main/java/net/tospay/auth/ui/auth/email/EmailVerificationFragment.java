@@ -63,13 +63,14 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             if (!TextUtils.isEmpty(charSequence)) {
-                if (charSequence.length() >= 6) {
-                    mViewModel.enableLoginButton.set(true);
+                if (charSequence.length() >= 5) {
+                    mBinding.codeInputLayout.setError(null);
+                    mViewModel.getOtp().setValue(charSequence.toString());
                 } else {
-                    mViewModel.enableLoginButton.set(false);
+                    mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
                 }
             } else {
-                mViewModel.enableLoginButton.set(false);
+                mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
             }
         }
 
@@ -96,10 +97,23 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
 
     @Override
     public void onVerifyClick(View view) {
+        mBinding.codeInputLayout.setError(null);
+
         String code = mBinding.codeEditText.getText().toString();
+        mViewModel.getOtp().setValue(code);
+
+        if (TextUtils.isEmpty(code)) {
+            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            return;
+        }
+
+        if (code.length() < 5) {
+            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            return;
+        }
 
         if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.verify(code);
+            mViewModel.verify();
             mViewModel.getVerifyResourceLiveData().observe(this, this::handleResponse);
         } else {
             Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
@@ -112,7 +126,7 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
                 case ERROR:
                     mProgressDialog.dismiss();
                     mViewModel.setIsError(true);
-                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    mViewModel.setErrorMessage(resource.message);
                     break;
 
                 case LOADING:
@@ -130,7 +144,8 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
                     mProgressDialog.dismiss();
 
                     NavHostFragment.findNavController(this)
-                            .navigate(EmailVerificationFragmentDirections.actionNavigationEmailVerificationToNavigationPhoneVerification());
+                            .navigate(EmailVerificationFragmentDirections
+                                    .actionNavigationEmailVerificationToNavigationPhoneVerification());
                     break;
             }
         }
@@ -138,32 +153,35 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
 
     @Override
     public void onResendClick(View view) {
-        mBinding.codeEditText.setText(null);
-        mViewModel.resend();
-        mViewModel.getResendResourceLiveData().observe(this, resource -> {
-            if (resource != null) {
-                switch (resource.status) {
-                    case ERROR:
-                        mProgressDialog.dismiss();
-                        mViewModel.setIsError(true);
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            mViewModel.resend();
+            mViewModel.getResendResourceLiveData().observe(this, resource -> {
+                if (resource != null) {
+                    switch (resource.status) {
+                        case ERROR:
+                            mProgressDialog.dismiss();
+                            mViewModel.setIsError(true);
+                            mViewModel.setErrorMessage(resource.message);
+                            break;
 
-                    case LOADING:
-                        mViewModel.setIsLoading(true);
-                        mViewModel.setIsError(false);
-                        hideKeyboard();
-                        mProgressDialog.setMessage("Resending OTP. Please wait...");
-                        mProgressDialog.show();
-                        break;
+                        case LOADING:
+                            mViewModel.setIsLoading(true);
+                            mViewModel.setIsError(false);
+                            hideKeyboard();
+                            mProgressDialog.setMessage("Resending OTP. Please wait...");
+                            mProgressDialog.show();
+                            break;
 
-                    case SUCCESS:
-                        mViewModel.setIsError(false);
-                        mProgressDialog.dismiss();
-                        Toast.makeText(getContext(), "Please check your email for OTP", Toast.LENGTH_SHORT).show();
-                        break;
+                        case SUCCESS:
+                            mViewModel.setIsError(false);
+                            mProgressDialog.dismiss();
+                            Toast.makeText(view.getContext(), "Please check your email for OTP", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 }

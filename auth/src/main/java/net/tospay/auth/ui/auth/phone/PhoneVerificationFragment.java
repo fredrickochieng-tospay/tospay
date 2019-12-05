@@ -13,12 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentPhoneVerificationBinding;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.utils.NetworkUtils;
 
 public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerificationBinding, PhoneViewModel>
         implements PhoneNavigator {
@@ -58,13 +61,14 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             if (!TextUtils.isEmpty(charSequence)) {
-                if (charSequence.length() >= 6) {
-                    mViewModel.enableLoginButton.set(true);
+                if (charSequence.length() >= 5) {
+                    mBinding.codeInputLayout.setError(null);
+                    mViewModel.getOtp().setValue(charSequence.toString());
                 } else {
-                    mViewModel.enableLoginButton.set(false);
+                    mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
                 }
             } else {
-                mViewModel.enableLoginButton.set(false);
+                mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
             }
         }
 
@@ -93,75 +97,89 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
 
     @Override
     public void onVerifyClick(View view) {
-        hideKeyboard();
-
-        mProgressDialog.setMessage("Verifying OTP. Please wait...");
-        mProgressDialog.show();
+        mBinding.codeInputLayout.setError(null);
 
         String code = mBinding.codeEditText.getText().toString();
-        mViewModel.verify(code);
-        mViewModel.getVerifyResourceLiveData().observe(this, resource -> {
-            if (resource != null) {
-                switch (resource.status) {
-                    case ERROR:
-                        mProgressDialog.dismiss();
-                        mViewModel.setIsError(true);
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
+        mViewModel.getOtp().setValue(code);
 
-                    case LOADING:
-                        mViewModel.setIsLoading(true);
-                        mViewModel.setIsError(false);
-                        break;
+        if (TextUtils.isEmpty(code)) {
+            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            return;
+        }
 
-                    case SUCCESS:
-                        mViewModel.setIsError(false);
-                        tospayUser.setPhoneVerified(true);
-                        getSharedPrefManager().setActiveUser(tospayUser);
-                        mProgressDialog.dismiss();
+        if (code.length() < 5) {
+            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            return;
+        }
 
-                        NavHostFragment
-                                .findNavController(this).navigate(
-                                PhoneVerificationFragmentDirections
-                                        .actionNavigationPhoneVerificationToNavigationLogin());
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            mViewModel.verify();
+            mViewModel.getVerifyResourceLiveData().observe(this, resource -> {
+                if (resource != null) {
+                    switch (resource.status) {
+                        case ERROR:
+                            mProgressDialog.dismiss();
+                            mViewModel.setIsError(true);
+                            mViewModel.setErrorMessage(resource.message);
+                            break;
 
-                        break;
+                        case LOADING:
+                            hideKeyboard();
+                            mProgressDialog.setMessage("Verifying OTP. Please wait...");
+                            mProgressDialog.show();
+                            mViewModel.setIsLoading(true);
+                            mViewModel.setIsError(false);
+                            break;
+
+                        case SUCCESS:
+                            mViewModel.setIsError(false);
+                            tospayUser.setPhoneVerified(true);
+                            getSharedPrefManager().setActiveUser(tospayUser);
+                            mProgressDialog.dismiss();
+
+                            NavHostFragment.findNavController(this).navigate(
+                                    PhoneVerificationFragmentDirections.actionNavigationPhoneVerificationToNavigationLogin());
+
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onResendClick(View view) {
-        hideKeyboard();
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            mViewModel.resend();
+            mViewModel.getResendResourceLiveData().observe(this, resource -> {
+                if (resource != null) {
+                    switch (resource.status) {
+                        case ERROR:
+                            mProgressDialog.dismiss();
+                            mViewModel.setIsError(true);
+                            mViewModel.setErrorMessage(resource.message);
+                            break;
 
-        mBinding.codeEditText.setText(null);
+                        case LOADING:
+                            hideKeyboard();
+                            mProgressDialog.setMessage("Resending OTP. Please wait...");
+                            mProgressDialog.show();
+                            mViewModel.setIsLoading(true);
+                            mViewModel.setIsError(false);
+                            break;
 
-        mProgressDialog.setMessage("Resending OTP. Please wait...");
-        mProgressDialog.show();
-
-        mViewModel.resend();
-        mViewModel.getResendResourceLiveData().observe(this, resource -> {
-            if (resource != null) {
-                switch (resource.status) {
-                    case ERROR:
-                        mProgressDialog.dismiss();
-                        mViewModel.setIsError(true);
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case LOADING:
-                        mViewModel.setIsLoading(true);
-                        mViewModel.setIsError(false);
-                        break;
-
-                    case SUCCESS:
-                        mViewModel.setIsError(false);
-                        mProgressDialog.dismiss();
-                        Toast.makeText(getContext(), "Please check your phone for OTP", Toast.LENGTH_SHORT).show();
-                        break;
+                        case SUCCESS:
+                            mViewModel.setIsError(false);
+                            mProgressDialog.dismiss();
+                            Toast.makeText(getContext(), "Please check your phone for OTP", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 }

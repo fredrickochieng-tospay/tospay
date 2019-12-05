@@ -85,6 +85,10 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_validate_password);
 
+        } else if (destination.getId() == R.id.navigation_email_verification) {
+            illustrationIV.startAnimation(view_fade_in);
+            illustrationIV.setImageResource(R.drawable.ic_validate_email);
+
         } else if (destination.getId() == R.id.navigation_phone_verification) {
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_validate_phone);

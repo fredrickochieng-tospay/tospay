@@ -33,7 +33,7 @@ public interface UserService {
     @POST("v1/auth/user/signup")
     LiveData<ApiResponse<Result<TospayUser>>> register(@Body RegisterRequest request);
 
-    @POST("v1/auth/user/verify/email")
+    @POST("v1/auth/user/verify-email")
     LiveData<ApiResponse<Result>> verifyEmail(@Body VerifyEmailRequest request);
 
     @POST("v1/auth/user/resend-email")

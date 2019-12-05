@@ -16,15 +16,14 @@
     <ScrollView
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:background="@color/white"
         tools:context=".ui.auth.email.EmailVerificationFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_24"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingBottom="@dimen/default_space_16">
@@ -64,18 +63,30 @@
                 android:visibility="@{emailViewModel.isError ? View.VISIBLE : View.GONE}"
                 app:error_message="@{emailViewModel.errorMessage}" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/codeEditText"
-                android:layout_width="150dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/codeInputLayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_space_16"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center"
-                android:hint="@string/enter_code"
-                android:inputType="number"
-                android:maxLength="6"
-                android:textAllCaps="true"
-                android:textSize="20sp" />
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="@dimen/default_space_24"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:layout_marginRight="28dp"
+                android:hint="@string/enter_code">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/codeEditText"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:text="@{emailViewModel.otp}"
+                    android:textAllCaps="true"
+                    android:textSize="20sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_verify_email"
@@ -88,7 +99,6 @@
                 android:layout_marginEnd="28dp"
                 android:layout_marginRight="28dp"
                 android:layout_marginBottom="8dp"
-                android:enabled="@{emailViewModel.enableLoginButton}"
                 android:onClick="@{(view)->emailViewModel.onClick(view)}"
                 android:text="@string/verify_code"
                 android:textAllCaps="false"
@@ -98,7 +108,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/default_space_24"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:gravity="center_horizontal"
                 android:text="@string/resend_message" />
@@ -108,7 +118,7 @@
                 style="@style/Tospay.Button.Transparent.Border"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/default_space_16"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:onClick="@{(view)->emailViewModel.onClick(view)}"
                 android:text="@string/resend"
