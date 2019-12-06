@@ -14,7 +14,8 @@
         <activity
             android:name=".ui.auth.AuthActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.main.TospayActivity" />
+        <activity android:name=".ui.main.TospayActivity"
+            android:label=""/>
     </application>
 
 </manifest>

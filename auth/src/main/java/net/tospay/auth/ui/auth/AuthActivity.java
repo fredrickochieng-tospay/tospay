@@ -68,7 +68,6 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
     public void onDestinationChanged(@NonNull NavController controller,
                                      @NonNull NavDestination destination,
                                      @Nullable Bundle arguments) {
-
         if (destination.getId() == R.id.navigation_login) {
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_login);
