@@ -14,6 +14,7 @@
     <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.account.verify.VerifyMobileFragment">
@@ -21,9 +22,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_16"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +32,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="100dp"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_validate_phone" />
 
@@ -61,18 +62,37 @@
                 android:textStyle="bold"
                 tools:text="+254712345678" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/codeEditText"
-                android:layout_width="150dp"
+            <net.tospay.auth.view.ErrorLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/proxima_nova_regular"
-                android:gravity="center"
-                android:hint="Enter code"
-                android:inputType="number"
-                android:maxLength="6"
-                android:textAllCaps="true"
-                android:textSize="16sp" />
+                android:layout_marginTop="@dimen/default_space_10"
+                android:visibility="@{mobileViewModel.isError ? View.VISIBLE : View.GONE}"
+                app:error_message="@{mobileViewModel.errorMessage}" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/codeInputLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_space_24"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="@dimen/default_space_24"
+                android:layout_marginEnd="@dimen/default_space_24"
+                android:layout_marginRight="28dp"
+                android:hint="@string/enter_code">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/codeEditText"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:text="@{mobileViewModel.otp}"
+                    android:textAllCaps="true"
+                    android:textSize="20sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_verify_phone"
@@ -119,7 +139,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

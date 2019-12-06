@@ -32,10 +32,8 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     private BaseActivity mActivity;
     private DB mViewDataBinding;
     private VM mViewModel;
-
-    private GatewayRepository mGatewayRepository;
-    private UserRepository mUserRepository;
     private SharedPrefManager mSharedPrefManager;
+    private AppExecutors mAppExecutors;
     public PaymentListener mListener;
 
     /**
@@ -79,14 +77,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppExecutors mAppExecutors = new AppExecutors();
-
-        UserService userService = ServiceGenerator.createService(UserService.class);
-        mUserRepository = new UserRepository(mAppExecutors, userService);
-
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
-        mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
-
+        mAppExecutors = new AppExecutors();
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());
         mViewModel = getViewModel();
         setBearerToken(mSharedPrefManager.getAccessToken());
@@ -124,12 +115,8 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         return mViewDataBinding;
     }
 
-    public UserRepository getUserRepository() {
-        return mUserRepository;
-    }
-
-    public GatewayRepository getGatewayRepository() {
-        return mGatewayRepository;
+    public AppExecutors getAppExecutors() {
+        return mAppExecutors;
     }
 
     public SharedPrefManager getSharedPrefManager() {

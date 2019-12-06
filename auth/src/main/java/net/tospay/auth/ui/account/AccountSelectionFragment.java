@@ -19,9 +19,12 @@ import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.request.PaymentRequest;
 import net.tospay.auth.remote.response.TospayException;
-import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.remote.service.AccountService;
+import net.tospay.auth.ui.AccountViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 
@@ -55,7 +58,9 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public AccountViewModel getViewModel() {
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
+        AccountRepository repository = new AccountRepository(getAppExecutors(),
+                ServiceGenerator.createService(AccountService.class));
+        AccountViewModelFactory factory = new AccountViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(AccountViewModel.class);
         return mViewModel;
     }

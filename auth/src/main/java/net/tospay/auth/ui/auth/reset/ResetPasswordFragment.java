@@ -20,6 +20,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentResetPasswordBinding;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.NetworkUtils;
@@ -45,7 +48,9 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
     @Override
     public ResetPasswordViewModel getViewModel() {
-        UserViewModelFactory factory = new UserViewModelFactory(getUserRepository());
+        UserRepository repository = new UserRepository(getAppExecutors(),
+                ServiceGenerator.createService(UserService.class));
+        UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(ResetPasswordViewModel.class);
         return mViewModel;
     }

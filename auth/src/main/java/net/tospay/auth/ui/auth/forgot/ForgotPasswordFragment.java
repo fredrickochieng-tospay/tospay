@@ -23,7 +23,10 @@ import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentForgotPasswordBinding;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.response.Result;
+import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
@@ -51,7 +54,9 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
 
     @Override
     public ForgotPasswordViewModel getViewModel() {
-        UserViewModelFactory factory = new UserViewModelFactory(getUserRepository());
+        UserRepository repository = new UserRepository(getAppExecutors(),
+                ServiceGenerator.createService(UserService.class));
+        UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(ForgotPasswordViewModel.class);
         return mViewModel;
     }

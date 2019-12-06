@@ -6,14 +6,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import net.tospay.auth.R;
+import net.tospay.auth.model.Country;
+import net.tospay.auth.model.Network;
+import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.repository.MobileRepository;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.response.MobileResponse;
 import net.tospay.auth.remote.response.Result;
-import net.tospay.auth.model.Country;
-import net.tospay.auth.model.Network;
-import net.tospay.auth.remote.Resource;
-import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.HashMap;
@@ -24,15 +24,16 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
     private MutableLiveData<Country> country = new MutableLiveData<>();
     private MutableLiveData<Network> network = new MutableLiveData<>();
     private MutableLiveData<String> phone = new MutableLiveData<>();
+    public MutableLiveData<String> otp = new MutableLiveData<>();
 
     private LiveData<Resource<MobileResponse>> mobileResourceLiveData;
     private LiveData<Resource<Result>> resendResourceLiveData;
     private LiveData<Resource<Result>> verifyResourceLiveData;
 
-    private GatewayRepository gatewayRepository;
+    private MobileRepository repository;
 
-    public MobileMoneyViewModel(GatewayRepository gatewayRepository) {
-        this.gatewayRepository = gatewayRepository;
+    public MobileMoneyViewModel(MobileRepository repository) {
+        this.repository = repository;
     }
 
     public MutableLiveData<Country> getCountry() {
@@ -47,6 +48,14 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
         return phone;
     }
 
+    public MutableLiveData<String> getOtp() {
+        return otp;
+    }
+
+    public void setOtp(MutableLiveData<String> otp) {
+        this.otp = otp;
+    }
+
     public LiveData<Resource<MobileResponse>> getMobileResourceLiveData() {
         return mobileResourceLiveData;
     }
@@ -59,26 +68,28 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
         return verifyResourceLiveData;
     }
 
-    public void linkAccount(String phone, String name) {
+    public void link(String phone, String name) {
         MobileRequest request = new MobileRequest();
         request.setCountry(country.getValue());
         request.setNetwork(network.getValue());
         request.setNumber(phone);
         request.setAlias(name);
 
-        mobileResourceLiveData = gatewayRepository.linkMobileAccount(getBearerToken().get(), request);
+        mobileResourceLiveData = repository.link(getBearerToken().get(), request);
     }
 
-    public void verifyAccount(String accountId, String code) {
-        MobileAccountVerificationRequest request = new MobileAccountVerificationRequest(accountId, code);
-        verifyResourceLiveData = gatewayRepository.verifyMobile(getBearerToken().get(), request);
+    public void verify(String accountId) {
+        String otp = getOtp().getValue();
+        MobileAccountVerificationRequest request
+                = new MobileAccountVerificationRequest(accountId, otp);
+        verifyResourceLiveData = repository.verify(getBearerToken().get(), request);
     }
 
     public void resend(String accountId) {
         Map<String, Object> request = new HashMap<>();
         request.put("id", accountId);
 
-        resendResourceLiveData = gatewayRepository.resendVerificationCode(getBearerToken().get(), request);
+        resendResourceLiveData = repository.resend(getBearerToken().get(), request);
     }
 
     @Override

@@ -10,18 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentLinkMobileAccountBinding;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.GatewayRepository;
+import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.account.verify.MobileMoneyNavigator;
 import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.ui.dialog.network.NetworkDialog;
+import net.tospay.auth.utils.NetworkUtils;
 
 public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAccountBinding, MobileMoneyViewModel>
         implements CountryDialog.CountrySelectedListener, NetworkDialog.NetworkSelectedListener, MobileMoneyNavigator {
@@ -50,7 +56,9 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public MobileMoneyViewModel getViewModel() {
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
+        GatewayRepository repository = new GatewayRepository(getAppExecutors(),
+                ServiceGenerator.createService(GatewayService.class));
+        GatewayViewModelFactory factory = new GatewayViewModelFactory(repository);
         viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
         return viewModel;
     }
@@ -119,39 +127,47 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
         String alias = mBinding.nameEditText.getText().toString();
 
-        progressDialog.show();
-
         Account account = new Account();
         account.setAlias(alias);
         account.setNetwork(network.getOperator());
         account.setTrunc(phone);
 
-        viewModel.linkAccount(phone, mBinding.nameEditText.getText().toString());
-        viewModel.getMobileResourceLiveData().observe(this, resource -> {
-            if (resource != null) {
-                switch (resource.status) {
-                    case SUCCESS:
-                        progressDialog.dismiss();
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+            viewModel.link(phone, mBinding.nameEditText.getText().toString());
+            viewModel.getMobileResourceLiveData().observe(this, resource -> {
+                if (resource != null) {
+                    switch (resource.status) {
+                        case SUCCESS:
+                            progressDialog.dismiss();
 
-                        if (resource.data != null) {
-                            account.setId(resource.data.getId());
-                        }
+                            if (resource.data != null) {
+                                account.setId(resource.data.getId());
+                            }
 
-                        AccountSelectionFragmentDirections
-                                .ActionNavigationAccountSelectionToNavigationVerifyMobile action =
-                                AccountSelectionFragmentDirections
-                                        .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
+                            AccountSelectionFragmentDirections
+                                    .ActionNavigationAccountSelectionToNavigationVerifyMobile action =
+                                    AccountSelectionFragmentDirections
+                                            .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
 
-                        NavHostFragment.findNavController(this).navigate(action);
+                            NavHostFragment.findNavController(this).navigate(action);
 
-                        break;
+                            break;
 
-                    case ERROR:
-                        progressDialog.dismiss();
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        break;
+                        case ERROR:
+                            progressDialog.dismiss();
+                            viewModel.setIsError(true);
+                            viewModel.setErrorMessage(resource.message);
+                            break;
+
+                        case LOADING:
+                            progressDialog.show();
+                            viewModel.setIsError(false);
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
     }
 }

@@ -23,6 +23,9 @@ import net.tospay.auth.databinding.FragmentRegisterBinding;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
@@ -73,7 +76,9 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
     @Override
     public RegisterViewModel getViewModel() {
-        UserViewModelFactory factory = new UserViewModelFactory(getUserRepository());
+        UserRepository repository = new UserRepository(getAppExecutors(),
+                ServiceGenerator.createService(UserService.class));
+        UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(RegisterViewModel.class);
         return mViewModel;
     }

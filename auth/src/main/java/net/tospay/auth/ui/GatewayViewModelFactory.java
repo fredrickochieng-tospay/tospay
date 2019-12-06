@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.ui.account.AccountViewModel;
-import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
 import net.tospay.auth.ui.confirm.ConfirmViewModel;
 import net.tospay.auth.ui.dialog.country.CountryViewModel;
 import net.tospay.auth.ui.dialog.network.NetworkViewModel;
@@ -28,21 +27,13 @@ public class GatewayViewModelFactory extends ViewModelProvider.NewInstanceFactor
             //noinspection unchecked
             return (T) new SummaryViewModel(gatewayRepository);
 
-        } else if (modelClass.isAssignableFrom(AccountViewModel.class)) {
-            //noinspection unchecked
-            return (T) new AccountViewModel(gatewayRepository);
-
-        } else if (modelClass.isAssignableFrom(ConfirmViewModel.class)) {
+        }  else if (modelClass.isAssignableFrom(ConfirmViewModel.class)) {
             //noinspection unchecked
             return (T) new ConfirmViewModel(gatewayRepository);
 
         } else if (modelClass.isAssignableFrom(PaymentViewModel.class)) {
             //noinspection unchecked
             return (T) new PaymentViewModel(gatewayRepository);
-
-        } else if (modelClass.isAssignableFrom(MobileMoneyViewModel.class)) {
-            //noinspection unchecked
-            return (T) new MobileMoneyViewModel(gatewayRepository);
 
         } else if (modelClass.isAssignableFrom(CountryViewModel.class)) {
             //noinspection unchecked

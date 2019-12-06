@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModelProviders;
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentConfirmBinding;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.request.PaymentRequest;
+import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.main.TospayActivity;
@@ -38,7 +41,9 @@ public class ConfirmFragment extends BaseFragment<FragmentConfirmBinding, Confir
 
     @Override
     public ConfirmViewModel getViewModel() {
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
+        GatewayRepository repository = new GatewayRepository(getAppExecutors(),
+                ServiceGenerator.createService(GatewayService.class));
+        GatewayViewModelFactory factory = new GatewayViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(ConfirmViewModel.class);
         return mViewModel;
     }

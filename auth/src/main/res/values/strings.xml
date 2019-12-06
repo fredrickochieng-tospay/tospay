@@ -56,4 +56,7 @@
     <string name="new_password">New Password</string>
     <string name="pay">Pay</string>
     <string name="paydetails">Payment Details</string>
+    <string name="network">Network</string>
+    <string name="link_mobile_account">Link Mobile Account</string>
+    <string name="alias_name">Alias name</string>
 </resources>

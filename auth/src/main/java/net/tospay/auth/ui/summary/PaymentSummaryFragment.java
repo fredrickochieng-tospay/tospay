@@ -17,10 +17,13 @@ import androidx.navigation.Navigation;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.databinding.FragmentPaymentSummaryBinding;
 import net.tospay.auth.remote.Resource;
+import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
@@ -144,7 +147,9 @@ public class PaymentSummaryFragment extends BaseFragment<FragmentPaymentSummaryB
 
     @Override
     public SummaryViewModel getViewModel() {
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
+        GatewayRepository repository = new GatewayRepository(getAppExecutors(),
+                ServiceGenerator.createService(GatewayService.class));
+        GatewayViewModelFactory factory = new GatewayViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(SummaryViewModel.class);
         return mViewModel;
     }
