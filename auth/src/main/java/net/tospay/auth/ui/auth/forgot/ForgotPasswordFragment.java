@@ -127,7 +127,7 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
 
         mViewModel.getEmail().setValue(email);
 
-        if (NetworkUtils.isNetworkAvailable(getContext())) {
+        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
             mViewModel.forgotPassword();
             mViewModel.getResponseLiveData().observe(this, this::handleResponse);
         } else {

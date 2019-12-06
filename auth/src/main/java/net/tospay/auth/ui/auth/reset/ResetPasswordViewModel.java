@@ -14,7 +14,9 @@ import net.tospay.auth.ui.base.BaseViewModel;
 
 public class ResetPasswordViewModel extends BaseViewModel<ResetPasswordNavigator> implements View.OnClickListener {
 
-    private MutableLiveData<String> mEmail;
+    private MutableLiveData<String> mEmail = new MutableLiveData<>();
+    public MutableLiveData<String> otp = new MutableLiveData<>();
+
     private final UserRepository userRepository;
 
     private LiveData<Resource<Result>> resetResourceLiveData;
@@ -22,11 +24,14 @@ public class ResetPasswordViewModel extends BaseViewModel<ResetPasswordNavigator
 
     public ResetPasswordViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.mEmail = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getEmail() {
         return mEmail;
+    }
+
+    public MutableLiveData<String> getOtp() {
+        return otp;
     }
 
     public LiveData<Resource<Result>> getResetResourceLiveData() {
@@ -41,8 +46,9 @@ public class ResetPasswordViewModel extends BaseViewModel<ResetPasswordNavigator
         resendResourceLiveData = userRepository.forgotPassword(mEmail.getValue());
     }
 
-    public void reset(String code, String password) {
-        resetResourceLiveData = userRepository.resetPassword(mEmail.getValue(), code, password);
+    public void reset(String password) {
+        String otp = getOtp().getValue();
+        resetResourceLiveData = userRepository.resetPassword(mEmail.getValue(), otp, password);
     }
 
     @Override

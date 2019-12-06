@@ -18,14 +18,14 @@ import net.tospay.auth.ui.base.BaseViewModel;
 public class PhoneViewModel extends BaseViewModel<PhoneNavigator> implements View.OnClickListener {
 
     public MutableLiveData<TospayUser> user = new MutableLiveData<>();
-    public ObservableBoolean enableLoginButton;
+    public MutableLiveData<String> otp = new MutableLiveData<>();
+
     private UserRepository userRepository;
     private LiveData<Resource<Result>> verifyResourceLiveData;
     private LiveData<Resource<Result>> resendResourceLiveData;
 
     public PhoneViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.enableLoginButton = new ObservableBoolean(false);
     }
 
     public LiveData<Resource<Result>> getVerifyResourceLiveData() {
@@ -37,10 +37,11 @@ public class PhoneViewModel extends BaseViewModel<PhoneNavigator> implements Vie
     }
 
 
-    public void verify(String code) {
+    public void verify() {
         setIsError(false);
-        String phone = user.getValue().getPhone();
-        verifyResourceLiveData = userRepository.verifyPhone(new VerifyPhoneRequest(phone, code));
+        String phone = getUser().getValue().getPhone();
+        String otp = getOtp().getValue();
+        verifyResourceLiveData = userRepository.verifyPhone(new VerifyPhoneRequest(phone, otp));
     }
 
     public void resend() {
@@ -51,6 +52,10 @@ public class PhoneViewModel extends BaseViewModel<PhoneNavigator> implements Vie
 
     public MutableLiveData<TospayUser> getUser() {
         return user;
+    }
+
+    public MutableLiveData<String> getOtp() {
+        return otp;
     }
 
     @Override

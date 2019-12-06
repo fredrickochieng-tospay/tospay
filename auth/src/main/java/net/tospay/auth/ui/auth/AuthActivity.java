@@ -23,7 +23,7 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
 
     public static final int REQUEST_CODE_LOGIN = 100;
     private ImageView illustrationIV;
-    private   Animation view_fade_in,view_fade_out;
+    private Animation view_fade_in, view_fade_out;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +31,8 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
         setContentView(R.layout.activity_auth);
         illustrationIV = findViewById(R.id.illustration_view);
 
-        view_fade_in = AnimationUtils.loadAnimation(this,R.anim.view_fade_in);
-        view_fade_out = AnimationUtils.loadAnimation(this,R.anim.view_fade_out);
+        view_fade_in = AnimationUtils.loadAnimation(this, R.anim.view_fade_in);
+        view_fade_out = AnimationUtils.loadAnimation(this, R.anim.view_fade_out);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_auth);
@@ -75,9 +75,23 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener, 
         } else if (destination.getId() == R.id.navigation_register) {
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_register);
+
         } else if (destination.getId() == R.id.navigation_forgot_password) {
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_forgot_password);
+
+        } else if (destination.getId() == R.id.navigation_reset_password) {
+            illustrationIV.startAnimation(view_fade_in);
+            illustrationIV.setImageResource(R.drawable.ic_validate_password);
+
+        } else if (destination.getId() == R.id.navigation_email_verification) {
+            illustrationIV.startAnimation(view_fade_in);
+            illustrationIV.setImageResource(R.drawable.ic_validate_email);
+
+        } else if (destination.getId() == R.id.navigation_phone_verification) {
+            illustrationIV.startAnimation(view_fade_in);
+            illustrationIV.setImageResource(R.drawable.ic_validate_phone);
+
         } else {
             illustrationIV.startAnimation(view_fade_in);
             illustrationIV.setImageResource(R.drawable.ic_login);
