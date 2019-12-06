@@ -14,6 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:fitsSystemWindows="true"
         android:keepScreenOn="true"
         tools:context=".ui.main.TospayActivity">
@@ -33,54 +34,53 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:toolbarId="@+id/toolbar">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:id="@+id/imageView3"
                         style="?partner_banner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/app_bar_height"
                         android:contentDescription="@string/app_name"
                         android:scaleType="fitXY"
-                        android:id="@+id/imageView3"
                         app:layout_collapseMode="parallax"
                         tools:src="@color/colorPrimary" />
 
                     <RelativeLayout
-                        android:layout_margin="16dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_above="@id/curved_view"
+                        android:layout_margin="16dp"
                         tools:ignore="MissingConstraints">
 
                         <ImageView
                             style="?partner_logo"
                             android:layout_width="70dp"
-                            android:layout_alignParentStart="true"
                             android:layout_height="70dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentLeft="true"
                             android:layout_marginStart="@dimen/default_space_24"
                             android:layout_marginLeft="@dimen/default_space_24"
                             android:contentDescription="@string/app_name"
-                            tools:src="@drawable/ic_tospay_logo_original"
-                            android:layout_alignParentLeft="true" />
+                            tools:src="@drawable/ic_tospay_logo_original" />
 
                         <ImageView
                             style="?partner_logo"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/circular_background"
-                            android:layout_marginRight="16dp"
                             android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
                             android:layout_marginStart="@dimen/default_space_24"
                             android:layout_marginLeft="@dimen/default_space_24"
+                            android:layout_marginRight="16dp"
+                            android:background="@drawable/circular_background"
                             android:contentDescription="@string/app_name"
-                            tools:src="@drawable/ic_tospay_logo_original"
-                            android:layout_alignParentRight="true" />
+                            tools:src="@drawable/ic_tospay_logo_original" />
 
                     </RelativeLayout>
-
-
 
                     <View
                         android:id="@+id/curved_view"
@@ -89,38 +89,28 @@
                         android:layout_alignBottom="@id/imageView3"
                         android:background="@drawable/background_top_curved" />
 
-
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.Toolbar
-                    android:orientation="vertical"
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    android:orientation="vertical"
                     app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
             </com.google.android.material.appbar.CollapsingToolbarLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container"
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <fragment
-                android:id="@+id/nav_host_fragment"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:defaultNavHost="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:navGraph="@navigation/nav_payment" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:defaultNavHost="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:navGraph="@navigation/nav_payment" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -54,4 +54,6 @@
     <string name="reset_password">Reset Password</string>
     <string name="invalid_otp">Invalid code or too short</string>
     <string name="new_password">New Password</string>
+    <string name="pay">Pay</string>
+    <string name="paydetails">Payment Details</string>
 </resources>

@@ -75,32 +75,4 @@ public interface GatewayService {
             @Body MobileAccountVerificationRequest request
     );
 
-    @POST("v1/transfer")
-    LiveData<ApiResponse<Result>> transfer(
-            @Header("Authorization") String bearer,
-            @Body Map<String, Object> request
-    );
-
-    @POST("v1/withdraw")
-    LiveData<ApiResponse<Result>> withdraw(
-            @Header("Authorization") String bearer,
-            @Body Map<String, Object> request
-    );
-
-    @POST("v1/topup")
-    LiveData<ApiResponse<Result>> topup(
-            @Header("Authorization") String bearer,
-            @Body Map<String, Object> request
-    );
-
-    @GET("v1/wallet-transactions")
-    LiveData<ApiResponse<Result<WalletTransactionResponse>>> fetchWalletTransactions(
-            @Header("Authorization") String bearer
-    );
-
-    @POST("v1/firebase-token")
-    LiveData<ApiResponse<Result>> saveFcmToken(
-            @Header("Authorization") String bearer,
-            @Body Map<String, String> request
-    );
 }
