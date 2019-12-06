@@ -4,6 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.interfaces.AccountType;
+import net.tospay.auth.model.Account;
+import net.tospay.auth.model.AccountTitle;
+import net.tospay.auth.model.Country;
+import net.tospay.auth.model.Network;
+import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.request.PaymentRequest;
@@ -13,20 +19,12 @@ import net.tospay.auth.remote.response.MobileResponse;
 import net.tospay.auth.remote.response.PaymentResponse;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
-import net.tospay.auth.remote.response.WalletTransactionResponse;
 import net.tospay.auth.remote.service.GatewayService;
-import net.tospay.auth.interfaces.AccountType;
-import net.tospay.auth.model.Account;
-import net.tospay.auth.model.AccountTitle;
-import net.tospay.auth.model.Country;
-import net.tospay.auth.model.Network;
-import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.util.NetworkBoundResource;
 import net.tospay.auth.utils.AbsentLiveData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

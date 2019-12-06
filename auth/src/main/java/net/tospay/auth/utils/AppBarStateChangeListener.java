@@ -1,4 +1,4 @@
-package net.tospay.auth.ui_listener;
+package net.tospay.auth.utils;
 
 
 import com.google.android.material.appbar.AppBarLayout;

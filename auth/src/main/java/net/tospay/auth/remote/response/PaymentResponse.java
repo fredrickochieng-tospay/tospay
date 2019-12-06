@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import net.tospay.auth.model.PaymentTransaction;
+import net.tospay.auth.model.transfer.OrderInfo;
 
 public class PaymentResponse {
 

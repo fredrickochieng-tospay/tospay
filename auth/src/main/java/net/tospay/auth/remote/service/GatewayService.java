@@ -2,6 +2,8 @@ package net.tospay.auth.remote.service;
 
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.model.Country;
+import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.request.PaymentRequest;
@@ -11,9 +13,6 @@ import net.tospay.auth.remote.response.MobileResponse;
 import net.tospay.auth.remote.response.PaymentResponse;
 import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.Result;
-import net.tospay.auth.remote.response.WalletTransactionResponse;
-import net.tospay.auth.model.Country;
-import net.tospay.auth.model.Network;
 
 import java.util.List;
 import java.util.Map;

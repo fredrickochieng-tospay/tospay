@@ -1,27 +1,23 @@
-package net.tospay.auth.remote.response;
+package net.tospay.auth.model.transfer;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OrderInfo {
+public class Amount {
 
     @SerializedName("amount")
     @Expose
-    private Double amount;
+    private String amount;
 
     @SerializedName("currency")
     @Expose
     private String currency;
 
-    @SerializedName("reference")
-    @Expose
-    private String reference;
-
-    public Double getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 
@@ -33,11 +29,4 @@ public class OrderInfo {
         this.currency = currency;
     }
 
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
 }

@@ -7,16 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -26,7 +22,6 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
@@ -41,7 +36,7 @@ import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
-import net.tospay.auth.ui_listener.AppBarStateChangeListener;
+import net.tospay.auth.utils.AppBarStateChangeListener;
 
 import java.net.URISyntaxException;
 
