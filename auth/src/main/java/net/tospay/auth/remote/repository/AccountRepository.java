@@ -133,45 +133,6 @@ public class AccountRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<List<Wallet>>> wallets(String bearerToken) {
-        return new NetworkBoundResource<List<Wallet>, Result<List<Wallet>>>(mAppExecutors) {
-
-            private List<Wallet> resultsDb;
-
-            @Override
-            protected void saveCallResult(@NonNull Result<List<Wallet>> item) {
-                resultsDb = item.getData();
-            }
-
-            @Override
-            protected boolean shouldFetch(@Nullable List<Wallet> data) {
-                return true;
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<List<Wallet>> loadFromDb() {
-                if (resultsDb == null) {
-                    return AbsentLiveData.create();
-                } else {
-                    return new LiveData<List<Wallet>>() {
-                        @Override
-                        protected void onActive() {
-                            super.onActive();
-                            setValue(resultsDb);
-                        }
-                    };
-                }
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<ApiResponse<Result<List<Wallet>>>> createCall() {
-                return mAccountService.wallets(bearerToken);
-            }
-        }.asLiveData();
-    }
-
     public LiveData<Resource<List<Account>>> accounts(String bearerToken, String type) {
         return new NetworkBoundResource<List<Account>, Result<List<Account>>>(mAppExecutors) {
 

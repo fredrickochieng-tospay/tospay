@@ -21,11 +21,6 @@ public interface AccountService {
             @Header("Authorization") String bearer
     );
 
-    @GET("v1/accounts/wallets")
-    LiveData<ApiResponse<Result<List<Wallet>>>> wallets(
-            @Header("Authorization") String bearer
-    );
-
     @GET("v1/accounts/{type}")
     LiveData<ApiResponse<Result<List<Account>>>> accounts(
             @Header("Authorization") String bearer,
