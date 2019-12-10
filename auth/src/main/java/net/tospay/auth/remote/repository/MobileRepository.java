@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import net.tospay.auth.model.transfer.Account;
+import net.tospay.auth.model.Account;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
