@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -39,7 +40,7 @@ public interface MobileService {
             @Body Map<String, Object> request
     );
 
-    @POST("v1/mobile/accounts")
+    @GET("v1/mobile/accounts")
     LiveData<ApiResponse<Result<List<Account>>>> accounts(
             @Header("Authorization") String bearer
     );
