@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.AccountTitle;
-import net.tospay.auth.model.Wallet;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.response.AccountResponse;
 import net.tospay.auth.remote.response.ApiResponse;
@@ -26,7 +25,7 @@ public class AccountRepository {
     private final AppExecutors mAppExecutors;
 
     /**
-     * @param mAppExecutors   -AppExecutor
+     * @param mAppExecutors   - AppExecutor
      * @param mAccountService - Account service
      */
     public AccountRepository(AppExecutors mAppExecutors, AccountService mAccountService) {
@@ -133,14 +132,26 @@ public class AccountRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<List<Account>>> accounts(String bearerToken, String type) {
-        return new NetworkBoundResource<List<Account>, Result<List<Account>>>(mAppExecutors) {
+    /**
+     * Retrieve user accounts
+     *
+     * @return LiveData
+     */
+    public LiveData<Resource<List<Account>>> accounts(String bearerToken) {
+        return new NetworkBoundResource<List<Account>, Result<AccountResponse>>(mAppExecutors) {
 
             private List<Account> resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<List<Account>> item) {
-                resultsDb = item.getData();
+            protected void saveCallResult(@NonNull Result<AccountResponse> item) {
+                AccountResponse response = item.getData();
+
+                List<Account> accounts = new ArrayList<>();
+                accounts.addAll(response.getMobile());
+                accounts.addAll(response.getCard());
+                accounts.addAll(response.getBank());
+
+                resultsDb = accounts;
             }
 
             @Override
@@ -166,9 +177,10 @@ public class AccountRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<List<Account>>>> createCall() {
-                return mAccountService.accounts(bearerToken, type);
+            protected LiveData<ApiResponse<Result<AccountResponse>>> createCall() {
+                return mAccountService.accounts(bearerToken);
             }
+
         }.asLiveData();
     }
 
