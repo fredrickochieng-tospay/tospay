@@ -9,10 +9,6 @@ public class Delivery {
     @Expose
     private Account account;
 
-    @SerializedName("charge")
-    @Expose
-    private Charge charge;
-
     @SerializedName("order")
     @Expose
     private Order order;
@@ -27,14 +23,6 @@ public class Delivery {
 
     public void setAccount(Account account) {
         this.account = account;
-    }
-
-    public Charge getCharge() {
-        return charge;
-    }
-
-    public void setCharge(Charge charge) {
-        this.charge = charge;
     }
 
     public Order getOrder() {

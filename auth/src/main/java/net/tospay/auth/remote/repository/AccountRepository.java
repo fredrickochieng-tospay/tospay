@@ -147,9 +147,21 @@ public class AccountRepository {
                 AccountResponse response = item.getData();
 
                 List<Account> accounts = new ArrayList<>();
-                accounts.addAll(response.getMobile());
-                accounts.addAll(response.getCard());
-                accounts.addAll(response.getBank());
+
+                for (Account account : response.getMobile()) {
+                    account.setAccountType(AccountType.MOBILE);
+                    accounts.add(account);
+                }
+
+                for (Account account : response.getCard()) {
+                    account.setAccountType(AccountType.CARD);
+                    accounts.add(account);
+                }
+
+                for (Account account : response.getBank()) {
+                    account.setAccountType(AccountType.BANK);
+                    accounts.add(account);
+                }
 
                 resultsDb = accounts;
             }

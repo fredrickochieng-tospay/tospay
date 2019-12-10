@@ -43,6 +43,7 @@ public class Account implements Parcelable, AccountType {
     private boolean verified;
 
     private int accountType;
+    private double amount;
 
     public Account() {
     }
@@ -57,6 +58,7 @@ public class Account implements Parcelable, AccountType {
         alias = in.readString();
         verified = in.readByte() != 0;
         accountType = in.readInt();
+        amount = in.readDouble();
     }
 
     @Override
@@ -70,6 +72,7 @@ public class Account implements Parcelable, AccountType {
         dest.writeString(alias);
         dest.writeByte((byte) (verified ? 1 : 0));
         dest.writeInt(accountType);
+        dest.writeDouble(amount);
     }
 
     @Override
@@ -161,6 +164,14 @@ public class Account implements Parcelable, AccountType {
         this.accountType = accountType;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
     @Override
     public int getType() {
         return accountType;
@@ -178,6 +189,7 @@ public class Account implements Parcelable, AccountType {
                 ", alias='" + alias + '\'' +
                 ", verified=" + verified +
                 ", accountType=" + accountType +
+                ", amount=" + amount +
                 '}';
     }
 }

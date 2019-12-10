@@ -7,17 +7,17 @@ import java.util.List;
 
 public class Transfer {
 
-    @SerializedName("chargeInfo")
-    @Expose
-    private ChargeInfo chargeInfo;
+    public static final String TOPUP = "TOPUP";
+    public static final String WITHDRAW = "WITHDRAW";
+    public static final String TRANSFER = "TRANSFER";
 
     @SerializedName("delivery")
     @Expose
     private List<Delivery> delivery = null;
 
-    @SerializedName("deviceInfo")
+    @SerializedName("source")
     @Expose
-    private DeviceInfo deviceInfo;
+    private List<Source> source = null;
 
     @SerializedName("orderInfo")
     @Expose
@@ -27,28 +27,12 @@ public class Transfer {
     @Expose
     private String type;
 
-    public ChargeInfo getChargeInfo() {
-        return chargeInfo;
-    }
-
-    public void setChargeInfo(ChargeInfo chargeInfo) {
-        this.chargeInfo = chargeInfo;
-    }
-
     public List<Delivery> getDelivery() {
         return delivery;
     }
 
     public void setDelivery(List<Delivery> delivery) {
         this.delivery = delivery;
-    }
-
-    public DeviceInfo getDeviceInfo() {
-        return deviceInfo;
-    }
-
-    public void setDeviceInfo(DeviceInfo deviceInfo) {
-        this.deviceInfo = deviceInfo;
     }
 
     public OrderInfo getOrderInfo() {
