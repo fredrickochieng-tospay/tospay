@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Source implements Parcelable {
 
-    @SerializedName("amount")
+    @SerializedName("account")
     @Expose
-    private Amount amount;
+    private Account account;
 
     @SerializedName("charge")
     @Expose
@@ -28,7 +28,7 @@ public class Source implements Parcelable {
     }
 
     protected Source(Parcel in) {
-        amount = in.readParcelable(Amount.class.getClassLoader());
+        account = in.readParcelable(Account.class.getClassLoader());
         charge = in.readParcelable(Charge.class.getClassLoader());
         order = in.readParcelable(Order.class.getClassLoader());
         total = in.readParcelable(Total.class.getClassLoader());
@@ -36,7 +36,7 @@ public class Source implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(amount, flags);
+        dest.writeParcelable(account, flags);
         dest.writeParcelable(charge, flags);
         dest.writeParcelable(order, flags);
         dest.writeParcelable(total, flags);
@@ -59,12 +59,12 @@ public class Source implements Parcelable {
         }
     };
 
-    public Amount getAmount() {
-        return amount;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAmount(Amount amount) {
-        this.amount = amount;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Charge getCharge() {
@@ -94,7 +94,7 @@ public class Source implements Parcelable {
     @Override
     public String toString() {
         return "Source{" +
-                "amount=" + amount +
+                "account=" + account +
                 ", charge=" + charge +
                 ", order=" + order +
                 ", total=" + total +

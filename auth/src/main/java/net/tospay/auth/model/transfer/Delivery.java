@@ -6,11 +6,15 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Delivery implements Parcelable{
+public class Delivery implements Parcelable {
 
     @SerializedName("account")
     @Expose
     private Account account;
+
+    @SerializedName("charge")
+    @Expose
+    private Charge charge;
 
     @SerializedName("order")
     @Expose
@@ -25,6 +29,7 @@ public class Delivery implements Parcelable{
 
     protected Delivery(Parcel in) {
         account = in.readParcelable(Account.class.getClassLoader());
+        charge = in.readParcelable(Charge.class.getClassLoader());
         order = in.readParcelable(Order.class.getClassLoader());
         total = in.readParcelable(Total.class.getClassLoader());
     }
@@ -32,6 +37,7 @@ public class Delivery implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(account, flags);
+        dest.writeParcelable(charge, flags);
         dest.writeParcelable(order, flags);
         dest.writeParcelable(total, flags);
     }
@@ -61,6 +67,14 @@ public class Delivery implements Parcelable{
         this.account = account;
     }
 
+    public Charge getCharge() {
+        return charge;
+    }
+
+    public void setCharge(Charge charge) {
+        this.charge = charge;
+    }
+
     public Order getOrder() {
         return order;
     }
@@ -81,6 +95,7 @@ public class Delivery implements Parcelable{
     public String toString() {
         return "Delivery{" +
                 "account=" + account +
+                ", charge=" + charge +
                 ", order=" + order +
                 ", total=" + total +
                 '}';
