@@ -38,6 +38,10 @@ public class Account implements Parcelable, AccountType {
     @Expose
     private String alias;
 
+    @SerializedName("currency")
+    @Expose
+    private String currency;
+
     @SerializedName("verified")
     @Expose
     private boolean verified;
@@ -56,6 +60,7 @@ public class Account implements Parcelable, AccountType {
         state = in.readString();
         note = in.readString();
         alias = in.readString();
+        currency = in.readString();
         verified = in.readByte() != 0;
         accountType = in.readInt();
         amount = in.readDouble();
@@ -70,6 +75,7 @@ public class Account implements Parcelable, AccountType {
         dest.writeString(state);
         dest.writeString(note);
         dest.writeString(alias);
+        dest.writeString(currency);
         dest.writeByte((byte) (verified ? 1 : 0));
         dest.writeInt(accountType);
         dest.writeDouble(amount);
@@ -148,6 +154,14 @@ public class Account implements Parcelable, AccountType {
         this.alias = alias;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public boolean isVerified() {
         return verified;
     }
@@ -187,6 +201,7 @@ public class Account implements Parcelable, AccountType {
                 ", state='" + state + '\'' +
                 ", note='" + note + '\'' +
                 ", alias='" + alias + '\'' +
+                ", currency='" + currency + '\'' +
                 ", verified=" + verified +
                 ", accountType=" + accountType +
                 ", amount=" + amount +
