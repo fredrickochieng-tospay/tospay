@@ -49,6 +49,7 @@ public class Account implements Parcelable, AccountType {
     private int accountType;
     private double amount;
     private boolean collapsed = false;
+    private boolean checked = false;
 
     public Account() {
     }
@@ -66,6 +67,7 @@ public class Account implements Parcelable, AccountType {
         accountType = in.readInt();
         amount = in.readDouble();
         collapsed = in.readByte() != 0;
+        checked = in.readByte() != 0;
     }
 
     @Override
@@ -82,6 +84,7 @@ public class Account implements Parcelable, AccountType {
         dest.writeInt(accountType);
         dest.writeDouble(amount);
         dest.writeByte((byte) (collapsed ? 1 : 0));
+        dest.writeByte((byte) (checked ? 1 : 0));
     }
 
     @Override
@@ -197,6 +200,14 @@ public class Account implements Parcelable, AccountType {
         this.collapsed = collapsed;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @Override
     public int getType() {
         return accountType;
@@ -217,6 +228,7 @@ public class Account implements Parcelable, AccountType {
                 ", accountType=" + accountType +
                 ", amount=" + amount +
                 ", collapsed=" + collapsed +
+                ", checked=" + checked +
                 '}';
     }
 }
