@@ -26,6 +26,12 @@ public class Account implements Parcelable{
     public Account() {
     }
 
+    public Account(String id, String type, String currency) {
+        this.id = id;
+        this.type = type;
+        this.currency = currency;
+    }
+
     protected Account(Parcel in) {
         id = in.readString();
         type = in.readString();

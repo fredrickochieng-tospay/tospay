@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.UUID;
-
 public class OrderInfo implements Parcelable{
 
     @SerializedName("amount")
@@ -19,6 +17,11 @@ public class OrderInfo implements Parcelable{
     private String reference;
 
     public OrderInfo() {
+    }
+
+    public OrderInfo(Amount amount, String reference) {
+        this.amount = amount;
+        this.reference = reference;
     }
 
     protected OrderInfo(Parcel in) {
@@ -58,7 +61,7 @@ public class OrderInfo implements Parcelable{
     }
 
     public String getReference() {
-        return UUID.randomUUID().toString();
+        return reference;
     }
 
     public void setReference(String reference) {

@@ -15,6 +15,10 @@ public class Charge implements Parcelable {
     public Charge() {
     }
 
+    public Charge(Amount amount) {
+        this.amount = amount;
+    }
+
     protected Charge(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }

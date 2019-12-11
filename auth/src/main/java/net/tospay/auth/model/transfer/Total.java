@@ -15,6 +15,10 @@ public class Total implements Parcelable {
     public Total() {
     }
 
+    public Total(Amount amount) {
+        this.amount = amount;
+    }
+
     protected Total(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }

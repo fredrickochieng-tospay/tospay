@@ -15,6 +15,10 @@ public class Order implements Parcelable{
     public Order() {
     }
 
+    public Order(Amount amount) {
+        this.amount = amount;
+    }
+
     protected Order(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }

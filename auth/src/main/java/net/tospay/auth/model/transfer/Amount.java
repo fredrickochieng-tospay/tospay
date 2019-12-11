@@ -19,6 +19,11 @@ public class Amount implements Parcelable {
     public Amount() {
     }
 
+    public Amount(String amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
     protected Amount(Parcel in) {
         amount = in.readString();
         currency = in.readString();
