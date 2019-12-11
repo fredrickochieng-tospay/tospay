@@ -24,6 +24,9 @@ public class Source implements Parcelable {
     @Expose
     private Total total;
 
+    public Source() {
+    }
+
     protected Source(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
         charge = in.readParcelable(Charge.class.getClassLoader());

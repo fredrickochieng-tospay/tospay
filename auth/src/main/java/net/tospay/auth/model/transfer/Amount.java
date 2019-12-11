@@ -16,6 +16,9 @@ public class Amount implements Parcelable {
     @Expose
     private String currency;
 
+    public Amount() {
+    }
+
     protected Amount(Parcel in) {
         amount = in.readString();
         currency = in.readString();

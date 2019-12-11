@@ -12,6 +12,9 @@ public class Total implements Parcelable {
     @Expose
     private Amount amount;
 
+    public Total() {
+    }
+
     protected Total(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }

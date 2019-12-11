@@ -23,6 +23,9 @@ public class Account implements Parcelable{
     @Expose
     private String currency;
 
+    public Account() {
+    }
+
     protected Account(Parcel in) {
         id = in.readString();
         type = in.readString();

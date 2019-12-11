@@ -18,6 +18,9 @@ public class OrderInfo implements Parcelable{
     @Expose
     private String reference;
 
+    public OrderInfo() {
+    }
+
     protected OrderInfo(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
         reference = in.readString();

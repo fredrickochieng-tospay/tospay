@@ -20,6 +20,9 @@ public class Delivery implements Parcelable{
     @Expose
     private Total total;
 
+    public Delivery() {
+    }
+
     protected Delivery(Parcel in) {
         account = in.readParcelable(Account.class.getClassLoader());
         order = in.readParcelable(Order.class.getClassLoader());

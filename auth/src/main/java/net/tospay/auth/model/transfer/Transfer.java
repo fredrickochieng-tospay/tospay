@@ -30,6 +30,9 @@ public class Transfer implements Parcelable {
     @Expose
     private String type;
 
+    public Transfer() {
+    }
+
     protected Transfer(Parcel in) {
         delivery = in.createTypedArrayList(Delivery.CREATOR);
         source = in.createTypedArrayList(Source.CREATOR);

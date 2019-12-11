@@ -12,6 +12,9 @@ public class Order implements Parcelable{
     @Expose
     private Amount amount;
 
+    public Order() {
+    }
+
     protected Order(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }

@@ -12,6 +12,9 @@ public class Charge implements Parcelable {
     @Expose
     private Amount amount;
 
+    public Charge() {
+    }
+
     protected Charge(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
     }
