@@ -47,7 +47,7 @@ public class Account implements Parcelable, AccountType {
     private boolean verified;
 
     private int accountType;
-    private double amount;
+    private double amount = 0.00;
     private boolean collapsed = false;
     private boolean checked = false;
 

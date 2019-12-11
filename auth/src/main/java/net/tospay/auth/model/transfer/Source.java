@@ -1,9 +1,12 @@
 package net.tospay.auth.model.transfer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Source {
+public class Source implements Parcelable {
 
     @SerializedName("amount")
     @Expose
@@ -20,6 +23,38 @@ public class Source {
     @SerializedName("total")
     @Expose
     private Total total;
+
+    protected Source(Parcel in) {
+        amount = in.readParcelable(Amount.class.getClassLoader());
+        charge = in.readParcelable(Charge.class.getClassLoader());
+        order = in.readParcelable(Order.class.getClassLoader());
+        total = in.readParcelable(Total.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(amount, flags);
+        dest.writeParcelable(charge, flags);
+        dest.writeParcelable(order, flags);
+        dest.writeParcelable(total, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Source> CREATOR = new Creator<Source>() {
+        @Override
+        public Source createFromParcel(Parcel in) {
+            return new Source(in);
+        }
+
+        @Override
+        public Source[] newArray(int size) {
+            return new Source[size];
+        }
+    };
 
     public Amount getAmount() {
         return amount;
@@ -51,5 +86,15 @@ public class Source {
 
     public void setTotal(Total total) {
         this.total = total;
+    }
+
+    @Override
+    public String toString() {
+        return "Source{" +
+                "amount=" + amount +
+                ", charge=" + charge +
+                ", order=" + order +
+                ", total=" + total +
+                '}';
     }
 }

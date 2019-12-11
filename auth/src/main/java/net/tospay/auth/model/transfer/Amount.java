@@ -1,9 +1,12 @@
 package net.tospay.auth.model.transfer;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Amount {
+public class Amount implements Parcelable {
 
     @SerializedName("amount")
     @Expose
@@ -12,6 +15,34 @@ public class Amount {
     @SerializedName("currency")
     @Expose
     private String currency;
+
+    protected Amount(Parcel in) {
+        amount = in.readString();
+        currency = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(amount);
+        dest.writeString(currency);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Amount> CREATOR = new Creator<Amount>() {
+        @Override
+        public Amount createFromParcel(Parcel in) {
+            return new Amount(in);
+        }
+
+        @Override
+        public Amount[] newArray(int size) {
+            return new Amount[size];
+        }
+    };
 
     public String getAmount() {
         return amount;
@@ -29,4 +60,11 @@ public class Amount {
         this.currency = currency;
     }
 
+    @Override
+    public String toString() {
+        return "Amount{" +
+                "amount='" + amount + '\'' +
+                ", currency='" + currency + '\'' +
+                '}';
+    }
 }
