@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 
-public class Account implements Parcelable{
+public class Account implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -93,5 +93,16 @@ public class Account implements Parcelable{
                 ", type='" + type + '\'' +
                 ", currency='" + currency + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Account)) {
+            return false;
+        }
+
+        Account account = (Account) obj;
+        return this.id.equals(account.getId());
     }
 }

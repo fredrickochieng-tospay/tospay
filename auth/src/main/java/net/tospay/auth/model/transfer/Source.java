@@ -100,4 +100,14 @@ public class Source implements Parcelable {
                 ", total=" + total +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Source)) {
+            return false;
+        }
+
+        Source source = (Source) obj;
+        return this.account.equals(source.account);
+    }
 }

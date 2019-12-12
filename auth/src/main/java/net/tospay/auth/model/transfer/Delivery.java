@@ -100,4 +100,14 @@ public class Delivery implements Parcelable {
                 ", total=" + total +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Delivery)) {
+            return false;
+        }
+
+        Delivery delivery = (Delivery) obj;
+        return this.account.equals(delivery.account);
+    }
 }
