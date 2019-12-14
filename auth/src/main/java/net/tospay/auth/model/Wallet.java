@@ -28,6 +28,10 @@ public class Wallet implements Parcelable, AccountType {
     @Expose
     private Double lastBalance;
 
+    private double withdrawalAmount = 0.00;
+    private boolean collapsed = false;
+    private boolean checked = false;
+
     public Wallet() {
 
     }
@@ -45,6 +49,9 @@ public class Wallet implements Parcelable, AccountType {
         } else {
             lastBalance = in.readDouble();
         }
+        withdrawalAmount = in.readDouble();
+        collapsed = in.readByte() != 0;
+        checked = in.readByte() != 0;
     }
 
     @Override
@@ -63,6 +70,9 @@ public class Wallet implements Parcelable, AccountType {
             dest.writeByte((byte) 1);
             dest.writeDouble(lastBalance);
         }
+        dest.writeDouble(withdrawalAmount);
+        dest.writeByte((byte) (collapsed ? 1 : 0));
+        dest.writeByte((byte) (checked ? 1 : 0));
     }
 
     @Override
@@ -114,6 +124,30 @@ public class Wallet implements Parcelable, AccountType {
         this.lastBalance = lastBalance;
     }
 
+    public double getWithdrawalAmount() {
+        return withdrawalAmount;
+    }
+
+    public void setWithdrawalAmount(double withdrawalAmount) {
+        this.withdrawalAmount = withdrawalAmount;
+    }
+
+    public boolean isCollapsed() {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @Override
     public int getType() {
         return AccountType.WALLET;
@@ -126,6 +160,9 @@ public class Wallet implements Parcelable, AccountType {
                 ", currency='" + currency + '\'' +
                 ", accountBalance=" + accountBalance +
                 ", lastBalance=" + lastBalance +
+                ", withdrawalAmount=" + withdrawalAmount +
+                ", collapsed=" + collapsed +
+                ", checked=" + checked +
                 '}';
     }
 }

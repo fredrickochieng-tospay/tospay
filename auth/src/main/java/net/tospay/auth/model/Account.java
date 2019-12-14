@@ -47,7 +47,7 @@ public class Account implements Parcelable, AccountType {
     private boolean verified;
 
     private int accountType;
-    private double amount = 0.00;
+    private double withdrawalAmount = 0.00;
     private boolean collapsed = false;
     private boolean checked = false;
 
@@ -65,7 +65,7 @@ public class Account implements Parcelable, AccountType {
         currency = in.readString();
         verified = in.readByte() != 0;
         accountType = in.readInt();
-        amount = in.readDouble();
+        withdrawalAmount = in.readDouble();
         collapsed = in.readByte() != 0;
         checked = in.readByte() != 0;
     }
@@ -82,7 +82,7 @@ public class Account implements Parcelable, AccountType {
         dest.writeString(currency);
         dest.writeByte((byte) (verified ? 1 : 0));
         dest.writeInt(accountType);
-        dest.writeDouble(amount);
+        dest.writeDouble(withdrawalAmount);
         dest.writeByte((byte) (collapsed ? 1 : 0));
         dest.writeByte((byte) (checked ? 1 : 0));
     }
@@ -184,12 +184,12 @@ public class Account implements Parcelable, AccountType {
         this.accountType = accountType;
     }
 
-    public double getAmount() {
-        return amount;
+    public double getWithdrawalAmount() {
+        return withdrawalAmount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setWithdrawalAmount(double withdrawalAmount) {
+        this.withdrawalAmount = withdrawalAmount;
     }
 
     public boolean isCollapsed() {
@@ -226,7 +226,7 @@ public class Account implements Parcelable, AccountType {
                 ", currency='" + currency + '\'' +
                 ", verified=" + verified +
                 ", accountType=" + accountType +
-                ", amount=" + amount +
+                ", withdrawalAmount=" + withdrawalAmount +
                 ", collapsed=" + collapsed +
                 ", checked=" + checked +
                 '}';
