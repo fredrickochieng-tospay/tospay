@@ -23,6 +23,14 @@ public class Account implements Parcelable {
     @Expose
     private String currency;
 
+    @SerializedName("country")
+    @Expose
+    private Country country;
+
+    @SerializedName("network")
+    @Expose
+    private Network network;
+
     public Account() {
     }
 
@@ -36,6 +44,22 @@ public class Account implements Parcelable {
         id = in.readString();
         type = in.readString();
         currency = in.readString();
+        country = in.readParcelable(Country.class.getClassLoader());
+        network = in.readParcelable(Network.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(type);
+        dest.writeString(currency);
+        dest.writeParcelable(country, flags);
+        dest.writeParcelable(network, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {
@@ -74,27 +98,21 @@ public class Account implements Parcelable {
         this.currency = currency;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public Country getCountry() {
+        return country;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(type);
-        parcel.writeString(currency);
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id='" + id + '\'' +
-                ", type='" + type + '\'' +
-                ", currency='" + currency + '\'' +
-                '}';
+    public Network getNetwork() {
+        return network;
     }
 
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
 
     @Override
     public boolean equals(Object obj) {

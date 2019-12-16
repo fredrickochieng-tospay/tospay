@@ -1,11 +1,14 @@
 package net.tospay.auth.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Country {
+public class Country implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -38,6 +41,49 @@ public class Country {
     @SerializedName("name")
     @Expose
     private String name;
+
+    public Country() {
+    }
+
+    protected Country(Parcel in) {
+        id = in.readString();
+        iso = in.readString();
+        nicename = in.readString();
+        iso3 = in.readString();
+        numcode = in.readString();
+        phonecode = in.readString();
+        currency = in.readString();
+        name = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(iso);
+        dest.writeString(nicename);
+        dest.writeString(iso3);
+        dest.writeString(numcode);
+        dest.writeString(phonecode);
+        dest.writeString(currency);
+        dest.writeString(name);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Country> CREATOR = new Creator<Country>() {
+        @Override
+        public Country createFromParcel(Parcel in) {
+            return new Country(in);
+        }
+
+        @Override
+        public Country[] newArray(int size) {
+            return new Country[size];
+        }
+    };
 
     public String getId() {
         return id;

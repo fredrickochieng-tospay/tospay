@@ -70,10 +70,4 @@ public interface UserService {
     LiveData<ApiResponse<Result>> updateAddress(
             @Header("Authorization") String bearer,
             @Body AddressRequest addressRequest);
-
-    @POST("v1/firebase-token")
-    LiveData<ApiResponse<Result>> saveFcmToken(
-            @Header("Authorization") String bearer,
-            @Body Map<String, String> request
-    );
 }
