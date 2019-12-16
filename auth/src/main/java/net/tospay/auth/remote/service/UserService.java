@@ -59,15 +59,4 @@ public interface UserService {
             @Header("Authorization") String bearer,
             @Body RefreshTokenRequest request
     );
-
-    @POST("v3/account/info/qr")
-    LiveData<ApiResponse<Result<TospayUser>>> qrInfo(
-            @Header("Authorization") String bearer,
-            @Body Map<String, String> request
-    );
-
-    @POST("v3/user/update-profile")
-    LiveData<ApiResponse<Result>> updateAddress(
-            @Header("Authorization") String bearer,
-            @Body AddressRequest addressRequest);
 }

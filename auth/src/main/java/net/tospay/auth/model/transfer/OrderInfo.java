@@ -16,6 +16,10 @@ public class OrderInfo implements Parcelable{
     @Expose
     private String reference;
 
+    @SerializedName("description")
+    @Expose
+    private String description;
+
     public OrderInfo() {
     }
 
@@ -24,15 +28,23 @@ public class OrderInfo implements Parcelable{
         this.reference = reference;
     }
 
+    public OrderInfo(Amount amount, String reference, String description) {
+        this.amount = amount;
+        this.reference = reference;
+        this.description = description;
+    }
+
     protected OrderInfo(Parcel in) {
         amount = in.readParcelable(Amount.class.getClassLoader());
         reference = in.readString();
+        description = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(amount, flags);
         dest.writeString(reference);
+        dest.writeString(description);
     }
 
     @Override
@@ -68,11 +80,11 @@ public class OrderInfo implements Parcelable{
         this.reference = reference;
     }
 
-    @Override
-    public String toString() {
-        return "OrderInfo{" +
-                "amount=" + amount +
-                ", reference='" + reference + '\'' +
-                '}';
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
