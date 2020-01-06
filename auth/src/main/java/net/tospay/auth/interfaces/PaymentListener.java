@@ -1,11 +1,11 @@
 package net.tospay.auth.interfaces;
 
-import net.tospay.auth.remote.response.PaymentValidationResponse;
+import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.model.TospayUser;
 
 public interface PaymentListener {
-    default void onPaymentDetails(PaymentValidationResponse response) {
+    default void onPaymentDetails(Transfer transfer) {
 
     }
 
@@ -25,7 +25,7 @@ public interface PaymentListener {
 
     }
 
-    default void onLoginFailed(){
+    default void onLoginFailed() {
 
     }
 }

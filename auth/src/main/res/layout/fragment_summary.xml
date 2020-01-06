@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -50,11 +51,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/default_space_8"
                     android:fontFamily="@font/proxima_nova_semibold"
-                    android:text="Mama Rocks"
                     android:textColor="@color/deep_dark_blue"
                     android:textSize="@dimen/text_size_header_large"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/pay" />
+                    app:layout_constraintTop_toBottomOf="@id/pay"
+                    tools:text="Mama Rocks" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,8 +86,9 @@
                 android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:padding="16dp"
+                android:layout_marginLeft="@dimen/default_space_16"
+                android:layout_marginRight="@dimen/default_space_16"
+                android:layout_marginBottom="@dimen/default_space_16"
                 app:cardBackgroundColor="@color/card_bg_color"
                 app:cardCornerRadius="32dp"
                 app:cardElevation="16dp">
@@ -124,12 +126,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_space_16"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:text="KES  30,000.00"
+                        android:fontFamily="@font/proxima_nova_semibold"
+                        android:text="@{summaryViewModel.transfer.orderInfo.amount.currency+` `+summaryViewModel.transfer.orderInfo.amount.amount}"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
                         app:layout_constraintLeft_toRightOf="@id/guideline"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="KES 30,000.00" />
 
                     <TextView
                         android:id="@+id/charge"
@@ -143,42 +146,19 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/order" />
 
-
                     <TextView
                         android:id="@+id/chargeValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_space_16"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:text="KES  30,000.00"
+                        android:fontFamily="@font/proxima_nova_semibold"
+                        android:text="@{summaryViewModel.transfer.chargeInfo.source.amount.currency+` `+summaryViewModel.transfer.chargeInfo.source.amount.amount}"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
                         app:layout_constraintLeft_toRightOf="@id/guideline"
-                        app:layout_constraintTop_toBottomOf="@id/orderValue" />
+                        app:layout_constraintTop_toBottomOf="@id/orderValue"
+                        tools:text="KES 30.00" />
 
-                    <TextView
-                        android:id="@+id/grand"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/default_space_16"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:text="Order total: "
-                        android:textColor="@color/deep_dark_blue"
-                        android:textSize="@dimen/text_size_header_medium"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/charge" />
-
-                    <TextView
-                        android:id="@+id/grandValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_space_16"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:text="KES  30,000.00"
-                        android:textColor="@color/deep_dark_blue"
-                        android:textSize="@dimen/text_size_header_medium"
-                        app:layout_constraintLeft_toRightOf="@id/guideline"
-                        app:layout_constraintTop_toBottomOf="@id/chargeValue" />
 
                     <TextView
                         android:id="@+id/amountTextView"
@@ -188,8 +168,9 @@
                         android:text="Amount total"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
+                        android:visibility="gone"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/grand" />
+                        app:layout_constraintTop_toBottomOf="@id/charge" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -201,6 +182,7 @@
                         android:text="USD 350.00"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_large"
+                        android:visibility="gone"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/amountTextView" />
 
@@ -210,7 +192,8 @@
                         android:layout_height="30dp"
                         android:layout_marginLeft="30dp"
                         android:src="@drawable/ic_trending_up_black_24dp"
-                        app:layout_constraintLeft_toLeftOf="@id/grandValue"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/chargeValue"
                         app:layout_constraintTop_toTopOf="@id/amountTextView" />
 
                     <TextView
@@ -220,11 +203,12 @@
                         android:layout_below="@id/icon"
                         android:layout_marginTop="@dimen/default_space_8"
                         android:fontFamily="@font/proxima_nova_regular"
-                        android:text="FX RATE 100.20"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
+                        android:visibility="gone"
                         app:layout_constraintLeft_toLeftOf="@id/icon"
-                        app:layout_constraintTop_toBottomOf="@id/icon" />
+                        app:layout_constraintTop_toBottomOf="@id/icon"
+                        tools:text="FX RATE 100.20" />
 
                     <TextView
                         android:id="@+id/fxTextView"
@@ -233,11 +217,12 @@
                         android:layout_below="@id/textRate"
                         android:layout_marginTop="@dimen/default_space_8"
                         android:fontFamily="@font/proxima_nova_regular"
-                        android:text="USD 350.00"
                         android:textColor="@color/green"
                         android:textSize="@dimen/text_size_header_medium"
+                        android:visibility="gone"
                         app:layout_constraintLeft_toLeftOf="@id/textRate"
-                        app:layout_constraintTop_toBottomOf="@id/textRate" />
+                        app:layout_constraintTop_toBottomOf="@id/textRate"
+                        tools:text="USD 350.00" />
 
                     <ImageView
                         android:id="@+id/calenderIcon"
@@ -256,12 +241,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/default_space_16"
                         android:fontFamily="@font/proxima_nova_regular"
-                        android:text="Tue, 24 Dec 2019 | 11.59PM"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
                         app:layout_constraintBottom_toBottomOf="@id/calenderIcon"
                         app:layout_constraintLeft_toRightOf="@id/calenderIcon"
-                        app:layout_constraintTop_toTopOf="@id/calenderIcon" />
+                        app:layout_constraintTop_toTopOf="@id/calenderIcon"
+                        tools:text="Tue, 24 Dec 2019 | 11.59PM" />
 
                     <ImageView
                         android:id="@+id/bcase"
@@ -281,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/calenderIcon"
                         android:layout_marginLeft="@dimen/default_space_16"
-                        android:fontFamily="@font/proxima_nova_regular"
+                        android:fontFamily="@font/proxima_nova_semibold"
                         android:text="Payment details"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_medium"
@@ -290,15 +275,16 @@
                         app:layout_constraintTop_toTopOf="@id/bcase" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/default_space_8"
                         android:fontFamily="@font/proxima_nova_regular"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod  "
                         android:textColor="@color/deep_dark_blue"
                         app:layout_constraintLeft_toLeftOf="@id/PaymentDetails"
-                        app:layout_constraintTop_toBottomOf="@id/PaymentDetails" />
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/PaymentDetails"
+                        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit,sed do eiusmod  " />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,11 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import net.tospay.auth.model.Address;
 import net.tospay.auth.model.Token;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
-import net.tospay.auth.remote.request.AddressRequest;
 import net.tospay.auth.remote.request.LoginRequest;
 import net.tospay.auth.remote.request.OtpRequest;
 import net.tospay.auth.remote.request.RefreshTokenRequest;

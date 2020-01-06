@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_payment_summary"
-        android:name="net.tospay.auth.ui.summary.PaymentSummaryFragment"
+        android:name="net.tospay.auth.ui.summary.SummaryFragment"
         android:label="fragment_payment_summary"
-        tools:layout="@layout/fragment_payment_summary">
+        tools:layout="@layout/fragment_summary">
 
         <argument
             android:name="token"

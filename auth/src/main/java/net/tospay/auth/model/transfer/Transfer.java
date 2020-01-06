@@ -30,6 +30,10 @@ public class Transfer implements Parcelable {
     @Expose
     private String type;
 
+    @SerializedName("chargeInfo")
+    @Expose
+    private ChargeInfo chargeInfo;
+
     public Transfer() {
     }
 
@@ -38,6 +42,7 @@ public class Transfer implements Parcelable {
         source = in.createTypedArrayList(Source.CREATOR);
         orderInfo = in.readParcelable(OrderInfo.class.getClassLoader());
         type = in.readString();
+        chargeInfo = in.readParcelable(ChargeInfo.class.getClassLoader());
     }
 
     @Override
@@ -46,6 +51,7 @@ public class Transfer implements Parcelable {
         dest.writeTypedList(source);
         dest.writeParcelable(orderInfo, flags);
         dest.writeString(type);
+        dest.writeParcelable(chargeInfo, flags);
     }
 
     @Override
@@ -97,6 +103,14 @@ public class Transfer implements Parcelable {
         this.type = type;
     }
 
+    public ChargeInfo getChargeInfo() {
+        return chargeInfo;
+    }
+
+    public void setChargeInfo(ChargeInfo chargeInfo) {
+        this.chargeInfo = chargeInfo;
+    }
+
     @Override
     public String toString() {
         return "Transfer{" +
@@ -104,6 +118,7 @@ public class Transfer implements Parcelable {
                 ", source=" + source +
                 ", orderInfo=" + orderInfo +
                 ", type='" + type + '\'' +
+                ", chargeInfo=" + chargeInfo +
                 '}';
     }
 }

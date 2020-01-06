@@ -3,7 +3,7 @@ package net.tospay.auth.ui.main;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import net.tospay.auth.remote.response.PaymentValidationResponse;
+//import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
@@ -21,7 +21,7 @@ public class PaymentViewModel extends BaseViewModel {
     private MutableLiveData<PaymentTransaction> transactionMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<AccountType> accountTypeMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<String> paymentTokenLiveData = new MutableLiveData<>();
-    private LiveData<Resource<PaymentValidationResponse>> responseLiveData;
+    //private LiveData<Resource<PaymentValidationResponse>> responseLiveData;
 
     private GatewayRepository gatewayRepository;
 
@@ -45,7 +45,7 @@ public class PaymentViewModel extends BaseViewModel {
         return paymentTokenLiveData;
     }
 
-    public void checkTransactionStatus(String token) {
+    /*public void checkTransactionStatus(String token) {
         Map<String, String> param = new HashMap<>();
         param.put("token", token);
         responseLiveData = gatewayRepository.validate((String) getBearerToken().get(), param);
@@ -53,5 +53,5 @@ public class PaymentViewModel extends BaseViewModel {
 
     public LiveData<Resource<PaymentValidationResponse>> getResponseLiveData() {
         return responseLiveData;
-    }
+    }*/
 }

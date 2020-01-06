@@ -24,6 +24,10 @@ public class Source implements Parcelable {
     @Expose
     private Total total;
 
+    @SerializedName("amount")
+    @Expose
+    private Amount amount;
+
     public Source() {
     }
 
@@ -32,6 +36,7 @@ public class Source implements Parcelable {
         charge = in.readParcelable(Charge.class.getClassLoader());
         order = in.readParcelable(Order.class.getClassLoader());
         total = in.readParcelable(Total.class.getClassLoader());
+        amount = in.readParcelable(Amount.class.getClassLoader());
     }
 
     @Override
@@ -40,6 +45,7 @@ public class Source implements Parcelable {
         dest.writeParcelable(charge, flags);
         dest.writeParcelable(order, flags);
         dest.writeParcelable(total, flags);
+        dest.writeParcelable(amount, flags);
     }
 
     @Override
@@ -91,6 +97,14 @@ public class Source implements Parcelable {
         this.total = total;
     }
 
+    public Amount getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Amount amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
         return "Source{" +
@@ -98,6 +112,7 @@ public class Source implements Parcelable {
                 ", charge=" + charge +
                 ", order=" + order +
                 ", total=" + total +
+                ", amount=" + amount +
                 '}';
     }
 

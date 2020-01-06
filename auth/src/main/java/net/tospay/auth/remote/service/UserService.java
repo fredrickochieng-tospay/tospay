@@ -2,7 +2,6 @@ package net.tospay.auth.remote.service;
 
 import androidx.lifecycle.LiveData;
 
-import net.tospay.auth.remote.request.AddressRequest;
 import net.tospay.auth.remote.request.LoginRequest;
 import net.tospay.auth.remote.request.OtpRequest;
 import net.tospay.auth.remote.request.RefreshTokenRequest;

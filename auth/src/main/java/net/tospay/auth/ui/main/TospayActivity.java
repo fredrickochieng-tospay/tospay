@@ -30,9 +30,8 @@ import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
+import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ApiConstants;
-import net.tospay.auth.remote.Resource;
-import net.tospay.auth.remote.response.PaymentValidationResponse;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.ui.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
@@ -92,7 +91,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         binding.setPaymentViewModel(mViewModel);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        animation = AnimationUtils.loadAnimation(this,R.anim.view_fade_in);
+        animation = AnimationUtils.loadAnimation(this, R.anim.view_fade_in);
 
 
         collapsingToolbarLayout = findViewById(R.id.app_bar);
@@ -100,7 +99,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 Log.d("STATE", state.name());
-                Log.d(TAG, "onStateChanged: "+appBarLayout.getScaleY());
+                Log.d(TAG, "onStateChanged: " + appBarLayout.getScaleY());
 
                 if (state.name().equalsIgnoreCase("COLLAPSED")) {
                     toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -196,12 +195,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     }
 
     @Override
-    public void onPaymentDetails(PaymentValidationResponse response) {
-        mViewModel.getTransactionMutableLiveData()
+    public void onPaymentDetails(Transfer transfer) {
+        /*mViewModel.getTransactionMutableLiveData()
                 .setValue(response.getPaymentTransaction());
 
         mViewModel.getMerchantMutableLiveData()
-                .setValue(response.getMerchant());
+                .setValue(response.getMerchant());*/
     }
 
     @Override
@@ -214,8 +213,8 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         runnable = () -> {
             try {
                 if (count <= 10) {
-                    mViewModel.checkTransactionStatus(paymentToken);
-                    mViewModel.getResponseLiveData().observe(TospayActivity.this, this::handleResponse);
+                    //mViewModel.checkTransactionStatus(paymentToken);
+                    //mViewModel.getResponseLiveData().observe(TospayActivity.this, this::handleResponse);
                 } else {
                     if (progressDialog != null) {
                         progressDialog.cancel();
@@ -231,7 +230,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         handler.post(runnable);
     }
 
-    private void handleResponse(Resource<PaymentValidationResponse> resource) {
+    /*private void handleResponse(Resource<PaymentValidationResponse> resource) {
         if (resource != null) {
             switch (resource.status) {
                 case SUCCESS:
@@ -268,7 +267,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
             }
         }
     }
-
+*/
     @Override
     public void onPaymentFailed(TospayException exception) {
         finishWithError(exception.getErrorMessage());
