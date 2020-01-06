@@ -10,8 +10,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
@@ -30,11 +28,10 @@ import net.tospay.auth.utils.NetworkUtils;
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
 public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, SummaryViewModel>
-        implements SummaryNavigator {
+        implements SummaryNavigator, LoginTypeDialog.OnLoginTypeListener {
 
     private FragmentSummaryBinding mBinding;
     private String paymentId;
-    private NavController navController;
     private SummaryViewModel mViewModel;
 
     public SummaryFragment() {
@@ -58,7 +55,6 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(view);
         mBinding = getViewDataBinding();
         mViewModel = getViewModel();
         mViewModel.setNavigator(this);
@@ -74,6 +70,9 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
         requireActivity().getOnBackPressedDispatcher().addCallback(callback);
 
         fetchPaymentDetails();
+
+        mBinding.btnSendPayment.setOnClickListener(view1 ->
+                LoginTypeDialog.newInstance().show(getChildFragmentManager(), LoginTypeDialog.TAG));
     }
 
     private void showNetworkErrorDialog() {
@@ -125,6 +124,8 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                     break;
 
                 case RE_AUTHENTICATE:
+                    mViewModel.setIsLoading(false);
+                    mViewModel.setIsError(false);
                     startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
                     break;
             }
@@ -151,8 +152,8 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     }
 
     @Override
-    public void onContinue(View view) {
-        navController.navigate(R.id.navigation_account_selection);
+    public void onRefresh() {
+        fetchPaymentDetails();
     }
 
     @Override
@@ -164,5 +165,15 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                 fetchPaymentDetails();
             }
         }
+    }
+
+    @Override
+    public void onLoginAsGuest() {
+
+    }
+
+    @Override
+    public void onLoginTospayUser() {
+        startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
     }
 }

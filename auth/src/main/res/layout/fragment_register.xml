@@ -58,6 +58,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/firstNameEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="name"
@@ -70,9 +71,6 @@
                     android:inputType="textPersonName|textCapSentences"
                     android:nextFocusRight="@id/passwordEditText"
                     android:nextFocusDown="@id/passwordEditText"
-                    android:textColor="#4F5F8E"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -87,6 +85,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lastNameEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="Last Name"
@@ -97,8 +96,8 @@
                     android:hint="@string/last_name"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName|textCapSentences"
-                    android:nextFocusRight="@id/passwordEditText"
-                    android:nextFocusDown="@id/passwordEditText"
+                    android:nextFocusRight="@id/emailEditText"
+                    android:nextFocusDown="@id/emailEditText"
                     android:textColor="#4F5F8E"
                     android:textColorHint="#979797"
                     android:textSize="16sp"
@@ -116,6 +115,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="email"
@@ -126,11 +126,8 @@
                     android:hint="@string/email"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
-                    android:nextFocusRight="@id/passwordEditText"
-                    android:nextFocusDown="@id/passwordEditText"
-                    android:textColor="#4F5F8E"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp"
+                    android:nextFocusRight="@id/selectCountryTextView"
+                    android:nextFocusDown="@id/selectCountryTextView"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -174,6 +171,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/phoneEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_phone"
@@ -182,10 +180,9 @@
                     android:fontFamily="@font/proxima_nova_regular"
                     android:hint="@string/phone_number"
                     android:inputType="phone"
-                    android:singleLine="true"
-                    android:textColor="#4F5F8E"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp" />
+                    android:nextFocusRight="@id/passwordEditText"
+                    android:nextFocusDown="@id/passwordEditText"
+                    android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -200,6 +197,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="password"
@@ -209,9 +207,8 @@
                     android:hint="@string/password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:textColor="#4F5F8E"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp"
+                    android:nextFocusRight="@id/confirmPasswordEditText"
+                    android:nextFocusDown="@id/confirmPasswordEditText"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -227,6 +224,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/confirmPasswordEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="password"
@@ -237,9 +235,6 @@
                     android:hint="@string/confirm_password"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:textColor="#4F5F8E"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>

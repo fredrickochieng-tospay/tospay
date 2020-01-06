@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.R;
 import net.tospay.auth.model.transfer.Transfer;
@@ -13,7 +14,7 @@ import net.tospay.auth.ui.base.BaseViewModel;
 
 
 public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
-        implements View.OnClickListener {
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private final PaymentRepository paymentRepository;
     private LiveData<Resource<Transfer>> detailsResourceLiveData;
@@ -39,8 +40,11 @@ public class SummaryViewModel extends BaseViewModel<SummaryNavigator>
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.btn_continue) {
-            getNavigator().onContinue(view);
-        }
+
+    }
+
+    @Override
+    public void onRefresh() {
+        getNavigator().onRefresh();
     }
 }

@@ -67,6 +67,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="email"
@@ -80,9 +81,6 @@
                     android:nextFocusRight="@id/passwordEditText"
                     android:nextFocusDown="@id/passwordEditText"
                     android:text="@={loginViewModel.email}"
-                    android:textColor="#4F5F8E"
-                    android:textColorHighlight="@color/colorPrimary"
-                    android:textColorHint="#979797"
                     android:textSize="16sp"
                     tools:targetApi="o" />
 
@@ -99,6 +97,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="password"
@@ -110,10 +109,6 @@
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:text="@={loginViewModel.password}"
-                    android:textColor="#4F5F8E"
-                    android:textColorHighlight="@color/colorPrimary"
-                    android:textColorHint="#979797"
-                    android:textSize="16sp"
                     tools:targetApi="o" />
 
             </com.google.android.material.textfield.TextInputLayout>

@@ -82,6 +82,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/codeEditText"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/proxima_nova_regular"
