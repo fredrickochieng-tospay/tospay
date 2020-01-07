@@ -18,8 +18,24 @@ public class Tospay {
         this.context = context;
     }
 
+    /**
+     * Creates an instance of this class
+     *
+     * @param context - application context
+     * @return this
+     */
     public static Tospay getInstance(Context context) {
         return new Tospay(context);
+    }
+
+    /**
+     * Returns an instance of shared pref manager
+     *
+     * @param context - application context
+     * @return SharedPrefManager
+     */
+    public SharedPrefManager getSharedPrefManager(Context context) {
+        return SharedPrefManager.getInstance(context);
     }
 
     /**
@@ -53,9 +69,7 @@ public class Tospay {
      * @return tospay payment activity intent
      */
     public Intent getPaymentIntent() {
-        if (context == null)
-            throw new RuntimeException("Context can not be null");
-
+        if (context == null) throw new RuntimeException("Context can not be null");
         Intent intent = new Intent(context, TospayActivity.class);
         intent.putExtra(KEY_TOKEN, token);
         return intent;

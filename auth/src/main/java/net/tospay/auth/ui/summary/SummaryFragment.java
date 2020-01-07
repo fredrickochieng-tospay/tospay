@@ -10,10 +10,15 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
+import net.tospay.auth.Tospay;
 import net.tospay.auth.databinding.FragmentSummaryBinding;
+import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
@@ -33,6 +38,8 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     private FragmentSummaryBinding mBinding;
     private String paymentId;
     private SummaryViewModel mViewModel;
+    private Tospay tospay;
+    private TospayUser tospayUser;
 
     public SummaryFragment() {
         // Required empty public constructor
@@ -41,6 +48,8 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.tospay = Tospay.getInstance(getContext());
+        this.tospayUser = tospay.getCurrentUser();
         if (getArguments() != null) {
             this.paymentId = getArguments().getString(KEY_TOKEN);
         }
@@ -71,8 +80,19 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
 
         fetchPaymentDetails();
 
-        mBinding.btnSendPayment.setOnClickListener(view1 ->
-                LoginTypeDialog.newInstance().show(getChildFragmentManager(), LoginTypeDialog.TAG));
+        mBinding.btnSendPayment.setOnClickListener(view1 -> {
+            if (tospayUser == null) {
+                LoginTypeDialog.newInstance().show(getChildFragmentManager(), LoginTypeDialog.TAG);
+                return;
+            }
+
+            if (tospay.getSharedPrefManager(getContext()).isTokenExpiredOrAlmost()) {
+                LoginTypeDialog.newInstance().show(getChildFragmentManager(), LoginTypeDialog.TAG);
+                return;
+            }
+
+            Navigation.findNavController(view).navigate(R.id.navigation_account_selection);
+        });
     }
 
     private void showNetworkErrorDialog() {
@@ -162,7 +182,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
         if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
-                fetchPaymentDetails();
+                NavHostFragment.findNavController(this).navigate(R.id.navigation_account_selection);
             }
         }
     }
