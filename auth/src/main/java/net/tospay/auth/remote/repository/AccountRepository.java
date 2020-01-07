@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
-import net.tospay.auth.model.AccountTitle;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.response.AccountResponse;
 import net.tospay.auth.remote.response.ApiResponse;
@@ -48,39 +47,22 @@ public class AccountRepository {
                 AccountResponse accounts = item.getData();
 
                 List<AccountType> accountTypeList = new ArrayList<>();
-                AccountTitle title;
                 List<Account> accountList;
 
                 //Wallets
                 if (showWallet) {
-                    title = new AccountTitle();
-                    title.setName("myWallet Accounts");
-                    title.setAccountType(AccountType.WALLET);
-                    accountTypeList.add(title);
                     accountTypeList.addAll(accounts.getWallet());
                 }
 
                 //Mobile Accounts
-                title = new AccountTitle();
-                title.setName("Mobile Accounts");
-                title.setAccountType(AccountType.MOBILE);
                 accountList = setAccountType(accounts.getMobile(), AccountType.MOBILE);
-                accountTypeList.add(title);
                 accountTypeList.addAll(accountList);
 
                 //Card accounts
-                title = new AccountTitle();
-                title.setName("Card Accounts");
-                title.setAccountType(AccountType.CARD);
-                accountTypeList.add(title);
                 accountList = setAccountType(accounts.getCard(), AccountType.CARD);
                 accountTypeList.addAll(accountList);
 
                 //Bank accounts
-                title = new AccountTitle();
-                title.setName("Bank Accounts");
-                title.setAccountType(AccountType.BANK);
-                accountTypeList.add(title);
                 accountList = setAccountType(accounts.getBank(), AccountType.BANK);
                 accountTypeList.addAll(accountList);
 

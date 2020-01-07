@@ -29,6 +29,7 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.BR;
@@ -72,9 +73,11 @@ public class LinkCardFragment extends BaseFragment<FragmentLinkCardBinding, Link
         super.onViewCreated(view, savedInstanceState);
         mBinding = getViewDataBinding();
         mBinding.setLinkCardViewModel(mViewModel);
+        mBinding.btnBackImageView.setOnClickListener(view1 ->
+                Navigation.findNavController(view1).navigateUp());
 
         String token = getBearerToken();
-        url = "http://secure.benkinet.com/skap/" + token;
+        url = "http://secure.benkinet.com/skap/" + token + "/";
 
         final WebSettings webSettings = mBinding.webView.getSettings();
         webSettings.setAllowFileAccess(false);

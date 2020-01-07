@@ -1,13 +1,18 @@
 package net.tospay.auth.ui.account;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -19,11 +24,13 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.ServiceGenerator;
-import net.tospay.auth.remote.repository.GatewayRepository;
-import net.tospay.auth.remote.service.GatewayService;
-import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.remote.repository.MobileRepository;
+import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.remote.service.MobileService;
+import net.tospay.auth.ui.MobileViewModelFactory;
 import net.tospay.auth.ui.account.verify.MobileMoneyNavigator;
 import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
+import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.ui.dialog.network.NetworkDialog;
@@ -56,9 +63,9 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public MobileMoneyViewModel getViewModel() {
-        GatewayRepository repository = new GatewayRepository(getAppExecutors(),
-                ServiceGenerator.createService(GatewayService.class));
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(repository);
+        MobileRepository repository =
+                new MobileRepository(getAppExecutors(), ServiceGenerator.createService(MobileService.class));
+        MobileViewModelFactory factory = new MobileViewModelFactory(repository);
         viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
         return viewModel;
     }
@@ -74,6 +81,9 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
         progressDialog.setMessage("Adding account. Please wait...");
         progressDialog.setIndeterminate(true);
         progressDialog.setCanceledOnTouchOutside(false);
+
+        mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
+                .navigateUp());
     }
 
     @Override
@@ -104,6 +114,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
         NetworkDialog.newInstance(country.getIso()).show(getChildFragmentManager(), NetworkDialog.TAG);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onConfirmClick(View view) {
         mBinding.selectCountryTextView.setError(null);
@@ -163,11 +174,28 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
                             progressDialog.show();
                             viewModel.setIsError(false);
                             break;
+
+                        case RE_AUTHENTICATE:
+                            viewModel.setIsLoading(false);
+                            viewModel.setIsError(true);
+                            viewModel.setErrorMessage(resource.message);
+                            openActivityOnTokenExpire();
+                            break;
                     }
                 }
             });
         } else {
             Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                reloadBearerToken();
+            }
         }
     }
 }

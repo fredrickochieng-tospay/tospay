@@ -6,7 +6,6 @@ public interface AccountType {
     int MOBILE = 2;
     int BANK = 3;
     int CARD = 4;
-    int TITLE = 5;
 
     int getType();
 

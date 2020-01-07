@@ -23,6 +23,14 @@
             android:name="isForResult"
             app:argType="boolean" />
 
+        <action
+            android:id="@+id/action_navigation_payment_summary_to_navigation_account_selection"
+            app:destination="@id/navigation_account_selection"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
 
     <fragment
@@ -42,14 +50,6 @@
         <action
             android:id="@+id/action_navigation_account_selection_to_navigation_link_card_account"
             app:destination="@id/navigation_link_card_account"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-
-        <action
-            android:id="@+id/action_navigation_account_selection_to_navigation_confirm"
-            app:destination="@id/navigation_confirm"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -88,17 +88,6 @@
         android:name="net.tospay.auth.ui.card.LinkCardFragment"
         android:label="Link Card"
         tools:layout="@layout/fragment_link_card" />
-
-    <fragment
-        android:id="@+id/navigation_confirm"
-        android:name="net.tospay.auth.ui.confirm.ConfirmFragment"
-        android:label="Confirm">
-
-        <argument
-            android:name="payment"
-            app:argType="net.tospay.auth.remote.request.PaymentRequest" />
-
-    </fragment>
 
     <fragment
         android:id="@+id/navigation_verify_mobile"

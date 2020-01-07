@@ -32,6 +32,10 @@ public class Network implements Parcelable {
     @Expose
     private String brand;
 
+    @SerializedName("type")
+    @Expose
+    private String type;
+
     public Network() {
 
     }
@@ -43,6 +47,7 @@ public class Network implements Parcelable {
         mnc = in.readString();
         mcc = in.readString();
         brand = in.readString();
+        type = in.readString();
     }
 
     @Override
@@ -53,6 +58,7 @@ public class Network implements Parcelable {
         dest.writeString(mnc);
         dest.writeString(mcc);
         dest.writeString(brand);
+        dest.writeString(type);
     }
 
     @Override
@@ -118,5 +124,13 @@ public class Network implements Parcelable {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

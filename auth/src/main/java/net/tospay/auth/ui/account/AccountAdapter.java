@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
-import net.tospay.auth.model.AccountTitle;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.ui.base.BaseAdapter;
 
@@ -29,8 +28,6 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         switch (viewType) {
-            case AccountType.WALLET:
-                return WalletViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
 
             case AccountType.BANK:
             case AccountType.CARD:
@@ -38,7 +35,7 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
                 return AccountViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
 
             default:
-                return TitleViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
+                return WalletViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
         }
     }
 
@@ -56,10 +53,6 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             case AccountType.CARD:
             case AccountType.MOBILE:
                 ((AccountViewHolder) holder).onBind((Account) accountType);
-                break;
-
-            case AccountType.TITLE:
-                ((TitleViewHolder) holder).onBind((AccountTitle) accountType);
                 break;
         }
     }

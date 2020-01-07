@@ -8,11 +8,13 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
+import net.tospay.auth.anim.ViewAnimation;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
@@ -40,7 +42,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
 
-    private boolean showWallet = true, isForResult = false;
+    private boolean showWallet = true, isForResult = false, isRotate = false;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -83,6 +85,35 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
         mViewModel.setNavigator(this);
         fetchAccounts();
+
+        ViewAnimation.init(mBinding.fabLinkCard);
+        ViewAnimation.init(mBinding.fabLinkMobile);
+
+        mBinding.fabAdd.setOnClickListener(view1 -> {
+            isRotate = ViewAnimation.rotateFab(view1, !isRotate);
+            if (isRotate) {
+                ViewAnimation.showIn(mBinding.fabLinkCard);
+                ViewAnimation.showIn(mBinding.fabLinkMobile);
+            } else {
+                ViewAnimation.showOut(mBinding.fabLinkCard);
+                ViewAnimation.showOut(mBinding.fabLinkMobile);
+            }
+        });
+
+        mBinding.fabLinkCard.setOnClickListener(view12 ->
+                NavHostFragment.findNavController(this)
+                        .navigate(AccountSelectionFragmentDirections
+                                .actionNavigationAccountSelectionToNavigationLinkCardAccount())
+        );
+
+        mBinding.fabLinkMobile.setOnClickListener(view13 ->
+                NavHostFragment.findNavController(this)
+                        .navigate(AccountSelectionFragmentDirections
+                                .actionNavigationAccountSelectionToNavigationLinkMobileAccount())
+        );
+
+        mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
+                .navigateUp());
     }
 
     private void fetchAccounts() {
@@ -121,9 +152,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     mViewModel.setErrorMessage(resource.message);
                     openActivityOnTokenExpire();
                     break;
-
-                default:
-                    break;
             }
         }
     }
@@ -157,11 +185,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
             }
         }
 
-        AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationConfirm
-                action = AccountSelectionFragmentDirections
-                .actionNavigationAccountSelectionToNavigationConfirm(request);
-
-        NavHostFragment.findNavController(this).navigate(action);
     }
 
     @Override
