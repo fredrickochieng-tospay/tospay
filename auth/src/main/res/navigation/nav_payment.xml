@@ -67,7 +67,7 @@
 
     <fragment
         android:id="@+id/navigation_link_mobile_account"
-        android:name="net.tospay.auth.ui.account.LinkMobileAccountFragment"
+        android:name="net.tospay.auth.ui.account.mobile.LinkMobileAccountFragment"
         android:label="Link Mobile"
         tools:layout="@layout/fragment_link_mobile_account">
 
@@ -85,14 +85,15 @@
 
     <fragment
         android:id="@+id/navigation_link_card_account"
-        android:name="net.tospay.auth.ui.card.LinkCardFragment"
+        android:name="net.tospay.auth.ui.account.card.LinkCardFragment"
         android:label="Link Card"
         tools:layout="@layout/fragment_link_card" />
 
     <fragment
         android:id="@+id/navigation_verify_mobile"
-        android:name="net.tospay.auth.ui.account.verify.VerifyMobileFragment"
-        android:label="Verify Mobile">
+        android:name="net.tospay.auth.ui.account.mobile.VerifyMobileFragment"
+        android:label="Verify Mobile"
+        tools:layout="@layout/fragment_verify_mobile">
         <argument
             android:name="account"
             app:argType="net.tospay.auth.model.Account" />

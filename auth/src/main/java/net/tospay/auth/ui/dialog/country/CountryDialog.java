@@ -19,15 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.tospay.auth.R;
-import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.databinding.DialogCountryBinding;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.repository.GatewayRepository;
-import net.tospay.auth.ui.GatewayViewModelFactory;
-import net.tospay.auth.utils.CountryFlagUtils;
+import net.tospay.auth.utils.Utils;
+import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;
 import net.tospay.auth.utils.SharedPrefManager;
 
 import java.util.ArrayList;
@@ -172,7 +171,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Country country = countryList.get(position);
             holder.text.setText(country.getName());
-            holder.countryFlag.setText(CountryFlagUtils.flag(country.getIso()));
+            holder.countryFlag.setText(Utils.flag(country.getIso()));
         }
 
         @Override

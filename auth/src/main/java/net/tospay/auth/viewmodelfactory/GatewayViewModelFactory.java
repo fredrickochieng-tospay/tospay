@@ -1,4 +1,4 @@
-package net.tospay.auth.ui;
+package net.tospay.auth.viewmodelfactory;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

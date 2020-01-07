@@ -9,8 +9,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -27,12 +25,11 @@ import net.tospay.auth.R;
 import net.tospay.auth.databinding.ActivityTospayBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
-import net.tospay.auth.model.Merchant;
 import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.response.TospayException;
-import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
 
 import java.net.URISyntaxException;

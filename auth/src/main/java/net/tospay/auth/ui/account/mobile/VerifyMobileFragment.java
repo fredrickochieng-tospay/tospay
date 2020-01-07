@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.account.verify;
+package net.tospay.auth.ui.account.mobile;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.MobileRepository;
 import net.tospay.auth.remote.service.MobileService;
-import net.tospay.auth.ui.MobileViewModelFactory;
+import net.tospay.auth.viewmodelfactory.MobileViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.NetworkUtils;
 
@@ -91,8 +91,8 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
         viewModel.setNavigator(this);
 
         if (getArguments() != null) {
-            account = VerifyMobileFragmentArgs.fromBundle(getArguments())
-                    .getAccount();
+            account = VerifyMobileFragmentArgs.fromBundle(getArguments()).getAccount();
+            viewModel.getPhone().setValue("****" + account.getTrunc());
         }
 
         mBinding.codeEditText.addTextChangedListener(otpTextWatcher);

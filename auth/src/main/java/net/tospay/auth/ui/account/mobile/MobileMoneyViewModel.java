@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.account.verify;
+package net.tospay.auth.ui.account.mobile;
 
 import android.view.View;
 
@@ -88,7 +88,6 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
     public void resend(String accountId) {
         Map<String, Object> request = new HashMap<>();
         request.put("id", accountId);
-
         resendResourceLiveData = repository.resend(getBearerToken().get(), request);
     }
 

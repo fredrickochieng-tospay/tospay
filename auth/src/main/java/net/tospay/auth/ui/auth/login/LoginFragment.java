@@ -6,9 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -27,7 +25,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.ui.UserViewModelFactory;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
 import net.tospay.auth.utils.NetworkUtils;

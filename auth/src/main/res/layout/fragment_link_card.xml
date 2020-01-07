@@ -5,7 +5,7 @@
 
         <variable
             name="linkCardViewModel"
-            type="net.tospay.auth.ui.card.LinkCardViewModel" />
+            type="net.tospay.auth.ui.account.card.LinkCardViewModel" />
 
     </data>
 
@@ -14,7 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.card.LinkCardFragment">
+        tools:context=".ui.account.card.LinkCardFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topPanel"

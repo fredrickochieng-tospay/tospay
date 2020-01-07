@@ -26,7 +26,7 @@ import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.request.PaymentRequest;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
-import net.tospay.auth.ui.AccountViewModelFactory;
+import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 

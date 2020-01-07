@@ -21,12 +21,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.DialogNetworkBinding;
 import net.tospay.auth.model.Network;
-import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.repository.GatewayRepository;
-import net.tospay.auth.ui.GatewayViewModelFactory;
+import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;
 import net.tospay.auth.utils.SharedPrefManager;
 
 import java.util.ArrayList;

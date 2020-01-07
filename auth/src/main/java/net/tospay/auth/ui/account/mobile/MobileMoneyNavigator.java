@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.account.verify;
+package net.tospay.auth.ui.account.mobile;
 
 import android.view.View;
 

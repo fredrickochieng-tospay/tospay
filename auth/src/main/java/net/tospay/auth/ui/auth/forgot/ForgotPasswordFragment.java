@@ -27,7 +27,7 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.ui.UserViewModelFactory;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
 import net.tospay.auth.utils.NetworkUtils;

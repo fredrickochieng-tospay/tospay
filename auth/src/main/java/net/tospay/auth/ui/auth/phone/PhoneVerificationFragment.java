@@ -22,7 +22,7 @@ import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.ui.UserViewModelFactory;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.NetworkUtils;
 

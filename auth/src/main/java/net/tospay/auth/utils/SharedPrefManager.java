@@ -2,14 +2,12 @@ package net.tospay.auth.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import net.tospay.auth.R;
 import net.tospay.auth.model.TospayUser;
 
 import java.util.Calendar;
 import java.util.Date;
-
 
 /**
  * Class providing app specific sharedPreference settings.
@@ -166,7 +164,7 @@ public class SharedPrefManager {
     }
 
     /**
-     * Checks token expiry ststus
+     * Checks token expiry status
      *
      * @return -boolean
      */

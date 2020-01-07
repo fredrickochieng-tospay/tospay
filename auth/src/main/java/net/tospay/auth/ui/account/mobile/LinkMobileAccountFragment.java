@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.account;
+package net.tospay.auth.ui.account.mobile;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -25,11 +24,9 @@ import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.MobileRepository;
-import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.MobileService;
-import net.tospay.auth.ui.MobileViewModelFactory;
-import net.tospay.auth.ui.account.verify.MobileMoneyNavigator;
-import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
+import net.tospay.auth.viewmodelfactory.MobileViewModelFactory;
+import net.tospay.auth.ui.account.AccountSelectionFragmentDirections;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
@@ -155,8 +152,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
                                 account.setId(resource.data.getId());
                             }
 
-                            AccountSelectionFragmentDirections
-                                    .ActionNavigationAccountSelectionToNavigationVerifyMobile action =
+                            AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile action =
                                     AccountSelectionFragmentDirections
                                             .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
 

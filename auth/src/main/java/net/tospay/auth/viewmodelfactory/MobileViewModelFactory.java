@@ -1,11 +1,11 @@
-package net.tospay.auth.ui;
+package net.tospay.auth.viewmodelfactory;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import net.tospay.auth.remote.repository.MobileRepository;
-import net.tospay.auth.ui.account.verify.MobileMoneyViewModel;
+import net.tospay.auth.ui.account.mobile.MobileMoneyViewModel;
 
 public class MobileViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

@@ -1,4 +1,4 @@
-package net.tospay.auth.ui.card;
+package net.tospay.auth.ui.account.card;
 
 import net.tospay.auth.ui.base.BaseViewModel;
 
