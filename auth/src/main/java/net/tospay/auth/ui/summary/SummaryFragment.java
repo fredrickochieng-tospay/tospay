@@ -39,6 +39,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     private SummaryViewModel mViewModel;
     private Tospay tospay;
     private TospayUser tospayUser;
+    private Transfer transfer;
 
     public SummaryFragment() {
         // Required empty public constructor
@@ -137,8 +138,9 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                     mViewModel.setIsLoading(false);
                     mViewModel.setIsError(false);
                     if (resource.data != null) {
-                        mViewModel.getTransfer().setValue(resource.data);
-                        mListener.onPaymentDetails(resource.data);
+                        this.transfer = resource.data;
+                        mViewModel.getTransfer().setValue(transfer);
+                        mListener.onPaymentDetails(transfer);
                     }
                     break;
 
@@ -181,7 +183,9 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
         if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
-                NavHostFragment.findNavController(this).navigate(R.id.navigation_account_selection);
+                NavHostFragment.findNavController(this)
+                        .navigate(SummaryFragmentDirections
+                                .actionNavigationPaymentSummaryToNavigationAccountSelection(transfer));
             }
         }
     }

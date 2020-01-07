@@ -1,11 +1,14 @@
 package net.tospay.auth.ui.account;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.tospay.auth.databinding.ListItemAccountViewBinding;
+import net.tospay.auth.databinding.ListItemWalletViewBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Wallet;
@@ -16,10 +19,11 @@ import java.util.List;
 public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, AccountType> {
 
     private List<AccountType> mAccountTypes;
-    private final OnAccountItemClickListener onAccountTypeSelectedListener;
+    private final OnAccountItemClickListener listener;
+    private int mSelectedItem = -1;
 
-    public AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener onAccountTypeSelectedListener) {
-        this.onAccountTypeSelectedListener = onAccountTypeSelectedListener;
+    AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener listener) {
+        this.listener = listener;
         this.mAccountTypes = accountTypes;
     }
 
@@ -32,10 +36,14 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             case AccountType.BANK:
             case AccountType.CARD:
             case AccountType.MOBILE:
-                return AccountViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
+                ListItemAccountViewBinding itemAccountViewBinding =
+                        ListItemAccountViewBinding.inflate(inflater, parent, false);
+                return new AccountViewHolder(itemAccountViewBinding, listener);
 
             default:
-                return WalletViewHolder.create(inflater, parent, onAccountTypeSelectedListener);
+                ListItemWalletViewBinding itemWalletViewBinding =
+                        ListItemWalletViewBinding.inflate(inflater, parent, false);
+                return new WalletViewHolder(itemWalletViewBinding, listener);
         }
     }
 
@@ -47,14 +55,24 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
             case AccountType.WALLET:
                 ((WalletViewHolder) holder).onBind((Wallet) accountType);
+                ((WalletViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
 
             case AccountType.BANK:
             case AccountType.CARD:
             case AccountType.MOBILE:
                 ((AccountViewHolder) holder).onBind((Account) accountType);
+                ((AccountViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
         }
+    }
+
+    AccountType getSelectedAccountType() {
+        if (mSelectedItem > -1) {
+            return mAccountTypes.get(mSelectedItem);
+        }
+
+        return null;
     }
 
     @Override
@@ -71,5 +89,69 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
     public void setData(List<AccountType> accountTypes) {
         this.mAccountTypes = accountTypes;
         notifyDataSetChanged();
+    }
+
+    public class WalletViewHolder extends RecyclerView.ViewHolder {
+
+        private ListItemWalletViewBinding mBinding;
+
+        private WalletViewHolder(ListItemWalletViewBinding binding, OnAccountItemClickListener listener) {
+            super(binding.getRoot());
+            this.mBinding = binding;
+
+            View.OnClickListener onClickListener = view -> {
+                mSelectedItem = getAdapterPosition();
+                notifyDataSetChanged();
+            };
+
+            mBinding.bgLayout.setOnClickListener(onClickListener);
+            mBinding.radioButton.setOnClickListener(onClickListener);
+        }
+
+        public ListItemWalletViewBinding getBinding() {
+            return mBinding;
+        }
+
+        void onBind(Wallet wallet) {
+            mBinding.setWallet(wallet);
+            mBinding.executePendingBindings();
+        }
+    }
+
+    private class AccountViewHolder extends RecyclerView.ViewHolder {
+
+        private ListItemAccountViewBinding mBinding;
+
+        private AccountViewHolder(ListItemAccountViewBinding mBinding, OnAccountItemClickListener listener) {
+            super(mBinding.getRoot());
+            this.mBinding = mBinding;
+
+            View.OnClickListener onClickListener = view -> {
+                mSelectedItem = getAdapterPosition();
+                if (mBinding.getAccount().getType() == AccountType.MOBILE) {
+                    if (!mBinding.getAccount().isVerified() && !mBinding.getAccount().getState().equalsIgnoreCase("ACTIVE")) {
+                        mSelectedItem = -1;
+                    }
+                }
+
+                notifyDataSetChanged();
+            };
+
+            mBinding.getRoot().setOnClickListener(onClickListener);
+            mBinding.radioButton.setOnClickListener(onClickListener);
+
+            mBinding.btnVerifyPhone.setOnClickListener(view ->
+                    listener.onVerifyClick(view, mBinding.getAccount())
+            );
+        }
+
+        public ListItemAccountViewBinding getBinding() {
+            return mBinding;
+        }
+
+        void onBind(Account account) {
+            mBinding.setAccount(account);
+            mBinding.executePendingBindings();
+        }
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
+import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
@@ -19,26 +20,21 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
 
     private ObservableBoolean isEmpty;
     private AccountRepository repository;
-
     private LiveData<Resource<List<AccountType>>> resourceLiveData;
-    private MutableLiveData<String> phone = new MutableLiveData<>();
-
-    public ObservableBoolean enableLoginButton;
-    private ObservableBoolean showWallet;
-
-    public MutableLiveData<String> getPhone() {
-        return phone;
-    }
+    private MutableLiveData<Transfer> transfer;
 
     public AccountViewModel(AccountRepository repository) {
         this.repository = repository;
         this.isEmpty = new ObservableBoolean();
-        this.showWallet = new ObservableBoolean(true);
-        this.enableLoginButton = new ObservableBoolean(false);
+        this.transfer = new MutableLiveData<>();
     }
 
+    public MutableLiveData<Transfer> getTransfer() {
+        return transfer;
+    }
+
+
     public void fetchAccounts(boolean showWallet) {
-        this.showWallet.set(showWallet);
         String bearerToken = getBearerToken().get();
         resourceLiveData = repository.accounts(bearerToken, showWallet);
     }

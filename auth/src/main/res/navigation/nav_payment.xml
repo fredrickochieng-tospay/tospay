@@ -63,6 +63,10 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
 
+        <argument
+            android:name="transfer"
+            app:argType="net.tospay.auth.model.transfer.Transfer" />
+
     </fragment>
 
     <fragment

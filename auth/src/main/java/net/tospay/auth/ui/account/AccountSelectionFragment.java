@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.anim.ViewAnimation;
@@ -19,21 +21,19 @@ import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Account;
-import net.tospay.auth.model.Wallet;
+import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.AccountRepository;
-import net.tospay.auth.remote.request.PaymentRequest;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
-import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.tospay.auth.utils.Constants.KEY_IS_FOR_RESULT;
 import static net.tospay.auth.utils.Constants.KEY_SHOW_WALLET;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
@@ -41,8 +41,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
-
-    private boolean showWallet = true, isForResult = false, isRotate = false;
+    private boolean isRotate = false;
+    private Transfer transfer;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -74,8 +74,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.setAccountViewModel(mViewModel);
 
         if (getArguments() != null) {
-            this.showWallet = getArguments().getBoolean(KEY_SHOW_WALLET);
-            this.isForResult = getArguments().getBoolean(KEY_IS_FOR_RESULT);
+            transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
+            mViewModel.getTransfer().setValue(transfer);
         }
 
         List<AccountType> accountTypes = new ArrayList<>();
@@ -114,10 +114,18 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
         mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
                 .navigateUp());
+
+        mBinding.btnPay.setOnClickListener(view14 -> {
+            if (adapter.getSelectedAccountType() != null) {
+
+            } else {
+                Snackbar.make(mBinding.container, "Source of funds not selected", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchAccounts() {
-        mViewModel.fetchAccounts(showWallet);
+        mViewModel.fetchAccounts(true);
         mViewModel.getResourceLiveData().observe(this, this::handleResponse);
     }
 
@@ -157,37 +165,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     @Override
-    public void onAccountType(AccountType accountType) {
-        if (mListener != null) {
-            mListener.onAccountSelected(accountType);
-            if (!isForResult) {
-                geToSummary(accountType);
-            }
-        }
-    }
-
-    private void geToSummary(AccountType accountType) {
-        PaymentRequest request = new PaymentRequest();
-
-        if (accountType instanceof Wallet) {
-            Wallet wallet = (Wallet) accountType;
-            request.setAccountId(wallet.getId());
-            request.setType("wallet");
-
-        } else {
-            Account account = (Account) accountType;
-            request.setAccountId(account.getId());
-
-            if (account.getType() == AccountType.MOBILE) {
-                request.setType("mobile");
-            } else if (account.getType() == AccountType.CARD) {
-                request.setType("card");
-            }
-        }
-
-    }
-
-    @Override
     public void onVerifyClick(View view, AccountType accountType) {
         AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
                 action = AccountSelectionFragmentDirections
@@ -206,21 +183,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
             } else {
                 mListener.onPaymentFailed(new TospayException("Invalid credentials"));
             }
-        }
-    }
-
-    @Override
-    public void onAddAccount(int accountType) {
-        switch (accountType) {
-            case AccountType.MOBILE:
-                NavHostFragment.findNavController(this)
-                        .navigate(AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationLinkMobileAccount());
-                break;
-
-            case AccountType.CARD:
-                NavHostFragment.findNavController(this)
-                        .navigate(AccountSelectionFragmentDirections.actionNavigationAccountSelectionToNavigationLinkCardAccount());
-                break;
         }
     }
 

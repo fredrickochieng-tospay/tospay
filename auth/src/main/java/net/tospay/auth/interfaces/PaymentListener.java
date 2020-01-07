@@ -9,15 +9,7 @@ public interface PaymentListener {
 
     }
 
-    default void onPaymentSuccess() {
-
-    }
-
     default void onPaymentFailed(TospayException exception) {
-
-    }
-
-    default void onAccountSelected(AccountType accountType) {
 
     }
 

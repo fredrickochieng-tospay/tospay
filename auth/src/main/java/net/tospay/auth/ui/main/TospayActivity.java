@@ -23,9 +23,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.ActivityTospayBinding;
-import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
-import net.tospay.auth.model.PaymentTransaction;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.response.TospayException;
@@ -36,7 +34,6 @@ import java.net.URISyntaxException;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
-@SuppressWarnings("ConstantConditions")
 public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentViewModel>
         implements PaymentListener {
 
@@ -49,11 +46,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     };
 
     private PaymentViewModel mViewModel;
-    private String paymentToken;
-
-    private final Handler handler = new Handler();
-    private int count = 0;
-    private ProgressDialog progressDialog;
 
     @Override
     public int getBindingVariable() {
@@ -80,7 +72,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        paymentToken = getIntent().getStringExtra(KEY_TOKEN);
+        String paymentToken = getIntent().getStringExtra(KEY_TOKEN);
         mViewModel.getPaymentTokenLiveData().setValue(paymentToken);
 
         Bundle args = new Bundle();
@@ -89,7 +81,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_payment, args);
 
-        progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Processing payment. Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -140,12 +132,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         finish();
     }
 
-    private void finishWithSuccess(PaymentTransaction transaction) {
+    /*private void finishWithSuccess(PaymentTransaction transaction) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("result", transaction);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
-    }
+    }*/
 
     @Override
     public void onPaymentDetails(Transfer transfer) {
@@ -154,35 +146,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
 
         mViewModel.getMerchantMutableLiveData()
                 .setValue(response.getMerchant());*/
-    }
-
-    @Override
-    public void onPaymentSuccess() {
-        progressDialog.show();
-        checkPaymentStatus();
-    }
-
-    private void checkPaymentStatus() {
-        //mViewModel.checkTransactionStatus(paymentToken);
-        //mViewModel.getResponseLiveData().observe(TospayActivity.this, this::handleResponse);
-        Runnable runnable = () -> {
-            try {
-                if (count <= 10) {
-                    //mViewModel.checkTransactionStatus(paymentToken);
-                    //mViewModel.getResponseLiveData().observe(TospayActivity.this, this::handleResponse);
-                } else {
-                    if (progressDialog != null) {
-                        progressDialog.cancel();
-                    }
-
-                    finishWithError("Transaction timed out");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
-
-        handler.post(runnable);
     }
 
     /*private void handleResponse(Resource<PaymentValidationResponse> resource) {
@@ -226,11 +189,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     @Override
     public void onPaymentFailed(TospayException exception) {
         finishWithError(exception.getErrorMessage());
-    }
-
-    @Override
-    public void onAccountSelected(AccountType accountType) {
-        mViewModel.getAccountTypeMutableLiveData().setValue(accountType);
     }
 
     @Override
