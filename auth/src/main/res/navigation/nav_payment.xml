@@ -67,6 +67,10 @@
             android:name="transfer"
             app:argType="net.tospay.auth.model.transfer.Transfer" />
 
+        <argument
+            android:name="paymentId"
+            app:argType="string" />
+
     </fragment>
 
     <fragment

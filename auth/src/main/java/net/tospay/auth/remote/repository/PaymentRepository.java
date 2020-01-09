@@ -72,4 +72,51 @@ public class PaymentRepository {
             }
         }.asLiveData();
     }
+
+    /**
+     * Execute payment
+     *
+     * @param bearerToken - bearer token
+     * @param paymentId   - payment reference id
+     * @param transfer    - Transfer payload
+     * @return payment reference no.
+     */
+    public LiveData<Resource<String>> pay(String bearerToken, String paymentId, Transfer transfer) {
+        return new NetworkBoundResource<String, Result<String>>(mAppExecutors) {
+
+            private String resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<String> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable String data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<String> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<String>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<String>>> createCall() {
+                return mPaymentService.pay(bearerToken, paymentId, transfer);
+            }
+        }.asLiveData();
+    }
 }

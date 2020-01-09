@@ -3,16 +3,16 @@ package net.tospay.auth.ui.account;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
@@ -25,8 +25,10 @@ import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.AccountRepository;
+import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
+import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
@@ -34,15 +36,17 @@ import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.tospay.auth.utils.Constants.KEY_SHOW_WALLET;
-
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener, AccountNavigator {
+
+    private static final String TAG = "AccountSelectionFragmen";
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
     private boolean isRotate = false;
+
     private Transfer transfer;
+    private String paymentId;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -60,9 +64,15 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public AccountViewModel getViewModel() {
-        AccountRepository repository = new AccountRepository(getAppExecutors(),
+        AccountRepository accountRepository = new AccountRepository(getAppExecutors(),
                 ServiceGenerator.createService(AccountService.class));
-        AccountViewModelFactory factory = new AccountViewModelFactory(repository);
+
+        PaymentRepository paymentRepository = new PaymentRepository(getAppExecutors(),
+                ServiceGenerator.createService(PaymentService.class));
+
+        AccountViewModelFactory factory =
+                new AccountViewModelFactory(accountRepository, paymentRepository);
+
         mViewModel = ViewModelProviders.of(this, factory).get(AccountViewModel.class);
         return mViewModel;
     }
@@ -72,9 +82,11 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         super.onViewCreated(view, savedInstanceState);
         mBinding = getViewDataBinding();
         mBinding.setAccountViewModel(mViewModel);
+        mViewModel.setNavigator(this);
 
         if (getArguments() != null) {
             transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
+            paymentId = AccountSelectionFragmentArgs.fromBundle(getArguments()).getPaymentId();
             mViewModel.getTransfer().setValue(transfer);
         }
 
@@ -83,7 +95,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         mBinding.recyclerView.setAdapter(adapter);
 
-        mViewModel.setNavigator(this);
         fetchAccounts();
 
         ViewAnimation.init(mBinding.fabLinkCard);
@@ -114,19 +125,11 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
         mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
                 .navigateUp());
-
-        mBinding.btnPay.setOnClickListener(view14 -> {
-            if (adapter.getSelectedAccountType() != null) {
-
-            } else {
-                Snackbar.make(mBinding.container, "Source of funds not selected", Snackbar.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void fetchAccounts() {
         mViewModel.fetchAccounts(true);
-        mViewModel.getResourceLiveData().observe(this, this::handleResponse);
+        mViewModel.getAccountsResourceLiveData().observe(this, this::handleResponse);
     }
 
     private void handleResponse(Resource<List<AccountType>> resource) {
@@ -151,7 +154,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     } else {
                         mViewModel.setIsEmpty(true);
                     }
-
                     break;
 
                 case RE_AUTHENTICATE:
@@ -165,7 +167,17 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     @Override
-    public void onVerifyClick(View view, AccountType accountType) {
+    public void onTopupClick(AccountType accountType) {
+
+    }
+
+    @Override
+    public void onAccountSelectedListener(AccountType accountType) {
+
+    }
+
+    @Override
+    public void onVerifyClick(AccountType accountType) {
         AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
                 action = AccountSelectionFragmentDirections
                 .actionNavigationAccountSelectionToNavigationVerifyMobile((Account) accountType);
@@ -189,5 +201,15 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Override
     public void onRefresh() {
         fetchAccounts();
+    }
+
+    public void pay() {
+        mViewModel.pay(paymentId, transfer);
+        mViewModel.getPaymentResourceLiveData().observe(this, new Observer<Resource<String>>() {
+            @Override
+            public void onChanged(Resource<String> resource) {
+                Log.e(TAG, "onChanged: " + resource);
+            }
+        });
     }
 }

@@ -20,7 +20,6 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
     private List<AccountType> mAccountTypes;
     private final OnAccountItemClickListener listener;
-    private int mSelectedItem = -1;
 
     AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener listener) {
         this.listener = listener;
@@ -55,24 +54,14 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
             case AccountType.WALLET:
                 ((WalletViewHolder) holder).onBind((Wallet) accountType);
-                ((WalletViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
 
             case AccountType.BANK:
             case AccountType.CARD:
             case AccountType.MOBILE:
                 ((AccountViewHolder) holder).onBind((Account) accountType);
-                ((AccountViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
         }
-    }
-
-    AccountType getSelectedAccountType() {
-        if (mSelectedItem > -1) {
-            return mAccountTypes.get(mSelectedItem);
-        }
-
-        return null;
     }
 
     @Override
@@ -100,12 +89,11 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             this.mBinding = binding;
 
             View.OnClickListener onClickListener = view -> {
-                mSelectedItem = getAdapterPosition();
+                listener.onAccountSelectedListener(mBinding.getWallet());
                 notifyDataSetChanged();
             };
 
             mBinding.bgLayout.setOnClickListener(onClickListener);
-            mBinding.radioButton.setOnClickListener(onClickListener);
         }
 
         public ListItemWalletViewBinding getBinding() {
@@ -127,10 +115,11 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             this.mBinding = mBinding;
 
             View.OnClickListener onClickListener = view -> {
-                mSelectedItem = getAdapterPosition();
                 if (mBinding.getAccount().getType() == AccountType.MOBILE) {
-                    if (!mBinding.getAccount().isVerified() && !mBinding.getAccount().getState().equalsIgnoreCase("ACTIVE")) {
-                        mSelectedItem = -1;
+                    if (!mBinding.getAccount().isVerified()
+                            && !mBinding.getAccount().getState()
+                            .equalsIgnoreCase("ACTIVE")) {
+                        listener.onAccountSelectedListener(mBinding.getAccount());
                     }
                 }
 
@@ -138,10 +127,9 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             };
 
             mBinding.getRoot().setOnClickListener(onClickListener);
-            mBinding.radioButton.setOnClickListener(onClickListener);
 
             mBinding.btnVerifyPhone.setOnClickListener(view ->
-                    listener.onVerifyClick(view, mBinding.getAccount())
+                    listener.onVerifyClick(mBinding.getAccount())
             );
         }
 

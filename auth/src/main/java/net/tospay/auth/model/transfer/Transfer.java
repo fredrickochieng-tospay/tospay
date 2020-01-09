@@ -13,6 +13,7 @@ public class Transfer implements Parcelable {
     public static final String TOPUP = "TOPUP";
     public static final String WITHDRAW = "WITHDRAW";
     public static final String TRANSFER = "TRANSFER";
+    public static final String PAYMENT = "PAYMENT";
 
     @SerializedName("delivery")
     @Expose

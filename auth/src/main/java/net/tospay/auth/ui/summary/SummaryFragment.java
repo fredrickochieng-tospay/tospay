@@ -93,6 +93,10 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
 
             Navigation.findNavController(view).navigate(R.id.navigation_account_selection);
         });
+
+        mBinding.btnBackImageView.setOnClickListener(view12 -> {
+            mListener.onPaymentFailed(new TospayException("Payment canceled"));
+        });
     }
 
     private void showNetworkErrorDialog() {
@@ -137,11 +141,9 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                 case SUCCESS:
                     mViewModel.setIsLoading(false);
                     mViewModel.setIsError(false);
-                    if (resource.data != null) {
-                        this.transfer = resource.data;
-                        mViewModel.getTransfer().setValue(transfer);
-                        mListener.onPaymentDetails(transfer);
-                    }
+                    transfer = resource.data;
+                    mViewModel.getTransfer().setValue(transfer);
+                    mListener.onPaymentDetails(transfer);
                     break;
 
                 case RE_AUTHENTICATE:
@@ -185,7 +187,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                 reloadBearerToken();
                 NavHostFragment.findNavController(this)
                         .navigate(SummaryFragmentDirections
-                                .actionNavigationPaymentSummaryToNavigationAccountSelection(transfer));
+                                .actionNavigationPaymentSummaryToNavigationAccountSelection(transfer, paymentId));
             }
         }
     }

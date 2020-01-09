@@ -3,6 +3,7 @@ package net.tospay.lib;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -10,14 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import net.tospay.auth.Tospay;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        String token = "VZDRFZFHRLHXQBCH";
+    public void pay(View view) {
+        String token = "DGLAYAYPSPPRIXRJ";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();

@@ -1,7 +1,5 @@
 package net.tospay.auth.ui.account;
 
-import android.view.View;
-
 import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,20 +9,27 @@ import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
+import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.List;
 
 public class AccountViewModel extends BaseViewModel<AccountNavigator>
-        implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+        implements SwipeRefreshLayout.OnRefreshListener {
 
     private ObservableBoolean isEmpty;
-    private AccountRepository repository;
-    private LiveData<Resource<List<AccountType>>> resourceLiveData;
+
+    private AccountRepository accountRepository;
+    private PaymentRepository paymentRepository;
+
+    private LiveData<Resource<List<AccountType>>> accountsResourceLiveData;
+    private LiveData<Resource<String>> paymentResourceLiveData;
+
     private MutableLiveData<Transfer> transfer;
 
-    public AccountViewModel(AccountRepository repository) {
-        this.repository = repository;
+    public AccountViewModel(AccountRepository accountRepository, PaymentRepository paymentRepository) {
+        this.accountRepository = accountRepository;
+        this.paymentRepository = paymentRepository;
         this.isEmpty = new ObservableBoolean();
         this.transfer = new MutableLiveData<>();
     }
@@ -33,19 +38,22 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         return transfer;
     }
 
+    public LiveData<Resource<List<AccountType>>> getAccountsResourceLiveData() {
+        return accountsResourceLiveData;
+    }
+
+    public LiveData<Resource<String>> getPaymentResourceLiveData() {
+        return paymentResourceLiveData;
+    }
 
     public void fetchAccounts(boolean showWallet) {
         String bearerToken = getBearerToken().get();
-        resourceLiveData = repository.accounts(bearerToken, showWallet);
+        accountsResourceLiveData = accountRepository.accounts(bearerToken, showWallet);
     }
 
-    public LiveData<Resource<List<AccountType>>> getResourceLiveData() {
-        return resourceLiveData;
-    }
-
-    @Override
-    public void onClick(View view) {
-
+    public void pay(String paymentId, Transfer transfer) {
+        String bearerToken = getBearerToken().get();
+        paymentResourceLiveData = paymentRepository.pay(bearerToken, paymentId, transfer);
     }
 
     @Override
