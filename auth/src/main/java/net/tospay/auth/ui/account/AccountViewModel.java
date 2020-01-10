@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
+import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
@@ -23,6 +24,7 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     private PaymentRepository paymentRepository;
 
     private LiveData<Resource<List<AccountType>>> accountsResourceLiveData;
+    private LiveData<Resource<Amount>> amountResourceLiveData;
     private LiveData<Resource<String>> paymentResourceLiveData;
 
     private MutableLiveData<Transfer> transfer;
@@ -54,6 +56,14 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     public void pay(String paymentId, Transfer transfer) {
         String bearerToken = getBearerToken().get();
         paymentResourceLiveData = paymentRepository.pay(bearerToken, paymentId, transfer);
+    }
+
+    public void chargeLookup(Transfer transfer) {
+        amountResourceLiveData = paymentRepository.chargeLookup(getBearerToken().get(), transfer);
+    }
+
+    public LiveData<Resource<Amount>> getAmountResourceLiveData() {
+        return amountResourceLiveData;
     }
 
     @Override

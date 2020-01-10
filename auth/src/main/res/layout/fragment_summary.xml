@@ -17,7 +17,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
         android:fillViewport="true"
         tools:contenxt="net.tospay.auth.ui.summary.SummaryFragment">
 
@@ -79,6 +80,7 @@
                     tools:src="@drawable/ic_tospay_logo_original" />
 
                 <ImageView
+                    profile_pic="@{summaryViewModel.user.profilePic}"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
@@ -138,6 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_space_8"
                         android:fontFamily="@font/proxima_nova_semibold"
+                        android:text="@{summaryViewModel.transfer.merchant.name}"
                         android:textColor="@color/deep_dark_blue"
                         android:textSize="@dimen/text_size_header_large"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -156,8 +159,9 @@
                         app:layout_constraintTop_toBottomOf="@id/merchant_name_tv" />
 
                     <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        imageUrl="@{summaryViewModel.transfer.merchant.profilePic}"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_margin="16dp"
@@ -177,8 +181,7 @@
                     android:layout_marginRight="@dimen/default_space_16"
                     android:layout_marginBottom="@dimen/default_space_16"
                     app:cardBackgroundColor="@color/card_bg_color"
-                    app:cardCornerRadius="32dp"
-                    app:cardElevation="16dp">
+                    app:cardCornerRadius="32dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraint"
@@ -215,38 +218,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/default_space_16"
-                            android:fontFamily="@font/proxima_nova_semibold"
+                            android:fontFamily="@font/proxima_nova_regular"
                             android:text="@{summaryViewModel.transfer.orderInfo.amount.currency+` `+summaryViewModel.transfer.orderInfo.amount.amount}"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="@dimen/text_size_header_medium"
                             app:layout_constraintLeft_toRightOf="@id/guideline"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="KES 30,000.00" />
-
-                        <TextView
-                            android:id="@+id/charge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/default_space_16"
-                            android:fontFamily="@font/proxima_nova_regular"
-                            android:text="Charge: "
-                            android:textColor="@color/deep_dark_blue"
-                            android:textSize="@dimen/text_size_header_medium"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/order" />
-
-                        <TextView
-                            android:id="@+id/chargeValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/default_space_16"
-                            android:fontFamily="@font/proxima_nova_semibold"
-                            android:text="@{summaryViewModel.transfer.chargeInfo.source.amount.currency+` `+summaryViewModel.transfer.chargeInfo.source.amount.amount}"
-                            android:textColor="@color/deep_dark_blue"
-                            android:textSize="@dimen/text_size_header_medium"
-                            app:layout_constraintLeft_toRightOf="@id/guideline"
-                            app:layout_constraintTop_toBottomOf="@id/orderValue"
-                            tools:text="KES 30.00" />
 
                         <TextView
                             android:id="@+id/amountTitleTextView"
@@ -257,22 +235,22 @@
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="@dimen/text_size_header_medium"
                             app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/charge" />
+                            app:layout_constraintTop_toBottomOf="@id/orderValue" />
 
                         <TextView
                             android:id="@+id/amountTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/amountTextView"
-                            android:layout_marginTop="@dimen/default_space_6"
+                            android:layout_marginTop="3dp"
                             android:ellipsize="marquee"
-                            android:fontFamily="@font/proxima_nova_semibold"
+                            android:fontFamily="@font/proxima_nova_regular"
                             android:text="@{summaryViewModel.transfer.orderInfo.amount.currency+` `+summaryViewModel.transfer.orderInfo.amount.amount}"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="@dimen/text_size_header_large"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/amountTitleTextView"
-                            tools:text="USD 350.00" />
+                            tools:text="KES 30000.00" />
 
                         <ImageView
                             android:id="@+id/calenderIcon"
@@ -291,6 +269,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/default_space_16"
                             android:fontFamily="@font/proxima_nova_regular"
+                            android:text="@{summaryViewModel.transfer.orderInfo.date}"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="@dimen/text_size_header_medium"
                             app:layout_constraintBottom_toBottomOf="@id/calenderIcon"
@@ -307,6 +286,7 @@
                             android:contentDescription="@string/app_name"
                             android:padding="6dp"
                             android:src="@drawable/ic_payment_details_icon"
+                            android:visibility="@{summaryViewModel.transfer.orderInfo.description==null?View.GONE:View.VISIBLE}"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/calenderIcon" />
 
@@ -320,6 +300,7 @@
                             android:text="Payment details"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="@dimen/text_size_header_medium"
+                            android:visibility="@{summaryViewModel.transfer.orderInfo.description==null?View.GONE:View.VISIBLE}"
                             app:layout_constraintBottom_toBottomOf="@id/bcase"
                             app:layout_constraintLeft_toRightOf="@id/bcase"
                             app:layout_constraintTop_toTopOf="@id/bcase" />
@@ -330,7 +311,9 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/default_space_8"
                             android:fontFamily="@font/proxima_nova_regular"
+                            android:text="@{summaryViewModel.transfer.orderInfo.description}"
                             android:textColor="@color/deep_dark_blue"
+                            android:visibility="@{summaryViewModel.transfer.orderInfo.description==null?View.GONE:View.VISIBLE}"
                             app:layout_constraintLeft_toLeftOf="@id/PaymentDetails"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/PaymentDetails"
@@ -339,15 +322,6 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.cardview.widget.CardView>
-
-                <Button
-                    android:id="@+id/btn_send_payment"
-                    style="@style/Tospay.Button.Large"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_space_16"
-                    android:text="Send Payment"
-                    android:textColor="@color/white" />
 
             </LinearLayout>
 
@@ -359,6 +333,19 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_send_payment"
+                style="@style/Tospay.Button.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_space_16"
+                android:text="Send Payment"
+                android:textColor="@color/white"
+                android:visibility="@{!summaryViewModel.isLoading?View.VISIBLE:View.INVISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

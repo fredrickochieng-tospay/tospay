@@ -47,13 +47,14 @@ public class ServiceGenerator {
     }
 
     /**
-     * Creates an instance of retrofit
+     * * Creates an instance of retrofit
      *
-     * @return Retrofit
+     * @param baseUrl - url endpoint
+     * @return retrofit instance
      */
-    private static Retrofit retrofitClient() {
+    private static Retrofit retrofitClient(String baseUrl) {
         return new Retrofit.Builder()
-                .baseUrl(ApiConstants.BASE_URL)
+                .baseUrl(baseUrl)
                 .client(okHttpClient(loggingInterceptor()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
@@ -69,6 +70,17 @@ public class ServiceGenerator {
      * @return S
      */
     public static <S> S createService(Class<S> serviceClass) {
-        return retrofitClient().create(serviceClass);
+        return retrofitClient(ApiConstants.BASE_URL).create(serviceClass);
+    }
+
+    /**
+     * Creates the client instance
+     *
+     * @param serviceClass - interface class
+     * @param <S>          -interface class
+     * @return S
+     */
+    public static <S> S createService(Class<S> serviceClass, String url) {
+        return retrofitClient(url).create(serviceClass);
     }
 }

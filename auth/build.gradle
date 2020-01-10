@@ -90,4 +90,8 @@ dependencies {
 
     //sockets
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
+
+    //stepper
+    implementation 'com.stepstone.stepper:material-stepper:4.3.1'
+
 }

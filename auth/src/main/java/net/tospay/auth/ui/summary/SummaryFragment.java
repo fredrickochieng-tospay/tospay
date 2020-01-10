@@ -69,6 +69,8 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
         mViewModel.setNavigator(this);
         mBinding.setSummaryViewModel(mViewModel);
 
+        mViewModel.getUser().setValue(tospayUser);
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -91,12 +93,13 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                 return;
             }
 
-            Navigation.findNavController(view).navigate(R.id.navigation_account_selection);
+            NavHostFragment.findNavController(this)
+                    .navigate(SummaryFragmentDirections
+                            .actionNavigationPaymentSummaryToNavigationAccountSelection(transfer, paymentId));
         });
 
-        mBinding.btnBackImageView.setOnClickListener(view12 -> {
-            mListener.onPaymentFailed(new TospayException("Payment canceled"));
-        });
+        mBinding.btnBackImageView.setOnClickListener(view12 ->
+                mListener.onPaymentFailed(new TospayException("Payment canceled")));
     }
 
     private void showNetworkErrorDialog() {

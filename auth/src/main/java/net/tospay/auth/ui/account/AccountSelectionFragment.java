@@ -14,13 +14,21 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.anim.ViewAnimation;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
-import net.tospay.auth.model.Account;
+import net.tospay.auth.model.Wallet;
+import net.tospay.auth.model.transfer.Account;
+import net.tospay.auth.model.transfer.Amount;
+import net.tospay.auth.model.transfer.Delivery;
+import net.tospay.auth.model.transfer.Order;
+import net.tospay.auth.model.transfer.Source;
+import net.tospay.auth.model.transfer.Total;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
@@ -29,8 +37,10 @@ import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
 import net.tospay.auth.remote.service.PaymentService;
+import net.tospay.auth.ui.account.topup.TopupDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.utils.Utils;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
 import java.util.ArrayList;
@@ -46,6 +56,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private boolean isRotate = false;
 
     private Transfer transfer;
+    private Account account;
     private String paymentId;
 
     public AccountSelectionFragment() {
@@ -123,8 +134,36 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                                 .actionNavigationAccountSelectionToNavigationLinkMobileAccount())
         );
 
-        mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
-                .navigateUp());
+        mBinding.btnBackImageView.setOnClickListener(view1 ->
+                Navigation.findNavController(view).navigateUp());
+
+        mBinding.btnPay.setOnClickListener(view14 -> {
+            AccountType accountType = adapter.getSelectedAccountType();
+            account = new Account();
+
+            if (accountType != null) {
+                if (accountType instanceof Wallet) {
+                    Wallet wallet = (Wallet) adapter.getSelectedAccountType();
+                    account.setType("wallet");
+                    account.setId(wallet.getId());
+                    account.setCurrency(wallet.getCurrency());
+
+                } else {
+                    String currency = "KES";
+                    if (account.getCurrency() != null) {
+                        currency = account.getCurrency();
+                    }
+
+                    account.setCurrency(currency);
+                    account.setId(account.getId());
+                    account.setType(Utils.getAccountType(accountType.getType()));
+                }
+
+                performChargeLookup();
+            } else {
+                Snackbar.make(mBinding.container, "Source of funds not selected", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchAccounts() {
@@ -167,20 +206,15 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     @Override
-    public void onTopupClick(AccountType accountType) {
-
-    }
-
-    @Override
-    public void onAccountSelectedListener(AccountType accountType) {
-
+    public void onTopupClick(Wallet wallet) {
+        TopupDialog.newInstance().show(getChildFragmentManager(), TopupDialog.TAG);
     }
 
     @Override
     public void onVerifyClick(AccountType accountType) {
         AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
                 action = AccountSelectionFragmentDirections
-                .actionNavigationAccountSelectionToNavigationVerifyMobile((Account) accountType);
+                .actionNavigationAccountSelectionToNavigationVerifyMobile((net.tospay.auth.model.Account) accountType);
 
         NavHostFragment.findNavController(this).navigate(action);
     }
@@ -201,6 +235,44 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Override
     public void onRefresh() {
         fetchAccounts();
+    }
+
+    private void performChargeLookup() {
+        Transfer chargeTransfer = transfer;
+        chargeTransfer.setMerchant(null);
+        chargeTransfer.setChargeInfo(null);
+
+        Amount amount = transfer.getOrderInfo().getAmount();
+        Order order = new Order(amount);
+        Total total = new Total(amount);
+
+        //sources
+        List<Source> sources = new ArrayList<>();
+        Source source = new Source();
+        source.setAccount(account);
+        source.setOrder(order);
+        source.setTotal(total);
+        sources.add(source);
+
+        //delivery
+        // TODO: 1/10/20 remove hardcoded currency
+        Delivery delivery = transfer.getDelivery().get(0);
+        delivery.getAccount().setCurrency("KES");
+        List<Delivery> deliveries = new ArrayList<>();
+        delivery.setOrder(order);
+        delivery.setTotal(total);
+        deliveries.add(delivery);
+        transfer.setDelivery(deliveries);
+
+        chargeTransfer.setSource(sources);
+
+        mViewModel.chargeLookup(chargeTransfer);
+        mViewModel.getAmountResourceLiveData().observe(this, new Observer<Resource<Amount>>() {
+            @Override
+            public void onChanged(Resource<Amount> resource) {
+                Log.e(TAG, "onChanged: " + resource);
+            }
+        });
     }
 
     public void pay() {

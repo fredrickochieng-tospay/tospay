@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.response.ApiResponse;
@@ -119,4 +120,44 @@ public class PaymentRepository {
             }
         }.asLiveData();
     }
+
+    public LiveData<Resource<Amount>> chargeLookup(String bearerToken, Transfer transfer) {
+        return new NetworkBoundResource<Amount, Result<Amount>>(mAppExecutors) {
+
+            private Amount resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<Amount> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Amount data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Amount> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Amount>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<Amount>>> createCall() {
+                return mPaymentService.chargeLookup(bearerToken, transfer);
+            }
+        }.asLiveData();
+    }
+
 }

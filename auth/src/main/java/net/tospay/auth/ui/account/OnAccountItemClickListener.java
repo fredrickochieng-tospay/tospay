@@ -1,13 +1,19 @@
 package net.tospay.auth.ui.account;
 
 import net.tospay.auth.interfaces.AccountType;
+import net.tospay.auth.model.Wallet;
 
 public interface OnAccountItemClickListener {
 
-    void onTopupClick(AccountType accountType);
+    default void onTopupClick(Wallet wallet) {
 
-    void onAccountSelectedListener(AccountType accountType);
+    }
 
-    void onVerifyClick(AccountType accountType);
+    default void onAccountSelectedListener(AccountType accountType) {
 
+    }
+
+    default void onVerifyClick(AccountType accountType) {
+
+    }
 }

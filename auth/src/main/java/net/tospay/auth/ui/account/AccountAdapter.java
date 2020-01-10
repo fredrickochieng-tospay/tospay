@@ -20,8 +20,9 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
     private List<AccountType> mAccountTypes;
     private final OnAccountItemClickListener listener;
+    private int mSelectedItem = -1;
 
-    AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener listener) {
+    public AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener listener) {
         this.listener = listener;
         this.mAccountTypes = accountTypes;
     }
@@ -54,14 +55,24 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
             case AccountType.WALLET:
                 ((WalletViewHolder) holder).onBind((Wallet) accountType);
+                ((WalletViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
 
             case AccountType.BANK:
             case AccountType.CARD:
             case AccountType.MOBILE:
                 ((AccountViewHolder) holder).onBind((Account) accountType);
+                ((AccountViewHolder) holder).getBinding().radioButton.setChecked(position == mSelectedItem);
                 break;
         }
+    }
+
+    AccountType getSelectedAccountType() {
+        if (mSelectedItem > -1) {
+            return mAccountTypes.get(mSelectedItem);
+        }
+
+        return null;
     }
 
     @Override
@@ -84,16 +95,19 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
         private ListItemWalletViewBinding mBinding;
 
-        private WalletViewHolder(ListItemWalletViewBinding binding, OnAccountItemClickListener listener) {
+        private WalletViewHolder(ListItemWalletViewBinding binding, OnAccountItemClickListener mListener) {
             super(binding.getRoot());
             this.mBinding = binding;
 
             View.OnClickListener onClickListener = view -> {
-                listener.onAccountSelectedListener(mBinding.getWallet());
+                mSelectedItem = getAdapterPosition();
+                mListener.onAccountSelectedListener(mBinding.getWallet());
                 notifyDataSetChanged();
             };
 
+            mBinding.btnTopup.setOnClickListener(view -> mListener.onTopupClick(mBinding.getWallet()));
             mBinding.bgLayout.setOnClickListener(onClickListener);
+            mBinding.radioButton.setOnClickListener(onClickListener);
         }
 
         public ListItemWalletViewBinding getBinding() {
@@ -110,16 +124,16 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
         private ListItemAccountViewBinding mBinding;
 
-        private AccountViewHolder(ListItemAccountViewBinding mBinding, OnAccountItemClickListener listener) {
+        private AccountViewHolder(ListItemAccountViewBinding mBinding, OnAccountItemClickListener mListener) {
             super(mBinding.getRoot());
             this.mBinding = mBinding;
 
             View.OnClickListener onClickListener = view -> {
+                mSelectedItem = getAdapterPosition();
                 if (mBinding.getAccount().getType() == AccountType.MOBILE) {
                     if (!mBinding.getAccount().isVerified()
-                            && !mBinding.getAccount().getState()
-                            .equalsIgnoreCase("ACTIVE")) {
-                        listener.onAccountSelectedListener(mBinding.getAccount());
+                            && !mBinding.getAccount().getState().equalsIgnoreCase("ACTIVE")) {
+                        mSelectedItem = -1;
                     }
                 }
 
@@ -127,9 +141,9 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
             };
 
             mBinding.getRoot().setOnClickListener(onClickListener);
-
+            mBinding.radioButton.setOnClickListener(onClickListener);
             mBinding.btnVerifyPhone.setOnClickListener(view ->
-                    listener.onVerifyClick(mBinding.getAccount())
+                    mListener.onVerifyClick(mBinding.getAccount())
             );
         }
 

@@ -3,6 +3,8 @@ package net.tospay.auth.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.tospay.auth.interfaces.AccountType;
+
 public class Utils {
 
     private static Gson gson;
@@ -34,5 +36,21 @@ public class Utils {
         int secondChar = Character.codePointAt(countryCode, 1) - asciiOffset + flagOffset;
 
         return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
+    }
+
+    public static String getAccountType(int type) {
+        switch (type) {
+            case AccountType.BANK:
+                return "bank";
+
+            case AccountType.MOBILE:
+                return "mobile";
+
+            case AccountType.CARD:
+                return "card";
+
+            default:
+                return "wallet";
+        }
     }
 }

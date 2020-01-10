@@ -2,6 +2,7 @@ package net.tospay.auth.databinding;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import net.tospay.auth.R;
+import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.view.ErrorLayout;
 
 public final class BindingUtils {
@@ -73,5 +75,15 @@ public final class BindingUtils {
     @BindingAdapter("error_message")
     public static void errorMessage(ErrorLayout errorLayout, String message) {
         errorLayout.setErrorMessage(message);
+    }
+
+    @BindingAdapter("profile_pic")
+    public static void profilePic(ImageView imageView, String imageUrl) {
+        if (imageUrl == null) {
+            imageView.setVisibility(View.INVISIBLE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+            setCircularImage(imageView, imageUrl);
+        }
     }
 }

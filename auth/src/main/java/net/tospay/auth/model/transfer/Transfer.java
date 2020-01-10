@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import net.tospay.auth.model.TospayUser;
+
 import java.util.List;
 
 public class Transfer implements Parcelable {
@@ -35,6 +37,10 @@ public class Transfer implements Parcelable {
     @Expose
     private ChargeInfo chargeInfo;
 
+    @SerializedName("merchant")
+    @Expose
+    private TospayUser merchant;
+
     public Transfer() {
     }
 
@@ -44,6 +50,7 @@ public class Transfer implements Parcelable {
         orderInfo = in.readParcelable(OrderInfo.class.getClassLoader());
         type = in.readString();
         chargeInfo = in.readParcelable(ChargeInfo.class.getClassLoader());
+        merchant = in.readParcelable(TospayUser.class.getClassLoader());
     }
 
     @Override
@@ -53,6 +60,7 @@ public class Transfer implements Parcelable {
         dest.writeParcelable(orderInfo, flags);
         dest.writeString(type);
         dest.writeParcelable(chargeInfo, flags);
+        dest.writeParcelable(merchant, flags);
     }
 
     @Override
@@ -112,6 +120,14 @@ public class Transfer implements Parcelable {
         this.chargeInfo = chargeInfo;
     }
 
+    public TospayUser getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(TospayUser merchant) {
+        this.merchant = merchant;
+    }
+
     @Override
     public String toString() {
         return "Transfer{" +
@@ -120,6 +136,7 @@ public class Transfer implements Parcelable {
                 ", orderInfo=" + orderInfo +
                 ", type='" + type + '\'' +
                 ", chargeInfo=" + chargeInfo +
+                ", merchant=" + merchant +
                 '}';
     }
 }

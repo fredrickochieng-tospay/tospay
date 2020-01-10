@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="net.tospay.auth.utils.StringUtil" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="accountViewModel"
+            type="net.tospay.auth.ui.account.AccountViewModel" />
+
+        <variable
+            name="resource"
+            type="net.tospay.auth.remote.Resource" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/default_space_16"
+        android:paddingRight="@dimen/default_space_16"
+        android:paddingBottom="@dimen/default_space_16"
+        tools:context=".ui.account.topup.TopupDialog">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="44.0dip"
+            android:layout_height="3.5dip"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dip"
+            android:contentDescription="@string/app_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rectangle_sky_blue" />
+
+        <TextView
+            android:id="@+id/loginAsTextView"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/proxima_nova_semibold"
+            android:text="Topup wallet"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView3" />
+
+        <net.tospay.auth.view.ErrorLayout
+            android:id="@+id/errorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="@{accountViewModel.isError ? View.VISIBLE : View.GONE}"
+            app:error_message="@{accountViewModel.errorMessage}"
+            app:layout_constraintTop_toBottomOf="@id/loginAsTextView" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/amountInputLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="@dimen/default_space_16"
+            android:visibility="@{accountViewModel.isLoading?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/errorLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailEditText"
+                style="@style/Tospay.TextInputEditText.Style"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/default_space_8"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:hint="Enter Amount"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textSize="17sp"
+                tools:targetApi="o" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_10"
+            android:layout_marginRight="@dimen/default_space_16"
+            android:fontFamily="@font/proxima_nova_semibold"
+            android:text="Please select source of funds"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            android:visibility="@{accountViewModel.isLoading?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amountInputLayout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_10"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/descriptionTextView"
+            app:resource="@{resource}"
+            tools:itemCount="4"
+            tools:listitem="@layout/list_item_account_view" />
+
+        <Button
+            android:id="@+id/btn_guest"
+            style="@style/Tospay.Button.Cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_space_28"
+            android:layout_marginRight="@dimen/default_space_16"
+            android:text="Cancel"
+            android:textColor="@color/white"
+            android:visibility="@{accountViewModel.isLoading?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+        <Button
+            android:id="@+id/btn_tospay"
+            style="@style/Tospay.Button.Transparent.Border"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_28"
+            android:text="Confirm"
+            android:textColor="@color/deep_dark_blue"
+            android:visibility="@{accountViewModel.isLoading?View.INVISIBLE:View.VISIBLE}"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_space_16"
+            android:visibility="@{accountViewModel.isLoading?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
