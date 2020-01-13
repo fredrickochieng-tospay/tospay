@@ -34,4 +34,10 @@ public interface PaymentService {
             @Path("paymentId") String paymentId,
             @Body Transfer transfer
     );
+
+    @POST("v1/transfer/execute-transfer")
+    LiveData<ApiResponse<Result<String>>> transfer(
+            @Header("Authorization") String bearer,
+            @Body Transfer transfer
+    );
 }

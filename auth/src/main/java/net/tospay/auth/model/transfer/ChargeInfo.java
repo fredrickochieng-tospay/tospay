@@ -16,18 +16,30 @@ public class ChargeInfo implements Parcelable {
     @Expose
     private Destination destination;
 
+    @SerializedName("partnerInfo")
+    @Expose
+    private PartnerInfo partnerInfo;
+
+    @SerializedName("railInfo")
+    @Expose
+    private RailInfo railInfo;
+
     public ChargeInfo() {
     }
 
     protected ChargeInfo(Parcel in) {
         source = in.readParcelable(Source.class.getClassLoader());
         destination = in.readParcelable(Destination.class.getClassLoader());
+        partnerInfo = in.readParcelable(PartnerInfo.class.getClassLoader());
+        railInfo = in.readParcelable(RailInfo.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(source, flags);
         dest.writeParcelable(destination, flags);
+        dest.writeParcelable(partnerInfo, flags);
+        dest.writeParcelable(railInfo, flags);
     }
 
     @Override
@@ -63,11 +75,29 @@ public class ChargeInfo implements Parcelable {
         this.destination = destination;
     }
 
+    public PartnerInfo getPartnerInfo() {
+        return partnerInfo;
+    }
+
+    public void setPartnerInfo(PartnerInfo partnerInfo) {
+        this.partnerInfo = partnerInfo;
+    }
+
+    public RailInfo getRailInfo() {
+        return railInfo;
+    }
+
+    public void setRailInfo(RailInfo railInfo) {
+        this.railInfo = railInfo;
+    }
+
     @Override
     public String toString() {
         return "ChargeInfo{" +
                 "source=" + source +
                 ", destination=" + destination +
+                ", partnerInfo=" + partnerInfo +
+                ", railInfo=" + railInfo +
                 '}';
     }
 }

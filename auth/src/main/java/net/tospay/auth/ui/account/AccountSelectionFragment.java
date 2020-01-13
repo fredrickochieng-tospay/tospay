@@ -1,10 +1,12 @@
 package net.tospay.auth.ui.account;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +27,10 @@ import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.model.transfer.Account;
 import net.tospay.auth.model.transfer.Amount;
+import net.tospay.auth.model.transfer.Charge;
 import net.tospay.auth.model.transfer.Delivery;
 import net.tospay.auth.model.transfer.Order;
+import net.tospay.auth.model.transfer.PartnerInfo;
 import net.tospay.auth.model.transfer.Source;
 import net.tospay.auth.model.transfer.Total;
 import net.tospay.auth.model.transfer.Transfer;
@@ -54,10 +58,12 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
     private boolean isRotate = false;
-
+    private Charge charge;
     private Transfer transfer;
     private Account account;
+    private PartnerInfo partnerInfo;
     private String paymentId;
+    private ProgressDialog progressDialog;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -95,8 +101,13 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.setAccountViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
+        progressDialog = new ProgressDialog(view.getContext());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setIndeterminate(true);
+
         if (getArguments() != null) {
             transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
+            partnerInfo = transfer.getChargeInfo().getPartnerInfo();
             paymentId = AccountSelectionFragmentArgs.fromBundle(getArguments()).getPaymentId();
             mViewModel.getTransfer().setValue(transfer);
         }
@@ -207,7 +218,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public void onTopupClick(Wallet wallet) {
-        TopupDialog.newInstance().show(getChildFragmentManager(), TopupDialog.TAG);
+        TopupDialog.newInstance(wallet).show(getChildFragmentManager(), TopupDialog.TAG);
     }
 
     @Override
@@ -239,8 +250,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     private void performChargeLookup() {
         Transfer chargeTransfer = transfer;
-        chargeTransfer.setMerchant(null);
-        chargeTransfer.setChargeInfo(null);
 
         Amount amount = transfer.getOrderInfo().getAmount();
         Order order = new Order(amount);
@@ -255,22 +264,39 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         sources.add(source);
 
         //delivery
-        // TODO: 1/10/20 remove hardcoded currency
         Delivery delivery = transfer.getDelivery().get(0);
-        delivery.getAccount().setCurrency("KES");
+        delivery.setAccount(partnerInfo.getAccount());
+        delivery.getAccount().setCurrency(partnerInfo.getAmount().getCurrency());
+
         List<Delivery> deliveries = new ArrayList<>();
         delivery.setOrder(order);
         delivery.setTotal(total);
         deliveries.add(delivery);
-        transfer.setDelivery(deliveries);
+        chargeTransfer.setDelivery(deliveries);
 
         chargeTransfer.setSource(sources);
+        chargeTransfer.setMerchant(null);
+        chargeTransfer.setChargeInfo(null);
 
         mViewModel.chargeLookup(chargeTransfer);
-        mViewModel.getAmountResourceLiveData().observe(this, new Observer<Resource<Amount>>() {
-            @Override
-            public void onChanged(Resource<Amount> resource) {
-                Log.e(TAG, "onChanged: " + resource);
+        mViewModel.getAmountResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        progressDialog.setMessage("Fetching charges. Please wait...");
+                        progressDialog.show();
+                        break;
+
+                    case SUCCESS:
+                        progressDialog.dismiss();
+                        charge = new Charge(resource.data);
+                        break;
+
+                    case ERROR:
+                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        break;
+                }
             }
         });
     }

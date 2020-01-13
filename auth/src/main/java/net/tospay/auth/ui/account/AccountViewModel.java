@@ -26,7 +26,7 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     private LiveData<Resource<List<AccountType>>> accountsResourceLiveData;
     private LiveData<Resource<Amount>> amountResourceLiveData;
     private LiveData<Resource<String>> paymentResourceLiveData;
-
+    private LiveData<Resource<String>> transferResourceLiveData;
     private MutableLiveData<Transfer> transfer;
 
     public AccountViewModel(AccountRepository accountRepository, PaymentRepository paymentRepository) {
@@ -64,6 +64,14 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
 
     public LiveData<Resource<Amount>> getAmountResourceLiveData() {
         return amountResourceLiveData;
+    }
+
+    public void topup(Transfer transfer) {
+        transferResourceLiveData = paymentRepository.transfer(getBearerToken().get(), transfer);
+    }
+
+    public LiveData<Resource<String>> getTransferResourceLiveData() {
+        return transferResourceLiveData;
     }
 
     @Override

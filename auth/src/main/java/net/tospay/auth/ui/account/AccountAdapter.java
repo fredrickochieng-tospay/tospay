@@ -134,10 +134,14 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
                     if (!mBinding.getAccount().isVerified()
                             && !mBinding.getAccount().getState().equalsIgnoreCase("ACTIVE")) {
                         mSelectedItem = -1;
+                    } else {
+                        mListener.onAccountSelectedListener(mBinding.getAccount());
+                        notifyDataSetChanged();
                     }
+                } else {
+                    mListener.onAccountSelectedListener(mBinding.getAccount());
+                    notifyDataSetChanged();
                 }
-
-                notifyDataSetChanged();
             };
 
             mBinding.getRoot().setOnClickListener(onClickListener);

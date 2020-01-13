@@ -11,6 +11,8 @@ import net.tospay.auth.model.Network;
 
 public class Account implements Parcelable {
 
+    public static final String TYPE_WALLET = "wallet";
+
     @SerializedName("id")
     @Expose
     private String id;
@@ -31,6 +33,14 @@ public class Account implements Parcelable {
     @Expose
     private Network network;
 
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
+
+    @SerializedName("user_type")
+    @Expose
+    private String userType;
+
     public Account() {
     }
 
@@ -46,6 +56,8 @@ public class Account implements Parcelable {
         currency = in.readString();
         country = in.readParcelable(Country.class.getClassLoader());
         network = in.readParcelable(Network.class.getClassLoader());
+        userId = in.readString();
+        userType = in.readString();
     }
 
     @Override
@@ -55,6 +67,8 @@ public class Account implements Parcelable {
         dest.writeString(currency);
         dest.writeParcelable(country, flags);
         dest.writeParcelable(network, flags);
+        dest.writeString(userId);
+        dest.writeString(userType);
     }
 
     @Override
@@ -114,6 +128,22 @@ public class Account implements Parcelable {
         this.network = network;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Account)) {
@@ -122,5 +152,18 @@ public class Account implements Parcelable {
 
         Account account = (Account) obj;
         return this.id.equals(account.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", currency='" + currency + '\'' +
+                ", country=" + country +
+                ", network=" + network +
+                ", userId='" + userId + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
     }
 }

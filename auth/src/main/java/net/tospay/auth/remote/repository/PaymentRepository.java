@@ -160,4 +160,42 @@ public class PaymentRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<String>> transfer(String bearerToken, Transfer transfer) {
+        return new NetworkBoundResource<String, Result<String>>(mAppExecutors) {
+
+            private String resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<String> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable String data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<String> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<String>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<String>>> createCall() {
+                return mPaymentService.transfer(bearerToken, transfer);
+            }
+        }.asLiveData();
+    }
 }

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import net.tospay.auth.R;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.view.ErrorLayout;
+import net.tospay.auth.view.LoadingLayout;
 
 public final class BindingUtils {
 
@@ -75,6 +76,17 @@ public final class BindingUtils {
     @BindingAdapter("error_message")
     public static void errorMessage(ErrorLayout errorLayout, String message) {
         errorLayout.setErrorMessage(message);
+    }
+
+    /**
+     * Set loading title of the view
+     *
+     * @param layout - loading layout
+     * @param title  -title
+     */
+    @BindingAdapter("loading_title")
+    public static void setLoadingTitle(LoadingLayout layout, String title) {
+        layout.setLoadingTitle(title);
     }
 
     @BindingAdapter("profile_pic")

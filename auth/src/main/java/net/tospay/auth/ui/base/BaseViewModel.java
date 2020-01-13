@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 public abstract class BaseViewModel<N> extends ViewModel {
 
     private final ObservableBoolean mIsLoading = new ObservableBoolean();
+    private final ObservableField<String> mLoadingTitle = new ObservableField<>("");
     private final ObservableBoolean mIsError = new ObservableBoolean(false);
     private final ObservableField<String> mErrorMessage = new ObservableField<>("");
     private final ObservableField<String> mBearerToken = new ObservableField<>("");
@@ -29,6 +30,14 @@ public abstract class BaseViewModel<N> extends ViewModel {
 
     public void setIsLoading(boolean isLoading) {
         mIsLoading.set(isLoading);
+    }
+
+    public ObservableField<String> getLoadingTitle() {
+        return mLoadingTitle;
+    }
+
+    public void setLoadingTitle(String loadingTitle) {
+        mLoadingTitle.set(loadingTitle);
     }
 
     public ObservableBoolean getIsError() {

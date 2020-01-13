@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -19,18 +20,27 @@ import androidx.navigation.Navigation;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.ActivityTospayBinding;
+import net.tospay.auth.event.NotificationEvent;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.ui.dialog.TransferDialog;
 import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;
 import net.tospay.auth.ui.base.BaseActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
@@ -42,7 +52,8 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
 
     private Emitter.Listener onNewMessage = args -> {
         String jsonStr = args[0].toString();
-        Log.e(TAG, ": " + jsonStr);
+        NotificationEvent event = new Gson().fromJson(jsonStr, NotificationEvent.class);
+        EventBus.getDefault().postSticky(event);
     };
 
     private PaymentViewModel mViewModel;
@@ -198,5 +209,24 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
             mSocket.disconnect();
             mSocket.off("notify", onNewMessage);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNotification(NotificationEvent notification) {
+        if (notification != null) {
+            TransferDialog.newInstance(notification).show(getSupportFragmentManager(), TransferDialog.TAG);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

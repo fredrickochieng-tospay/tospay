@@ -9,39 +9,37 @@ import android.widget.TextView;
 
 import net.tospay.auth.R;
 
-public class ErrorLayout extends LinearLayout {
+public class LoadingLayout extends LinearLayout {
 
     private TextView textView;
 
-    public ErrorLayout(Context context) {
+    public LoadingLayout(Context context) {
         this(context, null, 0);
     }
 
-    public ErrorLayout(Context context, AttributeSet attrs) {
+    public LoadingLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ErrorLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LoadingLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
-        LayoutInflater.from(context).inflate(R.layout.error_layout, this, true);
-        textView = findViewById(R.id.warning_text_view);
-
-        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.ErrorLayout);
-        String message = attributes.getString(R.styleable.ErrorLayout_text);
+        LayoutInflater.from(context).inflate(R.layout.loading_layout, this, true);
+        textView = findViewById(R.id.loading_title);
+        TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.LoadingLayout);
+        String message = attributes.getString(R.styleable.LoadingLayout_loading_title);
         if (message != null) {
             textView.setText(message);
         } else {
             textView.setText(null);
         }
-
         attributes.recycle();
     }
 
-    public void setErrorMessage(String text) {
+    public void setLoadingTitle(String text) {
         textView.setText(text);
     }
 }
