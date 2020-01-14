@@ -33,18 +33,18 @@ public class ApiResponse<T> {
         errorMessage = error.getMessage();
     }
 
+    @SuppressWarnings("CatchMayIgnoreException")
     public ApiResponse(Response<T> response) {
         code = response.code();
         if (response.isSuccessful()) {
             body = response.body();
             errorMessage = null;
         } else {
-
             String message = null;
+
             if (response.code() == 502) {
                 message = "Oop! Service is currently down. Please try again later.";
             } else {
-
                 if (response.errorBody() != null) {
                     try {
                         message = response.errorBody().string();

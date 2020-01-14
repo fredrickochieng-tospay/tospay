@@ -69,7 +69,7 @@ public class TospayException extends IOException {
         if (error != null) {
             if (!error.isEmpty()) {
                 if (error.size() == 1) {
-                    return error.get(0).getDesc();
+                    return error.get(0).getDescription();
                 } else {
                     return TextUtils.join("\n", error);
                 }
@@ -87,9 +87,9 @@ public class TospayException extends IOException {
         @Expose
         private String code;
 
-        @SerializedName("desc")
+        @SerializedName("description")
         @Expose
-        private String desc;
+        private String description;
 
         public String getCode() {
             return code;
@@ -99,18 +99,18 @@ public class TospayException extends IOException {
             this.code = code;
         }
 
-        public String getDesc() {
-            return desc;
+        public String getDescription() {
+            return description;
         }
 
-        public void setDesc(String desc) {
-            this.desc = desc;
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         @NonNull
         @Override
         public String toString() {
-            return desc;
+            return description;
         }
     }
 }

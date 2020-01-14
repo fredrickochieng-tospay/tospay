@@ -13,6 +13,10 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+/**
+ * @author Freddy Genicho
+ * <p>Contains all the library payment endpoints</p>
+ */
 public interface PaymentService {
 
     @GET("v1/payment/fetch/{paymentId}")
@@ -20,18 +24,22 @@ public interface PaymentService {
             @Path("paymentId") String paymentId
     );
 
-
     @POST("v1/payment/charge-lookup")
-    LiveData<ApiResponse<Result<Amount>>> chargeLookup(
+    LiveData<ApiResponse<Result<Amount>>> paymentChargeLookup(
             @Header("Authorization") String bearer,
             @Body Transfer transfer
     );
-
 
     @POST("v1/transfer/execute-payment/{paymentId}")
     LiveData<ApiResponse<Result<String>>> pay(
             @Header("Authorization") String bearer,
             @Path("paymentId") String paymentId,
+            @Body Transfer transfer
+    );
+
+    @POST("v1/transfer/charge-lookup")
+    LiveData<ApiResponse<Result<Amount>>> transferChargeLookup(
+            @Header("Authorization") String bearer,
             @Body Transfer transfer
     );
 

@@ -121,7 +121,7 @@ public class PaymentRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<Amount>> chargeLookup(String bearerToken, Transfer transfer) {
+    public LiveData<Resource<Amount>> chargeLookup(String bearerToken, Transfer transfer, String type) {
         return new NetworkBoundResource<Amount, Result<Amount>>(mAppExecutors) {
 
             private Amount resultsDb;
@@ -155,7 +155,11 @@ public class PaymentRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<Amount>>> createCall() {
-                return mPaymentService.chargeLookup(bearerToken, transfer);
+                if (type.equals(Transfer.PAYMENT)) {
+                    return mPaymentService.paymentChargeLookup(bearerToken, transfer);
+                } else {
+                    return mPaymentService.transferChargeLookup(bearerToken, transfer);
+                }
             }
         }.asLiveData();
     }

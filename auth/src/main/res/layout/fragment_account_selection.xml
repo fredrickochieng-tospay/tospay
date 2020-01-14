@@ -22,8 +22,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         tools:context=".ui.account.AccountSelectionFragment">
 
@@ -97,14 +96,16 @@
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:isScrollContainer="true"
+                android:measureAllChildren="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_space_16"
                     android:layout_marginRight="@dimen/default_space_16"
-                    android:layout_marginBottom="@dimen/default_space_16"
                     android:orientation="vertical">
 
                     <TextView
@@ -159,16 +160,182 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <net.tospay.auth.view.ErrorLayout
+                        android:id="@+id/errorLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="@{accountViewModel.isError ? View.VISIBLE : View.GONE}"
+                        app:error_message="@{accountViewModel.errorMessage}"
+                        app:layout_constraintTop_toBottomOf="@id/descriptionText" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/default_space_10"
                         android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:resource="@{resource}"
                         tools:itemCount="4"
                         tools:listitem="@layout/list_item_account_view" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_space_16"
+                        android:fontFamily="@font/proxima_nova_semibold"
+                        android:text="Add payment method"
+                        android:textColor="@color/deep_dark_blue"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layout_link_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_space_10"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_space_10">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/ic_mobile" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/default_space_16"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:text="Link mobile account"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_link_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_space_10">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/ic_link_card" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/default_space_16"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:text="Link card account"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <include
+                        layout="@layout/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="@dimen/default_space_10"
+                        android:layout_marginBottom="@dimen/default_space_10" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{accountViewModel.charge.amount !=null?View.VISIBLE:View.GONE}">
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent=".4" />
+
+                        <TextView
+                            android:id="@+id/payment_summery_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proxima_nova_semibold"
+                            android:text="Payment Summary"
+                            android:textColor="@color/deep_dark_blue"
+                            android:textSize="15sp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/chargeTitleView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:paddingTop="@dimen/default_space_10"
+                            android:paddingBottom="@dimen/default_space_10"
+                            android:text="Transaction Cost"
+                            android:textColor="@color/black"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/payment_summery_text_view" />
+
+                        <TextView
+                            android:id="@+id/totalTitleView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:paddingTop="@dimen/default_space_10"
+                            android:paddingBottom="@dimen/default_space_10"
+                            android:text="Total Amount"
+                            android:textColor="@color/black"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/chargeTitleView" />
+
+                        <TextView
+                            android:id="@+id/chargeTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:textColor="@color/deep_dark_blue"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@id/chargeTitleView"
+                            app:layout_constraintLeft_toRightOf="@id/guideline"
+                            app:layout_constraintTop_toTopOf="@id/chargeTitleView"
+                            tools:text="KSH 200" />
+
+                        <TextView
+                            android:id="@+id/totalTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proxima_nova_regular"
+                            android:textColor="@color/deep_dark_blue"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toBottomOf="@id/totalTitleView"
+                            app:layout_constraintLeft_toRightOf="@id/guideline"
+                            app:layout_constraintTop_toTopOf="@id/totalTitleView"
+                            tools:text="KSH 2220" />
+
+                        <Button
+                            android:id="@+id/btn_pay"
+                            style="@style/Tospay.Button.Large"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_space_16"
+                            android:text="Confirm Payment"
+                            android:textColor="@color/white"
+                            app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </LinearLayout>
 
@@ -176,60 +343,16 @@
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/btn_pay"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabLinkMobile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_mobile"
-                android:tint="@color/grey_80"
-                app:backgroundTint="@color/grey_20"
-                app:fabSize="mini"
-                app:rippleColor="@color/white" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabLinkCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_link_card"
-                android:tint="@color/grey_80"
-                app:backgroundTint="@color/grey_20"
-                app:fabSize="mini"
-                app:rippleColor="@color/white" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="18dp"
-                android:layout_marginBottom="18dp"
-                android:src="@drawable/ic_add_white_24dp"
-                app:fabSize="normal"
-                app:rippleColor="@color/white" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_pay"
-            style="@style/Tospay.Button.Large"
+        <net.tospay.auth.view.LoadingLayout
+            loading_title="@{accountViewModel.loadingTitle}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_space_16"
-            android:text="Proceed to pay"
-            android:textColor="@color/white"
-            android:visibility="@{accountViewModel.isLoading?View.GONE:View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:layout_height="0dp"
+            android:visibility="@{accountViewModel.isLoading?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

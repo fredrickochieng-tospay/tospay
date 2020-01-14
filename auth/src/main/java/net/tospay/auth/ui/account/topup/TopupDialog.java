@@ -311,7 +311,7 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
         orderInfo.setReference(UUID.randomUUID().toString());
         transfer.setOrderInfo(orderInfo);
 
-        mViewModel.chargeLookup(transfer);
+        mViewModel.chargeLookup(transfer, Transfer.TOPUP);
         mViewModel.getAmountResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {

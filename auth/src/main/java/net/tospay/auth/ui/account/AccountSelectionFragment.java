@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
-import net.tospay.auth.anim.ViewAnimation;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
+import net.tospay.auth.event.NotificationEvent;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Wallet;
@@ -47,23 +48,28 @@ import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.Utils;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener, AccountNavigator {
 
-    private static final String TAG = "AccountSelectionFragmen";
-
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
-    private boolean isRotate = false;
     private Charge charge;
-    private Transfer transfer;
+    private Transfer transfer, payload;
     private Account account;
     private PartnerInfo partnerInfo;
     private String paymentId;
-    private ProgressDialog progressDialog;
+    private NumberFormat numberFormat;
+    private String currency;
+    private double withdrawalAmount = 0;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -101,14 +107,19 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.setAccountViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
-        progressDialog = new ProgressDialog(view.getContext());
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setIndeterminate(true);
+        numberFormat = NumberFormat.getCurrencyInstance();
+        numberFormat.setMaximumFractionDigits(0);
 
         if (getArguments() != null) {
             transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
-            partnerInfo = transfer.getChargeInfo().getPartnerInfo();
             paymentId = AccountSelectionFragmentArgs.fromBundle(getArguments()).getPaymentId();
+
+            if (transfer.getChargeInfo() != null) {
+                partnerInfo = transfer.getChargeInfo().getPartnerInfo();
+                currency = partnerInfo.getAmount().getCurrency();
+                numberFormat.setCurrency(Currency.getInstance(currency));
+            }
+
             mViewModel.getTransfer().setValue(transfer);
         }
 
@@ -117,29 +128,13 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         mBinding.recyclerView.setAdapter(adapter);
 
-        fetchAccounts();
-
-        ViewAnimation.init(mBinding.fabLinkCard);
-        ViewAnimation.init(mBinding.fabLinkMobile);
-
-        mBinding.fabAdd.setOnClickListener(view1 -> {
-            isRotate = ViewAnimation.rotateFab(view1, !isRotate);
-            if (isRotate) {
-                ViewAnimation.showIn(mBinding.fabLinkCard);
-                ViewAnimation.showIn(mBinding.fabLinkMobile);
-            } else {
-                ViewAnimation.showOut(mBinding.fabLinkCard);
-                ViewAnimation.showOut(mBinding.fabLinkMobile);
-            }
-        });
-
-        mBinding.fabLinkCard.setOnClickListener(view12 ->
+        mBinding.layoutLinkCard.setOnClickListener(view12 ->
                 NavHostFragment.findNavController(this)
                         .navigate(AccountSelectionFragmentDirections
                                 .actionNavigationAccountSelectionToNavigationLinkCardAccount())
         );
 
-        mBinding.fabLinkMobile.setOnClickListener(view13 ->
+        mBinding.layoutLinkMobile.setOnClickListener(view13 ->
                 NavHostFragment.findNavController(this)
                         .navigate(AccountSelectionFragmentDirections
                                 .actionNavigationAccountSelectionToNavigationLinkMobileAccount())
@@ -149,76 +144,77 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                 Navigation.findNavController(view).navigateUp());
 
         mBinding.btnPay.setOnClickListener(view14 -> {
-            AccountType accountType = adapter.getSelectedAccountType();
-            account = new Account();
-
-            if (accountType != null) {
-                if (accountType instanceof Wallet) {
-                    Wallet wallet = (Wallet) adapter.getSelectedAccountType();
-                    account.setType("wallet");
-                    account.setId(wallet.getId());
-                    account.setCurrency(wallet.getCurrency());
-
-                } else {
-                    String currency = "KES";
-                    if (account.getCurrency() != null) {
-                        currency = account.getCurrency();
-                    }
-
-                    account.setCurrency(currency);
-                    account.setId(account.getId());
-                    account.setType(Utils.getAccountType(accountType.getType()));
-                }
-
-                performChargeLookup();
-            } else {
-                Snackbar.make(mBinding.container, "Source of funds not selected", Snackbar.LENGTH_SHORT).show();
-            }
+            executePayment();
         });
+
+        fetchAccounts();
     }
 
     private void fetchAccounts() {
         mViewModel.fetchAccounts(true);
-        mViewModel.getAccountsResourceLiveData().observe(this, this::handleResponse);
-    }
+        mViewModel.getAccountsResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-    private void handleResponse(Resource<List<AccountType>> resource) {
-        if (resource != null) {
-            switch (resource.status) {
-                case ERROR:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    break;
+                    case LOADING:
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        mViewModel.setLoadingTitle("Fetching sources of funds...");
+                        break;
 
-                case LOADING:
-                    mViewModel.setIsLoading(true);
-                    mViewModel.setIsError(false);
-                    break;
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        if (resource.data != null && resource.data.size() > 0) {
+                            mBinding.setResource(resource);
+                        } else {
+                            mViewModel.setIsEmpty(true);
+                        }
+                        break;
 
-                case SUCCESS:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(false);
-                    if (resource.data != null && resource.data.size() > 0) {
-                        mBinding.setResource(resource);
-                    } else {
-                        mViewModel.setIsEmpty(true);
-                    }
-                    break;
-
-                case RE_AUTHENTICATE:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    openActivityOnTokenExpire();
-                    break;
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        openActivityOnTokenExpire();
+                        break;
+                }
             }
-        }
+        });
     }
 
     @Override
     public void onTopupClick(Wallet wallet) {
         TopupDialog.newInstance(wallet).show(getChildFragmentManager(), TopupDialog.TAG);
+    }
+
+    @Override
+    public void onAccountSelectedListener(AccountType accountType) {
+        this.account = new Account();
+        if (accountType instanceof Wallet) {
+            Wallet wallet = (Wallet) accountType;
+            account.setType("wallet");
+            account.setId(wallet.getId());
+            account.setCurrency(wallet.getCurrency());
+        } else {
+            net.tospay.auth.model.Account acc = (net.tospay.auth.model.Account) accountType;
+
+            String currency = "KES";
+            if (acc.getCurrency() != null) {
+                currency = acc.getCurrency();
+            }
+
+            account.setCurrency(currency);
+            account.setId(acc.getId());
+            account.setType(Utils.getAccountType(accountType.getType()));
+        }
+
+        performChargeLookup();
     }
 
     @Override
@@ -278,36 +274,110 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         chargeTransfer.setMerchant(null);
         chargeTransfer.setChargeInfo(null);
 
-        mViewModel.chargeLookup(chargeTransfer);
+        payload = chargeTransfer;
+
+        mViewModel.chargeLookup(chargeTransfer, Transfer.PAYMENT);
         mViewModel.getAmountResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
-                        progressDialog.setMessage("Fetching charges. Please wait...");
-                        progressDialog.show();
-                        break;
-
-                    case SUCCESS:
-                        progressDialog.dismiss();
-                        charge = new Charge(resource.data);
+                        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        mViewModel.setLoadingTitle("Fetching transaction charges...");
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
                         break;
 
                     case ERROR:
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        break;
+
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        charge = new Charge(resource.data);
+                        mViewModel.getCharge().setValue(charge);
+
+                        withdrawalAmount = Double.valueOf(transfer.getOrderInfo().getAmount().getAmount());
+                        withdrawalAmount += Double.parseDouble(charge.getAmount().getAmount());
+
+                        source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), currency)));
+                        mBinding.totalTextView.setText(numberFormat.format(withdrawalAmount));
+                        mBinding.chargeTextView.setText(numberFormat.format(
+                                Double.parseDouble(charge.getAmount().getAmount())));
+
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        break;
+
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        openActivityOnTokenExpire();
                         break;
                 }
             }
         });
     }
 
-    public void pay() {
-        mViewModel.pay(paymentId, transfer);
-        mViewModel.getPaymentResourceLiveData().observe(this, new Observer<Resource<String>>() {
-            @Override
-            public void onChanged(Resource<String> resource) {
-                Log.e(TAG, "onChanged: " + resource);
+    private void executePayment() {
+        mViewModel.pay(paymentId, payload);
+        mViewModel.getPaymentResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        mViewModel.setLoadingTitle("Processing transactions...");
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        break;
+
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        break;
+
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        break;
+
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        openActivityOnTokenExpire();
+                        break;
+                }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNotification(NotificationEvent notification) {
+        if (notification != null) {
+            if (!notification.getData().getStatus().equals("FAILED")) {
+                fetchAccounts();
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }

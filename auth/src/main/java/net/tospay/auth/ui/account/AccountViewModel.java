@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.transfer.Amount;
+import net.tospay.auth.model.transfer.Charge;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
@@ -28,12 +29,14 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     private LiveData<Resource<String>> paymentResourceLiveData;
     private LiveData<Resource<String>> transferResourceLiveData;
     private MutableLiveData<Transfer> transfer;
+    private MutableLiveData<Charge> charge;
 
     public AccountViewModel(AccountRepository accountRepository, PaymentRepository paymentRepository) {
         this.accountRepository = accountRepository;
         this.paymentRepository = paymentRepository;
         this.isEmpty = new ObservableBoolean();
         this.transfer = new MutableLiveData<>();
+        this.charge = new MutableLiveData<>();
     }
 
     public MutableLiveData<Transfer> getTransfer() {
@@ -48,6 +51,10 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         return paymentResourceLiveData;
     }
 
+    public MutableLiveData<Charge> getCharge() {
+        return charge;
+    }
+
     public void fetchAccounts(boolean showWallet) {
         String bearerToken = getBearerToken().get();
         accountsResourceLiveData = accountRepository.accounts(bearerToken, showWallet);
@@ -58,8 +65,8 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         paymentResourceLiveData = paymentRepository.pay(bearerToken, paymentId, transfer);
     }
 
-    public void chargeLookup(Transfer transfer) {
-        amountResourceLiveData = paymentRepository.chargeLookup(getBearerToken().get(), transfer);
+    public void chargeLookup(Transfer transfer, String type) {
+        amountResourceLiveData = paymentRepository.chargeLookup(getBearerToken().get(), transfer, type);
     }
 
     public LiveData<Resource<Amount>> getAmountResourceLiveData() {
