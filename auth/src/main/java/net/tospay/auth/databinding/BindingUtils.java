@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import net.tospay.auth.R;
+import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.view.ErrorLayout;
 import net.tospay.auth.view.LoadingLayout;
@@ -42,7 +43,7 @@ public final class BindingUtils {
             imageView.setImageResource(R.drawable.ic_mobile);
 
         } else if (TextUtils.equals(sourceChannel, "card")) {
-            imageView.setImageResource(R.drawable.ic_link_card);
+            imageView.setImageResource(R.drawable.ic_card);
 
         } else if (TextUtils.equals(sourceChannel, "bank")) {
             imageView.setImageResource(R.drawable.ic_bank);
@@ -96,6 +97,23 @@ public final class BindingUtils {
         } else {
             imageView.setVisibility(View.VISIBLE);
             setCircularImage(imageView, imageUrl);
+        }
+    }
+
+    @BindingAdapter("account_type_icon")
+    public static void accountTypeLogo(ImageView imageView, int type) {
+        switch (type) {
+            case AccountType.BANK:
+                imageView.setImageResource(R.drawable.ic_bank);
+                break;
+
+            case AccountType.MOBILE:
+                imageView.setImageResource(R.drawable.ic_mobile);
+                break;
+
+            case AccountType.CARD:
+                imageView.setImageResource(R.drawable.ic_card);
+                break;
         }
     }
 }

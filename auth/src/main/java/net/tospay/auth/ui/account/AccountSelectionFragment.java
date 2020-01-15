@@ -67,8 +67,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private Account account;
     private PartnerInfo partnerInfo;
     private String paymentId;
-    private NumberFormat numberFormat;
-    private String currency;
     private double withdrawalAmount = 0;
 
     public AccountSelectionFragment() {
@@ -107,17 +105,12 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.setAccountViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
-        numberFormat = NumberFormat.getCurrencyInstance();
-        numberFormat.setMaximumFractionDigits(0);
-
         if (getArguments() != null) {
             transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
             paymentId = AccountSelectionFragmentArgs.fromBundle(getArguments()).getPaymentId();
 
             if (transfer.getChargeInfo() != null) {
                 partnerInfo = transfer.getChargeInfo().getPartnerInfo();
-                currency = partnerInfo.getAmount().getCurrency();
-                numberFormat.setCurrency(Currency.getInstance(currency));
             }
 
             mViewModel.getTransfer().setValue(transfer);
@@ -304,10 +297,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         withdrawalAmount = Double.valueOf(transfer.getOrderInfo().getAmount().getAmount());
                         withdrawalAmount += Double.parseDouble(charge.getAmount().getAmount());
 
-                        source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), currency)));
-                        mBinding.totalTextView.setText(numberFormat.format(withdrawalAmount));
-                        mBinding.chargeTextView.setText(numberFormat.format(
-                                Double.parseDouble(charge.getAmount().getAmount())));
+                        source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), partnerInfo.getAmount().getCurrency())));
+                        mViewModel.getSource().setValue(source);
 
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         break;

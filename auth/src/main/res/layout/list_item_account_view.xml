@@ -24,17 +24,19 @@
 
         <ImageView
             android:id="@+id/avatarView"
+            account_type_icon="@{account.type}"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="@dimen/default_space_10"
-            android:layout_marginBottom="@dimen/default_space_10"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:contentDescription="@string/app_name"
-            app:imageUrl="@{account.avatar}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_tospay_logo_original" />
+            tools:src="@drawable/ic_mobile" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -47,16 +49,15 @@
             android:id="@+id/networkTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_16"
             android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="3dp"
             android:fontFamily="@font/proxima_nova_semibold"
-            android:text="@{account.network}"
-            android:textAllCaps="true"
+            android:text="@{account.network +` - `+ account.name}"
+            android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toTopOf="@id/guideline4"
             app:layout_constraintLeft_toRightOf="@id/guideline3"
-            app:layout_constraintTop_toTopOf="@id/avatarView"
-            tools:text="Visa" />
+            tools:text="Visa, Mobile" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -69,25 +70,25 @@
             android:id="@+id/truncTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_16"
-            android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="2dp"
             android:fontFamily="@font/proxima_nova_regular"
-            android:text="@{String.format(`%s - %s`, account.getAlias(), account.getTrunc())}"
+            android:text="@{String.format(`%s ***%s`, account.getAlias(), account.getTrunc())}"
+            android:textAllCaps="false"
             android:textColor="@color/textColor"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toRightOf="@id/guideline3"
-            app:layout_constraintTop_toBottomOf="@id/guideline4"
-            tools:text="*****03434" />
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@+id/networkTextView"
+            app:layout_constraintTop_toBottomOf="@+id/guideline4"
+            tools:text="***03434" />
 
         <Button
             android:id="@+id/btn_verify_phone"
+            style="@style/Tospay.Button.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/proxima_nova_regular"
             android:text="Verify"
             android:textAllCaps="false"
-            android:visibility="@{account.type!=2?View.GONE:account.verified ? View.GONE:View.VISIBLE}"
+            android:visibility="@{account.type!=2?View.INVISIBLE:account.verified ? View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@id/divider"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

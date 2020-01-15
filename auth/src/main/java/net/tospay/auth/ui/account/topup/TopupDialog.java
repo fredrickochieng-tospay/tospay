@@ -66,7 +66,6 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
     private Charge charge;
     private net.tospay.auth.model.Account selectedAccount;
     private double withdrawalAmount = 0;
-    private NumberFormat numberFormat;
     private String currency;
 
     //source
@@ -96,11 +95,10 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
 
         if (getArguments() != null) {
             wallet = getArguments().getParcelable(KEY_WALLET);
+            if (wallet != null) {
+                currency = wallet.getCurrency();
+            }
         }
-
-        numberFormat = NumberFormat.getCurrencyInstance();
-        numberFormat.setMaximumFractionDigits(0);
-        numberFormat.setCurrency(Currency.getInstance(wallet.getCurrency()));
     }
 
     @Override
@@ -335,16 +333,19 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
                         mViewModel.setIsError(false);
                         charge = new Charge(resource.data);
 
+                        mBinding.paymentSummeryTextView.setVisibility(View.VISIBLE);
                         mBinding.chargeTitleView.setVisibility(View.VISIBLE);
                         mBinding.chargeTextView.setVisibility(View.VISIBLE);
-                        mBinding.chargeTextView.setText(numberFormat.format(Double.parseDouble(charge.getAmount().getAmount())));
+                        mBinding.chargeTextView.setText(String.format("%s %s",
+                                charge.getAmount().getCurrency(),
+                                charge.getAmount().getAmount()));
 
                         withdrawalAmount += Double.parseDouble(charge.getAmount().getAmount());
                         source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), currency)));
 
                         mBinding.totalTitleView.setVisibility(View.VISIBLE);
                         mBinding.totalTextView.setVisibility(View.VISIBLE);
-                        mBinding.totalTextView.setText(numberFormat.format(withdrawalAmount));
+                        mBinding.totalTextView.setText(String.format("%s %s", currency, withdrawalAmount));
 
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         break;

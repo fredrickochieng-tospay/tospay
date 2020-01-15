@@ -46,6 +46,7 @@ public class Account implements Parcelable, AccountType {
     @Expose
     private boolean verified;
 
+    private String name;
     private int accountType;
     private double withdrawalAmount = 0.00;
     private boolean collapsed = false;
@@ -211,6 +212,21 @@ public class Account implements Parcelable, AccountType {
     @Override
     public int getType() {
         return accountType;
+    }
+
+    public String getName() {
+        switch (accountType) {
+            case 2:
+                return "Mobile";
+            case 3:
+                return "Bank";
+
+            case 4:
+                return "Card";
+
+            default:
+                return "Wallet";
+        }
     }
 
     @Override

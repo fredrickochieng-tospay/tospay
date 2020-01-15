@@ -158,27 +158,55 @@
             app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
 
         <TextView
+            android:id="@+id/payment_summery_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_10"
+            android:fontFamily="@font/proxima_nova_semibold"
+            android:text="Topup Summary"
+            android:textColor="@color/deep_dark_blue"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            tools:visibility="visible" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".4" />
+
+
+        <TextView
             android:id="@+id/chargeTitleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_6"
             android:layout_marginRight="@dimen/default_space_6"
             android:fontFamily="@font/proxima_nova_regular"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:text="Transaction Cost :"
+            android:textColor="@color/black"
             android:visibility="gone"
-            app:layout_constraintRight_toLeftOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            app:layout_constraintLeft_toLeftOf="@id/payment_summery_text_view"
+            app:layout_constraintTop_toBottomOf="@id/payment_summery_text_view"
             tools:visibility="visible" />
 
         <TextView
             android:id="@+id/totalTitleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/default_space_6"
             android:fontFamily="@font/proxima_nova_regular"
-            android:text="Total Amount :"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="Total Amount"
+            android:textColor="@color/black"
             android:visibility="gone"
-            app:layout_constraintRight_toLeftOf="@id/guideline"
+            app:layout_constraintLeft_toLeftOf="@id/payment_summery_text_view"
             app:layout_constraintTop_toBottomOf="@id/chargeTitleView"
             tools:visibility="visible" />
 
@@ -188,9 +216,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_space_16"
             android:fontFamily="@font/proxima_nova_semibold"
+            android:textColor="@color/deep_dark_blue"
+            android:textSize="16sp"
             android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            app:layout_constraintBottom_toBottomOf="@id/chargeTitleView"
+            app:layout_constraintLeft_toRightOf="@id/guideline2"
+            app:layout_constraintTop_toTopOf="@id/chargeTitleView"
             tools:text="KSH 200"
             tools:visibility="visible" />
 
@@ -200,9 +231,13 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/default_space_6"
             android:fontFamily="@font/proxima_nova_semibold"
+            android:textColor="@color/deep_dark_blue"
+            android:textSize="16sp"
             android:visibility="gone"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintBottom_toBottomOf="@id/totalTitleView"
+            app:layout_constraintLeft_toRightOf="@id/guideline2"
             app:layout_constraintTop_toBottomOf="@id/chargeTitleView"
+            app:layout_constraintTop_toTopOf="@id/totalTitleView"
             tools:text="KSH 2220"
             tools:visibility="visible" />
 

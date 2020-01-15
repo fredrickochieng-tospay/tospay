@@ -27,8 +27,10 @@
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_tospay_logo_transparent"
+            android:src="@drawable/ic_wallet"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/guideline3"
@@ -42,16 +44,15 @@
             app:layout_constraintGuide_percent="0.20" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_16"
             android:layout_marginLeft="@dimen/default_space_16"
             android:fontFamily="@font/proxima_nova_semibold"
             android:text="Wallet Balance"
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@id/guideline4"
-            app:layout_constraintLeft_toRightOf="@id/guideline3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintLeft_toRightOf="@id/guideline3" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -64,16 +65,13 @@
             android:id="@+id/balanceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_space_16"
-            android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="2dp"
             android:fontFamily="@font/proxima_nova_regular"
             android:text="@{String.format(`%s %s`, wallet.getCurrency(),wallet.getAccountBalance())}"
             android:textColor="@color/textColor"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/guideline3"
-            app:layout_constraintTop_toBottomOf="@id/guideline4"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/guideline4"
             tools:text="KES 2000" />
 
         <Button
@@ -98,7 +96,6 @@
             app:layout_constraintBottom_toBottomOf="@id/guideline4"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/guideline4" />
-
 
         <View
             android:id="@+id/divider"
