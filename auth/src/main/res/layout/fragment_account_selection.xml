@@ -257,7 +257,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="@{accountViewModel.charge.amount !=null?View.VISIBLE:View.GONE}">
+                        android:visibility="@{accountViewModel.charge!=null?View.VISIBLE:View.GONE}">
 
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/guideline"
@@ -307,7 +307,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proxima_nova_regular"
-                            android:text="@{accountViewModel.charge.amount.currency+` `+accountViewModel.charge.amount.amount}"
+                            android:text="@{accountViewModel.charge.currency+` `+accountViewModel.charge.amount}"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="@id/chargeTitleView"
@@ -320,7 +320,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proxima_nova_regular"
-                            android:text="@{accountViewModel.source.total.amount.currency+` `+accountViewModel.source.total.amount.amount}"
+                            android:text="@{accountViewModel.source.total.currency+` `+accountViewModel.source.total.amount}"
                             android:textColor="@color/deep_dark_blue"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="@id/totalTitleView"

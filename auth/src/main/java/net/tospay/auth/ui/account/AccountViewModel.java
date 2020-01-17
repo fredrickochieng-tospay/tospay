@@ -7,8 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.transfer.Amount;
-import net.tospay.auth.model.transfer.Charge;
-import net.tospay.auth.model.transfer.Source;
+import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
@@ -30,8 +29,8 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     private LiveData<Resource<String>> paymentResourceLiveData;
     private LiveData<Resource<String>> transferResourceLiveData;
     private MutableLiveData<Transfer> transfer;
-    private MutableLiveData<Charge> charge;
-    private MutableLiveData<Source> source;
+    private MutableLiveData<Amount> charge;
+    private MutableLiveData<Store> source;
 
     public AccountViewModel(AccountRepository accountRepository, PaymentRepository paymentRepository) {
         this.accountRepository = accountRepository;
@@ -54,11 +53,11 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         return paymentResourceLiveData;
     }
 
-    public MutableLiveData<Charge> getCharge() {
+    public MutableLiveData<Amount> getCharge() {
         return charge;
     }
 
-    public MutableLiveData<Source> getSource() {
+    public MutableLiveData<Store> getSource() {
         return source;
     }
 

@@ -19,11 +19,11 @@ public class Transfer implements Parcelable {
 
     @SerializedName("delivery")
     @Expose
-    private List<Delivery> delivery = null;
+    private List<Store> delivery = null;
 
     @SerializedName("source")
     @Expose
-    private List<Source> source = null;
+    private List<Store> source = null;
 
     @SerializedName("orderInfo")
     @Expose
@@ -45,8 +45,8 @@ public class Transfer implements Parcelable {
     }
 
     protected Transfer(Parcel in) {
-        delivery = in.createTypedArrayList(Delivery.CREATOR);
-        source = in.createTypedArrayList(Source.CREATOR);
+        delivery = in.createTypedArrayList(Store.CREATOR);
+        source = in.createTypedArrayList(Store.CREATOR);
         orderInfo = in.readParcelable(OrderInfo.class.getClassLoader());
         type = in.readString();
         chargeInfo = in.readParcelable(ChargeInfo.class.getClassLoader());
@@ -80,19 +80,19 @@ public class Transfer implements Parcelable {
         }
     };
 
-    public List<Delivery> getDelivery() {
+    public List<Store> getDelivery() {
         return delivery;
     }
 
-    public void setDelivery(List<Delivery> delivery) {
+    public void setDelivery(List<Store> delivery) {
         this.delivery = delivery;
     }
 
-    public List<Source> getSource() {
+    public List<Store> getSource() {
         return source;
     }
 
-    public void setSource(List<Source> source) {
+    public void setSource(List<Store> source) {
         this.source = source;
     }
 
@@ -126,17 +126,5 @@ public class Transfer implements Parcelable {
 
     public void setMerchant(TospayUser merchant) {
         this.merchant = merchant;
-    }
-
-    @Override
-    public String toString() {
-        return "Transfer{" +
-                "delivery=" + delivery +
-                ", source=" + source +
-                ", orderInfo=" + orderInfo +
-                ", type='" + type + '\'' +
-                ", chargeInfo=" + chargeInfo +
-                ", merchant=" + merchant +
-                '}';
     }
 }

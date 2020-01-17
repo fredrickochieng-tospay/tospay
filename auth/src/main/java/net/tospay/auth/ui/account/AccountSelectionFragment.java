@@ -1,13 +1,11 @@
 package net.tospay.auth.ui.account;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,8 +14,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
@@ -28,14 +24,8 @@ import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.model.transfer.Account;
 import net.tospay.auth.model.transfer.Amount;
-import net.tospay.auth.model.transfer.Charge;
-import net.tospay.auth.model.transfer.Delivery;
-import net.tospay.auth.model.transfer.Order;
-import net.tospay.auth.model.transfer.PartnerInfo;
-import net.tospay.auth.model.transfer.Source;
-import net.tospay.auth.model.transfer.Total;
+import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
-import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.repository.PaymentRepository;
@@ -52,9 +42,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
@@ -62,11 +50,11 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
-    private Charge charge;
-    private Transfer transfer, payload;
+    private Amount charge;
+    private Transfer transfer;
     private Account account;
-    private PartnerInfo partnerInfo;
     private String paymentId;
+    private List<Store> sources;
     private double withdrawalAmount = 0;
 
     public AccountSelectionFragment() {
@@ -108,11 +96,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         if (getArguments() != null) {
             transfer = AccountSelectionFragmentArgs.fromBundle(getArguments()).getTransfer();
             paymentId = AccountSelectionFragmentArgs.fromBundle(getArguments()).getPaymentId();
-
-            if (transfer.getChargeInfo() != null) {
-                partnerInfo = transfer.getChargeInfo().getPartnerInfo();
-            }
-
             mViewModel.getTransfer().setValue(transfer);
         }
 
@@ -136,9 +119,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         mBinding.btnBackImageView.setOnClickListener(view1 ->
                 Navigation.findNavController(view).navigateUp());
 
-        mBinding.btnPay.setOnClickListener(view14 -> {
-            executePayment();
-        });
+        mBinding.btnPay.setOnClickListener(view14 -> executePayment());
 
         fetchAccounts();
     }
@@ -189,6 +170,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Override
     public void onAccountSelectedListener(AccountType accountType) {
         this.account = new Account();
+        mViewModel.getSource().setValue(null);
+
         if (accountType instanceof Wallet) {
             Wallet wallet = (Wallet) accountType;
             account.setType("wallet");
@@ -238,36 +221,27 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     private void performChargeLookup() {
-        Transfer chargeTransfer = transfer;
-
+        Transfer chargeTransfer = new Transfer();
+        chargeTransfer.setType(Transfer.PAYMENT);
+        chargeTransfer.setOrderInfo(transfer.getOrderInfo());
         Amount amount = transfer.getOrderInfo().getAmount();
-        Order order = new Order(amount);
-        Total total = new Total(amount);
 
         //sources
-        List<Source> sources = new ArrayList<>();
-        Source source = new Source();
+        sources = new ArrayList<>();
+        Store source = new Store();
         source.setAccount(account);
-        source.setOrder(order);
-        source.setTotal(total);
+        source.setOrder(amount);
+        source.setTotal(amount);
         sources.add(source);
 
-        //delivery
-        Delivery delivery = transfer.getDelivery().get(0);
-        delivery.setAccount(partnerInfo.getAccount());
-        delivery.getAccount().setCurrency(partnerInfo.getAmount().getCurrency());
-
-        List<Delivery> deliveries = new ArrayList<>();
-        delivery.setOrder(order);
-        delivery.setTotal(total);
+        //deliveries
+        List<Store> deliveries = new ArrayList<>();
+        Store delivery = transfer.getDelivery().get(0);
+        delivery.setOrder(amount);
+        delivery.setTotal(amount);
         deliveries.add(delivery);
         chargeTransfer.setDelivery(deliveries);
-
         chargeTransfer.setSource(sources);
-        chargeTransfer.setMerchant(null);
-        chargeTransfer.setChargeInfo(null);
-
-        payload = chargeTransfer;
 
         mViewModel.chargeLookup(chargeTransfer, Transfer.PAYMENT);
         mViewModel.getAmountResourceLiveData().observe(this, resource -> {
@@ -291,15 +265,16 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     case SUCCESS:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
-                        charge = new Charge(resource.data);
+                        charge = resource.data;
                         mViewModel.getCharge().setValue(charge);
 
-                        withdrawalAmount = Double.valueOf(transfer.getOrderInfo().getAmount().getAmount());
-                        withdrawalAmount += Double.parseDouble(charge.getAmount().getAmount());
+                        withdrawalAmount = Double.valueOf(chargeTransfer.getOrderInfo().getAmount().getAmount());
+                        withdrawalAmount += Double.parseDouble(charge.getAmount());
 
-                        source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), partnerInfo.getAmount().getCurrency())));
+                        source.setCharge(charge);
+                        source.setTotal(new Amount(String.valueOf(withdrawalAmount), delivery.getAccount().getCurrency()));
+                        sources.set(0, source);
                         mViewModel.getSource().setValue(source);
-
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         break;
 
@@ -315,6 +290,9 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     private void executePayment() {
+        Transfer payload = new Transfer();
+        payload.setSource(sources);
+
         mViewModel.pay(paymentId, payload);
         mViewModel.getPaymentResourceLiveData().observe(this, resource -> {
             if (resource != null) {

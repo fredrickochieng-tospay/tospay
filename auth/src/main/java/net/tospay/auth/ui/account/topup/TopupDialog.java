@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,8 @@ import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.model.transfer.Account;
 import net.tospay.auth.model.transfer.Amount;
-import net.tospay.auth.model.transfer.Charge;
-import net.tospay.auth.model.transfer.Delivery;
-import net.tospay.auth.model.transfer.Order;
 import net.tospay.auth.model.transfer.OrderInfo;
-import net.tospay.auth.model.transfer.Source;
-import net.tospay.auth.model.transfer.Total;
+import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
@@ -47,9 +42,7 @@ import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.utils.Utils;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,14 +56,14 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
     private SharedPrefManager mSharedPrefManager;
     private Transfer transfer;
     private Wallet wallet;
-    private Charge charge;
+    private Amount charge;
     private net.tospay.auth.model.Account selectedAccount;
     private double withdrawalAmount = 0;
     private String currency;
 
     //source
-    private List<Source> sources;
-    private Source source;
+    private List<Store> sources;
+    private Store source;
 
     public TopupDialog() {
         // Required empty public constructor
@@ -262,7 +255,7 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
     private void performChargeLookup() {
         charge = null;
         sources = new ArrayList<>();
-        source = new Source();
+        source = new Store();
 
         currency = "KES";
         if (selectedAccount.getCurrency() != null) {
@@ -278,29 +271,23 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
         withdrawalAmount = Double.parseDouble(mBinding.amountEditText.getText().toString());
 
         Amount amount = new Amount(String.valueOf(withdrawalAmount), currency);
-        source.setOrder(new Order(amount));
-        source.setTotal(new Total(amount));
+        source.setOrder(amount);
+        source.setTotal(amount);
 
         sources.add(source);
         transfer.setSource(sources);
 
         //delivery
-        List<Delivery> deliveries = new ArrayList<>();
+        List<Store> deliveries = new ArrayList<>();
 
         Amount walletAmount = new Amount();
         walletAmount.setAmount(String.valueOf(withdrawalAmount));
         walletAmount.setCurrency(wallet.getCurrency());
 
-        Order order = new Order();
-        order.setAmount(amount);
-
-        Total total = new Total();
-        total.setAmount(amount);
-
-        Delivery delivery = new Delivery();
+        Store delivery = new Store();
         delivery.setAccount(new Account(wallet.getId(), Account.TYPE_WALLET, wallet.getCurrency()));
-        delivery.setOrder(order);
-        delivery.setTotal(total);
+        delivery.setOrder(amount);
+        delivery.setTotal(amount);
         deliveries.add(delivery);
         transfer.setDelivery(deliveries);
 
@@ -331,17 +318,15 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
                     case SUCCESS:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
-                        charge = new Charge(resource.data);
+                        charge = resource.data;
 
                         mBinding.paymentSummeryTextView.setVisibility(View.VISIBLE);
                         mBinding.chargeTitleView.setVisibility(View.VISIBLE);
                         mBinding.chargeTextView.setVisibility(View.VISIBLE);
-                        mBinding.chargeTextView.setText(String.format("%s %s",
-                                charge.getAmount().getCurrency(),
-                                charge.getAmount().getAmount()));
+                        mBinding.chargeTextView.setText(String.format("%s %s", charge.getCurrency(), charge.getAmount()));
 
-                        withdrawalAmount += Double.parseDouble(charge.getAmount().getAmount());
-                        source.setTotal(new Total(new Amount(String.valueOf(withdrawalAmount), currency)));
+                        withdrawalAmount += Double.parseDouble(charge.getAmount());
+                        source.setTotal(new Amount(String.valueOf(withdrawalAmount), currency));
 
                         mBinding.totalTitleView.setVisibility(View.VISIBLE);
                         mBinding.totalTextView.setVisibility(View.VISIBLE);

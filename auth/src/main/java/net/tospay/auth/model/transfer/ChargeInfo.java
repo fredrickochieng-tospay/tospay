@@ -10,11 +10,11 @@ public class ChargeInfo implements Parcelable {
 
     @SerializedName("source")
     @Expose
-    private Source source;
+    private Store source;
 
     @SerializedName("destination")
     @Expose
-    private Destination destination;
+    private Amount amount;
 
     @SerializedName("partnerInfo")
     @Expose
@@ -28,8 +28,8 @@ public class ChargeInfo implements Parcelable {
     }
 
     protected ChargeInfo(Parcel in) {
-        source = in.readParcelable(Source.class.getClassLoader());
-        destination = in.readParcelable(Destination.class.getClassLoader());
+        source = in.readParcelable(Store.class.getClassLoader());
+        amount = in.readParcelable(Amount.class.getClassLoader());
         partnerInfo = in.readParcelable(PartnerInfo.class.getClassLoader());
         railInfo = in.readParcelable(RailInfo.class.getClassLoader());
     }
@@ -37,7 +37,7 @@ public class ChargeInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(source, flags);
-        dest.writeParcelable(destination, flags);
+        dest.writeParcelable(amount, flags);
         dest.writeParcelable(partnerInfo, flags);
         dest.writeParcelable(railInfo, flags);
     }
@@ -59,20 +59,20 @@ public class ChargeInfo implements Parcelable {
         }
     };
 
-    public Source getSource() {
+    public Store getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(Store source) {
         this.source = source;
     }
 
-    public Destination getDestination() {
-        return destination;
+    public Amount getAmount() {
+        return amount;
     }
 
-    public void setDestination(Destination destination) {
-        this.destination = destination;
+    public void setAmount(Amount amount) {
+        this.amount = amount;
     }
 
     public PartnerInfo getPartnerInfo() {
@@ -89,15 +89,5 @@ public class ChargeInfo implements Parcelable {
 
     public void setRailInfo(RailInfo railInfo) {
         this.railInfo = railInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "ChargeInfo{" +
-                "source=" + source +
-                ", destination=" + destination +
-                ", partnerInfo=" + partnerInfo +
-                ", railInfo=" + railInfo +
-                '}';
     }
 }

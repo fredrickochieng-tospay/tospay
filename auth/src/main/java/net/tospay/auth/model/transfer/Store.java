@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Source implements Parcelable {
+public class Store implements Parcelable {
 
     @SerializedName("account")
     @Expose
@@ -14,28 +14,28 @@ public class Source implements Parcelable {
 
     @SerializedName("charge")
     @Expose
-    private Charge charge;
+    private Amount charge;
 
     @SerializedName("order")
     @Expose
-    private Order order;
+    private Amount order;
 
     @SerializedName("total")
     @Expose
-    private Total total;
+    private Amount total;
 
     @SerializedName("amount")
     @Expose
     private Amount amount;
 
-    public Source() {
+    public Store() {
     }
 
-    protected Source(Parcel in) {
+    protected Store(Parcel in) {
         account = in.readParcelable(Account.class.getClassLoader());
-        charge = in.readParcelable(Charge.class.getClassLoader());
-        order = in.readParcelable(Order.class.getClassLoader());
-        total = in.readParcelable(Total.class.getClassLoader());
+        charge = in.readParcelable(Amount.class.getClassLoader());
+        order = in.readParcelable(Amount.class.getClassLoader());
+        total = in.readParcelable(Amount.class.getClassLoader());
         amount = in.readParcelable(Amount.class.getClassLoader());
     }
 
@@ -53,15 +53,15 @@ public class Source implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Source> CREATOR = new Creator<Source>() {
+    public static final Creator<Store> CREATOR = new Creator<Store>() {
         @Override
-        public Source createFromParcel(Parcel in) {
-            return new Source(in);
+        public Store createFromParcel(Parcel in) {
+            return new Store(in);
         }
 
         @Override
-        public Source[] newArray(int size) {
-            return new Source[size];
+        public Store[] newArray(int size) {
+            return new Store[size];
         }
     };
 
@@ -73,27 +73,27 @@ public class Source implements Parcelable {
         this.account = account;
     }
 
-    public Charge getCharge() {
+    public Amount getCharge() {
         return charge;
     }
 
-    public void setCharge(Charge charge) {
+    public void setCharge(Amount charge) {
         this.charge = charge;
     }
 
-    public Order getOrder() {
+    public Amount getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder(Amount order) {
         this.order = order;
     }
 
-    public Total getTotal() {
+    public Amount getTotal() {
         return total;
     }
 
-    public void setTotal(Total total) {
+    public void setTotal(Amount total) {
         this.total = total;
     }
 
@@ -106,23 +106,12 @@ public class Source implements Parcelable {
     }
 
     @Override
-    public String toString() {
-        return "Source{" +
-                "account=" + account +
-                ", charge=" + charge +
-                ", order=" + order +
-                ", total=" + total +
-                ", amount=" + amount +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Source)) {
+        if (!(obj instanceof Store)) {
             return false;
         }
 
-        Source source = (Source) obj;
+        Store source = (Store) obj;
         return this.account.equals(source.account);
     }
 }
