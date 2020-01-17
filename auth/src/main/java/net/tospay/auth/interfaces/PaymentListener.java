@@ -1,11 +1,11 @@
 package net.tospay.auth.interfaces;
 
-import net.tospay.auth.model.transfer.Transfer;
-import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.remote.response.TospayException;
 
 public interface PaymentListener {
-    default void onPaymentDetails(Transfer transfer) {
+
+    default void onPaymentSuccess() {
 
     }
 

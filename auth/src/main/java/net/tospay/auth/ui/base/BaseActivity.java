@@ -82,17 +82,29 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
         return mGatewayRepository;
     }
 
-    public SharedPrefManager getSharedPrefManager() {
-        return mSharedPrefManager;
-    }
-
     public void setBearerToken(String token) {
         String bearerToken = "Bearer " + token;
         mViewModel.setBearerToken(bearerToken);
     }
 
+    /**
+     * Uses the new bearer token
+     */
+    public void reloadBearerToken() {
+        setBearerToken(getAccessToken());
+    }
+
+    /**
+     * Return Access token
+     *
+     * @return
+     */
     public String getAccessToken() {
         return mSharedPrefManager.getAccessToken();
+    }
+
+    public SharedPrefManager getSharedPrefManager() {
+        return mSharedPrefManager;
     }
 
     /**

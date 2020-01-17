@@ -26,4 +26,9 @@ public class ApiConstants {
      * Notification Endpoint
      */
     public static final String NOTIFICATION_URL = "https://taar.tospay.net";
+
+    /**
+     * Notification channel
+     */
+    public static final String NOTIFICATION_CHANNEL = "notify";
 }

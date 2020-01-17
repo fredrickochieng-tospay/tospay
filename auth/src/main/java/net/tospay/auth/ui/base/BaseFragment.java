@@ -88,10 +88,18 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
         mViewModel.setBearerToken(bearerToken);
     }
 
+    /**
+     * Returns bearer token
+     *
+     * @return string
+     */
     public String getBearerToken() {
         return mSharedPrefManager.getAccessToken();
     }
 
+    /**
+     * Uses the new bearer token
+     */
     public void reloadBearerToken() {
         setBearerToken(getBearerToken());
     }

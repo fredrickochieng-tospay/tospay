@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import net.tospay.auth.BR;
@@ -24,10 +23,10 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.PaymentService;
-import net.tospay.auth.viewmodelfactory.PaymentViewModelFactory;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.NetworkUtils;
+import net.tospay.auth.viewmodelfactory.PaymentViewModelFactory;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
@@ -146,7 +145,6 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                     mViewModel.setIsError(false);
                     transfer = resource.data;
                     mViewModel.getTransfer().setValue(transfer);
-                    mListener.onPaymentDetails(transfer);
                     break;
 
                 case RE_AUTHENTICATE:
@@ -187,6 +185,9 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
             if (resultCode == Activity.RESULT_OK) {
+                if (mListener != null) {
+                    mListener.onLoginSuccess(getSharedPrefManager().getActiveUser());
+                }
                 reloadBearerToken();
                 NavHostFragment.findNavController(this)
                         .navigate(SummaryFragmentDirections
