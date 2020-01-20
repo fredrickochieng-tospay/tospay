@@ -188,6 +188,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
                 if (mListener != null) {
                     mListener.onLoginSuccess(getSharedPrefManager().getActiveUser());
                 }
+
                 reloadBearerToken();
                 NavHostFragment.findNavController(this)
                         .navigate(SummaryFragmentDirections

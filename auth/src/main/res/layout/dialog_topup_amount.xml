@@ -17,12 +17,13 @@
 
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.account.topup.TopupDialog">
+        tools:context=".ui.account.topup.TopupAmountDialog">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -56,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/proxima_nova_regular"
-            android:text="Topup your TosPay Wallet"
+            android:text="Enter Amount"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -96,53 +97,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="@dimen/default_space_16"
-            android:layout_marginRight="@dimen/default_space_16"
-            android:fontFamily="@font/proxima_nova_semibold"
-            android:text="Please select source of funds"
-            android:textColor="@color/textColor"
-            android:textSize="14sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/amountInputLayout" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_space_6"
-            android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/descriptionTextView"
-            app:resource="@{resource}"
-            tools:itemCount="4"
-            tools:listitem="@layout/list_item_account_view" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            style="@style/Tospay.Button.Cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="@dimen/default_space_28"
-            android:layout_marginRight="@dimen/default_space_16"
-            android:text="Cancel"
-            android:textColor="@color/white"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
-
         <Button
             android:id="@+id/btn_confirm"
             style="@style/Tospay.Button.Transparent.Border"
@@ -151,9 +105,9 @@
             android:layout_marginLeft="@dimen/default_space_16"
             android:layout_marginTop="@dimen/default_space_28"
             android:layout_marginRight="@dimen/default_space_16"
-            android:text="Confirm"
+            android:text="Confirm Topup"
             android:textColor="@color/deep_dark_blue"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
 
@@ -162,14 +116,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="@dimen/default_space_10"
+            android:layout_marginTop="@dimen/default_space_16"
             android:fontFamily="@font/proxima_nova_semibold"
             android:text="Topup Summary"
             android:textColor="@color/deep_dark_blue"
             android:textSize="15sp"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@id/amountInputLayout"
             tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -247,17 +201,6 @@
             android:layout_marginTop="@dimen/default_space_24"
             app:layout_constraintTop_toBottomOf="@id/btn_confirm" />
 
-        <net.tospay.auth.view.LoadingLayout
-            loading_title="@{accountViewModel.loadingTitle}"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="@{accountViewModel.isLoading?View.VISIBLE:View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
-
         <net.tospay.auth.view.MessageLayout
             android:id="@+id/message_layout"
             android:layout_width="match_parent"
@@ -267,7 +210,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

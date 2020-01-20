@@ -3,13 +3,11 @@ package net.tospay.auth.ui.account;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -32,7 +30,7 @@ import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
 import net.tospay.auth.remote.service.PaymentService;
-import net.tospay.auth.ui.account.topup.TopupDialog;
+import net.tospay.auth.ui.account.topup.TopupAccountSelectionDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.Utils;
@@ -164,7 +162,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public void onTopupClick(Wallet wallet) {
-        TopupDialog.newInstance(wallet).show(getChildFragmentManager(), TopupDialog.TAG);
+        TopupAccountSelectionDialog.newInstance().show(getChildFragmentManager(), TopupAccountSelectionDialog.TAG);
     }
 
     @Override

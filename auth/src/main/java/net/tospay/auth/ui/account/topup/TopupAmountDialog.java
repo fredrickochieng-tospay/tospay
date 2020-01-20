@@ -1,6 +1,12 @@
 package net.tospay.auth.ui.account.topup;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,49 +16,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.tospay.auth.R;
 import net.tospay.auth.anim.ViewAnimation;
+import net.tospay.auth.databinding.DialogTopupAmountBinding;
 import net.tospay.auth.databinding.DialogTopupBinding;
-import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.model.transfer.Account;
 import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.OrderInfo;
 import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
-import net.tospay.auth.remote.Resource;
-import net.tospay.auth.remote.ServiceGenerator;
-import net.tospay.auth.remote.repository.AccountRepository;
-import net.tospay.auth.remote.repository.PaymentRepository;
-import net.tospay.auth.remote.service.AccountService;
-import net.tospay.auth.remote.service.PaymentService;
-import net.tospay.auth.remote.util.AppExecutors;
-import net.tospay.auth.ui.account.AccountAdapter;
 import net.tospay.auth.ui.account.AccountViewModel;
-import net.tospay.auth.ui.account.OnAccountItemClickListener;
 import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.utils.Utils;
-import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TopupDialog extends BottomSheetDialogFragment implements OnAccountItemClickListener {
+import static androidx.fragment.app.DialogFragment.STYLE_NORMAL;
 
-    public static final String TAG = "TopupDialog";
+public class TopupAmountDialog extends BottomSheetDialogFragment {
+
     private static final String KEY_WALLET = "wallet";
 
     private AccountViewModel mViewModel;
-    private DialogTopupBinding mBinding;
+    private DialogTopupAmountBinding mBinding;
     private SharedPrefManager mSharedPrefManager;
     private Transfer transfer;
     private Wallet wallet;
@@ -65,12 +56,12 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
     private List<Store> sources;
     private Store source;
 
-    public TopupDialog() {
+    public TopupAmountDialog() {
         // Required empty public constructor
     }
 
-    public static TopupDialog newInstance(Wallet wallet) {
-        TopupDialog fragment = new TopupDialog();
+    public static TopupAmountDialog newInstance(Wallet wallet) {
+        TopupAmountDialog fragment = new TopupAmountDialog();
         Bundle args = new Bundle();
         args.putParcelable(KEY_WALLET, wallet);
         fragment.setArguments(args);
@@ -96,36 +87,13 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_topup, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_topup_amount, container, false);
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppExecutors mAppExecutors = new AppExecutors();
-
-        AccountRepository accountRepository = new AccountRepository(mAppExecutors,
-                ServiceGenerator.createService(AccountService.class));
-
-        PaymentRepository paymentRepository = new PaymentRepository(mAppExecutors,
-                ServiceGenerator.createService(PaymentService.class));
-
-        AccountViewModelFactory factory =
-                new AccountViewModelFactory(accountRepository, paymentRepository);
-
-        mViewModel = ViewModelProviders.of(this, factory).get(AccountViewModel.class);
-        mBinding.setAccountViewModel(mViewModel);
-
-        String bearerToken = "Bearer " + mSharedPrefManager.getAccessToken();
-        mViewModel.setBearerToken(bearerToken);
-
-        List<AccountType> accountTypes = new ArrayList<>();
-        AccountAdapter adapter = new AccountAdapter(accountTypes, this);
-        mBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
-        mBinding.recyclerView.setAdapter(adapter);
-
-        fetchAccounts();
 
         mBinding.amountEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,7 +112,6 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
             }
         });
 
-        mBinding.btnCancel.setOnClickListener(view1 -> dismiss());
         mBinding.btnConfirm.setOnClickListener(view12 -> {
             if (charge == null) {
                 mViewModel.setIsError(true);
@@ -205,52 +172,6 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
         });
     }
 
-    private void fetchAccounts() {
-        mViewModel.fetchAccounts(false);
-        mViewModel.getAccountsResourceLiveData().observe(this, this::handleResponse);
-    }
-
-    private void handleResponse(Resource<List<AccountType>> resource) {
-        if (resource != null) {
-            switch (resource.status) {
-                case LOADING:
-                    mViewModel.setIsLoading(true);
-                    mViewModel.setIsError(false);
-                    getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    mViewModel.setLoadingTitle("Loading accounts...");
-                    break;
-
-                case ERROR:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    break;
-
-                case SUCCESS:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(false);
-                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    if (resource.data != null && resource.data.size() > 0) {
-                        mBinding.setResource(resource);
-                    } else {
-                        mViewModel.setIsEmpty(true);
-                    }
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onAccountSelectedListener(AccountType accountType) {
-        selectedAccount = (net.tospay.auth.model.Account) accountType;
-        if (TextUtils.isEmpty(mBinding.amountEditText.getText())) {
-            return;
-        }
-
-        performChargeLookup();
-    }
 
     private void performChargeLookup() {
         charge = null;
@@ -338,4 +259,5 @@ public class TopupDialog extends BottomSheetDialogFragment implements OnAccountI
             }
         });
     }
+
 }
