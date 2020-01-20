@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pay(View view) {
-        String token = "RTCNDGMRIRWTVDGU";
+        String token = "TFCCPAPESOWVAIEH";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();

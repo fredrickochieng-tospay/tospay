@@ -1,12 +1,7 @@
 package net.tospay.auth.ui.account.topup;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,34 +11,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import net.tospay.auth.R;
 import net.tospay.auth.anim.ViewAnimation;
-import net.tospay.auth.databinding.DialogTopupAmountBinding;
-import net.tospay.auth.databinding.DialogTopupBinding;
+import net.tospay.auth.databinding.DialogTopupMobileAmountBinding;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.model.transfer.Account;
 import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.OrderInfo;
 import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.AccountRepository;
+import net.tospay.auth.remote.repository.PaymentRepository;
+import net.tospay.auth.remote.service.AccountService;
+import net.tospay.auth.remote.service.PaymentService;
+import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.account.AccountViewModel;
 import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.utils.Utils;
+import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static androidx.fragment.app.DialogFragment.STYLE_NORMAL;
+public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
 
-public class TopupAmountDialog extends BottomSheetDialogFragment {
+    public static final String TAG = "TopupMobileAmountDialog";
 
     private static final String KEY_WALLET = "wallet";
+    private static final String KEY_ACCOUNT = "account";
 
     private AccountViewModel mViewModel;
-    private DialogTopupAmountBinding mBinding;
+    private DialogTopupMobileAmountBinding mBinding;
     private SharedPrefManager mSharedPrefManager;
     private Transfer transfer;
     private Wallet wallet;
@@ -56,14 +63,15 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
     private List<Store> sources;
     private Store source;
 
-    public TopupAmountDialog() {
+    public TopupMobileAmountDialog() {
         // Required empty public constructor
     }
 
-    public static TopupAmountDialog newInstance(Wallet wallet) {
-        TopupAmountDialog fragment = new TopupAmountDialog();
+    public static TopupMobileAmountDialog newInstance(Wallet wallet, net.tospay.auth.model.Account selectedAccount) {
+        TopupMobileAmountDialog fragment = new TopupMobileAmountDialog();
         Bundle args = new Bundle();
         args.putParcelable(KEY_WALLET, wallet);
+        args.putParcelable(KEY_ACCOUNT, selectedAccount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,21 +87,38 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
 
         if (getArguments() != null) {
             wallet = getArguments().getParcelable(KEY_WALLET);
-            if (wallet != null) {
-                currency = wallet.getCurrency();
-            }
+            selectedAccount = getArguments().getParcelable(KEY_ACCOUNT);
+            currency = wallet.getCurrency();
         }
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_topup_amount, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.dialog_topup_mobile_amount, container, false);
         return mBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        AppExecutors mAppExecutors = new AppExecutors();
+
+        AccountRepository accountRepository = new AccountRepository(mAppExecutors,
+                ServiceGenerator.createService(AccountService.class));
+
+        PaymentRepository paymentRepository = new PaymentRepository(mAppExecutors,
+                ServiceGenerator.createService(PaymentService.class));
+
+        AccountViewModelFactory factory =
+                new AccountViewModelFactory(accountRepository, paymentRepository);
+
+        mViewModel = ViewModelProviders.of(this, factory).get(AccountViewModel.class);
+        mBinding.setAccountViewModel(mViewModel);
+
+        String bearerToken = "Bearer " + mSharedPrefManager.getAccessToken();
+        mViewModel.setBearerToken(bearerToken);
+        mViewModel.getAccount().setValue(selectedAccount);
 
         mBinding.amountEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,38 +134,27 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 charge = null;
+                mBinding.btnPay.setVisibility(View.GONE);
+                mBinding.btnChargeLookup.setVisibility(View.VISIBLE);
             }
         });
 
-        mBinding.btnConfirm.setOnClickListener(view12 -> {
-            if (charge == null) {
-                mViewModel.setIsError(true);
-                mViewModel.setErrorMessage("Unable to process request. Please make sure you have entered amount and selected an account");
-                return;
-            }
-
-            topupWallet();
-        });
+        mBinding.btnChargeLookup.setOnClickListener(view1 -> performChargeLookup());
+        mBinding.btnPay.setOnClickListener(view12 -> topupWallet());
     }
 
     private void topupWallet() {
-        mBinding.amountInputLayout.setError(null);
-        mBinding.amountInputLayout.setEnabled(false);
-
-        if (TextUtils.isEmpty(mBinding.amountEditText.getText())) {
-            mBinding.amountInputLayout.setError("Amount is required");
-            mBinding.amountInputLayout.setEnabled(true);
+        if (charge == null) {
+            mViewModel.setIsError(true);
+            mViewModel.setErrorMessage("Unable to process request. Please make sure you have entered amount and selected an account");
             return;
         }
 
-        if (charge == null) {
-            if (selectedAccount == null) {
-                mViewModel.setIsError(true);
-                mViewModel.setErrorMessage("Please select source of funds");
-                return;
-            }
+        mBinding.amountEditText.setError(null);
 
-            performChargeLookup();
+        if (TextUtils.isEmpty(mBinding.amountEditText.getText())) {
+            mBinding.amountEditText.setError("Amount is required");
+            return;
         }
 
         source.setCharge(charge);
@@ -151,6 +165,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
+                        mViewModel.setLoadingTitle("Processing transactions...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -174,6 +189,11 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
 
 
     private void performChargeLookup() {
+        if (TextUtils.isEmpty(mBinding.amountEditText.getText())) {
+            mBinding.amountEditText.setError("Amount is required");
+            return;
+        }
+
         charge = null;
         sources = new ArrayList<>();
         source = new Store();
@@ -239,6 +259,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
                     case SUCCESS:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
+
                         charge = resource.data;
 
                         mBinding.paymentSummeryTextView.setVisibility(View.VISIBLE);
@@ -253,6 +274,9 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
                         mBinding.totalTextView.setVisibility(View.VISIBLE);
                         mBinding.totalTextView.setText(String.format("%s %s", currency, withdrawalAmount));
 
+                        mBinding.btnPay.setVisibility(View.VISIBLE);
+                        mBinding.btnChargeLookup.setVisibility(View.GONE);
+
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         break;
                 }
@@ -260,4 +284,9 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
         });
     }
 
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
 }

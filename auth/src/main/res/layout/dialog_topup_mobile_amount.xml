@@ -23,7 +23,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.account.topup.TopupAmountDialog">
+        tools:context=".ui.account.topup.TopupMobileAmountDialog">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/proxima_nova_semibold"
-            android:text="Topup"
+            android:text="Topup Wallet"
             android:textAllCaps="true"
             android:textSize="14sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/proxima_nova_regular"
-            android:text="Enter Amount"
+            android:text="Please enter amount you wish to topup"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -72,44 +72,57 @@
             app:error_message="@{accountViewModel.errorMessage}"
             app:layout_constraintTop_toBottomOf="@id/descriptionText" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/amountInputLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="@dimen/default_space_16"
-            android:layout_marginRight="@dimen/default_space_16"
+        <RelativeLayout
+            android:id="@+id/cardEditText"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@drawable/ic_mpesa_card"
+            android:contentDescription="@string/app_name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/errorLayout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/amountEditText"
-                style="@style/Tospay.TextInputEditText.Style"
-                android:layout_width="fill_parent"
+            <TextView
+                android:id="@+id/CardName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="60dp"
                 android:fontFamily="@font/proxima_nova_regular"
-                android:hint="Enter Amount"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:textSize="17sp"
-                tools:targetApi="o" />
+                android:text="@{accountViewModel.account.alias}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_header_large"
+                tools:text="Card Name" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/CardName"
+                android:layout_alignLeft="@id/CardName"
+                android:layout_marginTop="-32dp"
+                android:fontFamily="@font/proxima_nova_regular"
+                android:text="@{`****`+accountViewModel.account.trunc}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_header_medium"
+                tools:text="****53628" />
 
-        <Button
-            android:id="@+id/btn_confirm"
-            style="@style/Tospay.Button.Transparent.Border"
-            android:layout_width="0dp"
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/amountEditText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/default_space_16"
-            android:layout_marginTop="@dimen/default_space_28"
             android:layout_marginRight="@dimen/default_space_16"
-            android:text="Confirm Topup"
-            android:textColor="@color/deep_dark_blue"
+            android:background="@drawable/send_amount_bg"
+            android:fontFamily="@font/proxima_nova_regular"
+            android:hint="Enter Amount"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:padding="16dp"
+            android:textAlignment="center"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
+            app:layout_constraintTop_toBottomOf="@id/cardEditText" />
 
         <TextView
             android:id="@+id/payment_summery_text_view"
@@ -123,7 +136,7 @@
             android:textSize="15sp"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/amountInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/amountEditText"
             tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -195,17 +208,56 @@
             tools:text="KSH 2220"
             tools:visibility="visible" />
 
+        <Button
+            android:id="@+id/btn_charge_lookup"
+            style="@style/Tospay.Button.Transparent.Border"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_28"
+            android:layout_marginRight="@dimen/default_space_16"
+            android:text="Topup"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/totalTitleView" />
+
+        <Button
+            android:id="@+id/btn_pay"
+            style="@style/Tospay.Button.Large"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_space_16"
+            android:layout_marginTop="@dimen/default_space_28"
+            android:layout_marginRight="@dimen/default_space_16"
+            android:text="Confirm Topup"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_charge_lookup"
+            tools:visibility="visible" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_space_24"
-            app:layout_constraintTop_toBottomOf="@id/btn_confirm" />
+            app:layout_constraintTop_toBottomOf="@id/btn_pay" />
 
         <net.tospay.auth.view.MessageLayout
             android:id="@+id/message_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
+
+        <net.tospay.auth.view.LoadingLayout
+            loading_title="@{accountViewModel.loadingTitle}"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="@{accountViewModel.isLoading?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -3,6 +3,8 @@ package net.tospay.auth.ui.account;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,17 +16,21 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Wallet;
 import net.tospay.auth.ui.base.BaseAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, AccountType> {
+public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, AccountType>
+        implements Filterable {
 
     private List<AccountType> mAccountTypes;
+    private List<AccountType> mAccountTypeListFiltered;
     private final OnAccountItemClickListener listener;
     private int mSelectedItem = -1;
 
     public AccountAdapter(List<AccountType> accountTypes, OnAccountItemClickListener listener) {
         this.listener = listener;
         this.mAccountTypes = accountTypes;
+        this.mAccountTypeListFiltered = accountTypes;
     }
 
     @NonNull
@@ -49,7 +55,7 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        AccountType accountType = mAccountTypes.get(position);
+        AccountType accountType = mAccountTypeListFiltered.get(position);
 
         switch (getItemViewType(position)) {
 
@@ -67,28 +73,54 @@ public class AccountAdapter extends BaseAdapter<RecyclerView.ViewHolder, Account
         }
     }
 
-    AccountType getSelectedAccountType() {
-        if (mSelectedItem > -1) {
-            return mAccountTypes.get(mSelectedItem);
-        }
-
-        return null;
-    }
-
     @Override
     public int getItemCount() {
-        return mAccountTypes != null ? mAccountTypes.size() : 0;
+        return mAccountTypeListFiltered != null ? mAccountTypeListFiltered.size() : 0;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mAccountTypes.get(position).getType();
+        return mAccountTypeListFiltered.get(position).getType();
     }
 
     @Override
     public void setData(List<AccountType> accountTypes) {
         this.mAccountTypes = accountTypes;
+        this.mAccountTypeListFiltered = accountTypes;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                int type = Integer.valueOf(charSequence.toString());
+
+                if (type != AccountType.ALL) {
+                    List<AccountType> filteredList = new ArrayList<>();
+                    for (AccountType row : mAccountTypes) {
+                        if (row.getType() == type) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    mAccountTypeListFiltered = filteredList;
+                } else {
+                    mAccountTypeListFiltered = mAccountTypes;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mAccountTypeListFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mAccountTypeListFiltered = (List<AccountType>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public class WalletViewHolder extends RecyclerView.ViewHolder {

@@ -31,6 +31,7 @@ import net.tospay.auth.remote.response.TospayException;
 import net.tospay.auth.remote.service.AccountService;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.account.topup.TopupAccountSelectionDialog;
+import net.tospay.auth.ui.account.topup.TopupMobileAmountDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.Utils;
@@ -44,7 +45,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
-        implements OnAccountItemClickListener, PaymentListener, AccountNavigator {
+        implements OnAccountItemClickListener, PaymentListener, AccountNavigator,
+        TopupAccountSelectionDialog.OnAccountListener {
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
@@ -54,6 +56,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private String paymentId;
     private List<Store> sources;
     private double withdrawalAmount = 0;
+
+    private Wallet topupWallet;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -162,6 +166,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public void onTopupClick(Wallet wallet) {
+        this.topupWallet = wallet;
         TopupAccountSelectionDialog.newInstance().show(getChildFragmentManager(), TopupAccountSelectionDialog.TAG);
     }
 
@@ -346,5 +351,17 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onAccount(net.tospay.auth.model.Account account) {
+        if (topupWallet == null) {
+            return;
+        }
+
+        if (account.getType() == AccountType.MOBILE) {
+            TopupMobileAmountDialog.newInstance(topupWallet, account)
+                    .show(getChildFragmentManager(), TopupMobileAmountDialog.TAG);
+        }
     }
 }
