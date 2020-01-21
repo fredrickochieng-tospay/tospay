@@ -21,7 +21,7 @@ import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.PaymentRepository;
-import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
@@ -169,7 +169,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     @Override
     public SummaryViewModel getViewModel() {
         PaymentRepository repository = new PaymentRepository(getAppExecutors(),
-                ServiceGenerator.createService(PaymentService.class));
+                ServiceGenerator.createService(PaymentService.class, getContext()));
         PaymentViewModelFactory factory = new PaymentViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(SummaryViewModel.class);
         return mViewModel;

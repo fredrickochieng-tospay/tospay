@@ -1,4 +1,4 @@
-package net.tospay.auth.remote.response;
+package net.tospay.auth.remote.exception;
 
 import android.text.TextUtils;
 

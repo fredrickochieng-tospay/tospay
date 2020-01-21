@@ -22,7 +22,7 @@ import net.tospay.auth.event.NotificationEvent;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.ApiConstants;
-import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.ui.base.BaseActivity;
 import net.tospay.auth.ui.dialog.TransferDialog;
 import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;

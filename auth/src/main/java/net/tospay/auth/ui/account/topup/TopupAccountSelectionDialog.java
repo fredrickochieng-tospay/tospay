@@ -76,10 +76,10 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
         AppExecutors mAppExecutors = new AppExecutors();
 
         AccountRepository accountRepository = new AccountRepository(mAppExecutors,
-                ServiceGenerator.createService(AccountService.class));
+                ServiceGenerator.createService(AccountService.class, getContext()));
 
         PaymentRepository paymentRepository = new PaymentRepository(mAppExecutors,
-                ServiceGenerator.createService(PaymentService.class));
+                ServiceGenerator.createService(PaymentService.class, getContext()));
 
         AccountViewModelFactory factory =
                 new AccountViewModelFactory(accountRepository, paymentRepository);

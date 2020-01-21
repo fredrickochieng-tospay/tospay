@@ -64,7 +64,7 @@ public class NetworkDialog extends BottomSheetDialogFragment {
 
         AppExecutors mAppExecutors = new AppExecutors();
 
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class, getContext());
 
         GatewayRepository mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         GatewayViewModelFactory factory = new GatewayViewModelFactory(mGatewayRepository);

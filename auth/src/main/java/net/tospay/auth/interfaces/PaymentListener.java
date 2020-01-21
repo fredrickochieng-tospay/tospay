@@ -1,7 +1,7 @@
 package net.tospay.auth.interfaces;
 
 import net.tospay.auth.model.TospayUser;
-import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.remote.exception.TospayException;
 
 public interface PaymentListener {
 

@@ -48,7 +48,7 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
     @Override
     public ResetPasswordViewModel getViewModel() {
         UserRepository repository = new UserRepository(getAppExecutors(),
-                ServiceGenerator.createService(UserService.class));
+                ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(ResetPasswordViewModel.class);
         return mViewModel;
@@ -164,37 +164,33 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
             return;
         }
 
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.reset(mBinding.passwordEditText.getText().toString());
-            mViewModel.getResetResourceLiveData().observe(this, resource -> {
-                if (resource != null) {
-                    switch (resource.status) {
-                        case ERROR:
-                            mProgressDialog.dismiss();
-                            mViewModel.setIsError(true);
-                            mViewModel.setErrorMessage(resource.message);
-                            break;
+        mViewModel.reset(mBinding.passwordEditText.getText().toString());
+        mViewModel.getResetResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case ERROR:
+                        mProgressDialog.dismiss();
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-                        case LOADING:
-                            hideKeyboard();
-                            mProgressDialog.setMessage("Resetting password. Please wait...");
-                            mProgressDialog.show();
-                            mViewModel.setIsLoading(true);
-                            mViewModel.setIsError(false);
-                            break;
+                    case LOADING:
+                        hideKeyboard();
+                        mProgressDialog.setMessage("Resetting password. Please wait...");
+                        mProgressDialog.show();
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        break;
 
-                        case SUCCESS:
-                            mProgressDialog.dismiss();
-                            mViewModel.setIsError(false);
-                            Toast.makeText(view.getContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
-                            navController.navigate(ResetPasswordFragmentDirections.actionNavigationResetPasswordToNavigationLogin());
-                            break;
-                    }
+                    case SUCCESS:
+                        mProgressDialog.dismiss();
+                        mViewModel.setIsError(false);
+                        Toast.makeText(view.getContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
+                        navController.navigate(ResetPasswordFragmentDirections.actionNavigationResetPasswordToNavigationLogin());
+                        break;
                 }
-            });
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 
     @Override

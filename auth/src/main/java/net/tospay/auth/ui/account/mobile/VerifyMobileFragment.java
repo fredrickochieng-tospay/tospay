@@ -50,7 +50,7 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
     @Override
     public MobileMoneyViewModel getViewModel() {
         MobileRepository repository = new MobileRepository(getAppExecutors(),
-                ServiceGenerator.createService(MobileService.class));
+                ServiceGenerator.createService(MobileService.class, getContext()));
         MobileViewModelFactory factory = new MobileViewModelFactory(repository);
         viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
         return viewModel;

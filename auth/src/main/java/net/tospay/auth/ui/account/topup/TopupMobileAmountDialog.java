@@ -1,5 +1,6 @@
 package net.tospay.auth.ui.account.topup;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -49,6 +51,7 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
     private static final String KEY_WALLET = "wallet";
     private static final String KEY_ACCOUNT = "account";
 
+    private OnTopupListener mListener;
     private AccountViewModel mViewModel;
     private DialogTopupMobileAmountBinding mBinding;
     private SharedPrefManager mSharedPrefManager;
@@ -105,10 +108,10 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
         AppExecutors mAppExecutors = new AppExecutors();
 
         AccountRepository accountRepository = new AccountRepository(mAppExecutors,
-                ServiceGenerator.createService(AccountService.class));
+                ServiceGenerator.createService(AccountService.class, getContext()));
 
         PaymentRepository paymentRepository = new PaymentRepository(mAppExecutors,
-                ServiceGenerator.createService(PaymentService.class));
+                ServiceGenerator.createService(PaymentService.class, getContext()));
 
         AccountViewModelFactory factory =
                 new AccountViewModelFactory(accountRepository, paymentRepository);
@@ -165,7 +168,7 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
-                        mViewModel.setLoadingTitle("Processing transactions...");
+                        mViewModel.setLoadingTitle("Enter mpesa pin when prompted to complete transaction");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -173,6 +176,7 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
                     case SUCCESS:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
+                        mListener.onTopupSuccess(resource.data);
                         ViewAnimation.circularReveal(mBinding.messageLayout);
                         new Handler().postDelayed(this::dismiss, 1000);
                         break;
@@ -186,7 +190,6 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
             }
         });
     }
-
 
     private void performChargeLookup() {
         if (TextUtils.isEmpty(mBinding.amountEditText.getText())) {
@@ -288,5 +291,27 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        final Fragment parent = getParentFragment();
+        if (parent != null) {
+            mListener = (OnTopupListener) parent;
+        } else {
+            mListener = (OnTopupListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnTopupListener {
+
+        void onTopupSuccess(String transactionId);
     }
 }

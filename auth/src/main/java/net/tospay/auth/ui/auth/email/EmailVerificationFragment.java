@@ -53,7 +53,7 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
     @Override
     public EmailViewModel getViewModel() {
         UserRepository repository = new UserRepository(getAppExecutors(),
-                ServiceGenerator.createService(UserService.class));
+                ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(EmailViewModel.class);
         return mViewModel;
@@ -117,12 +117,8 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
             return;
         }
 
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.verify();
-            mViewModel.getVerifyResourceLiveData().observe(this, this::handleResponse);
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+        mViewModel.verify();
+        mViewModel.getVerifyResourceLiveData().observe(this, this::handleResponse);
     }
 
     private void handleResponse(Resource<Result> resource) {

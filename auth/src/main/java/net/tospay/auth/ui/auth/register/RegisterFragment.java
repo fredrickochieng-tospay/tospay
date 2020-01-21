@@ -77,7 +77,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public RegisterViewModel getViewModel() {
         UserRepository repository = new UserRepository(getAppExecutors(),
-                ServiceGenerator.createService(UserService.class));
+                ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(RegisterViewModel.class);
         return mViewModel;
@@ -271,12 +271,8 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         String password = passwordEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
 
-        if (NetworkUtils.isNetworkAvailable(getContext())) {
-            mViewModel.register(firstName, lastName, email, password, phone, country);
-            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+        mViewModel.register(firstName, lastName, email, password, phone, country);
+        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
     }
 
     private void handleResponse(Resource<TospayUser> resource) {

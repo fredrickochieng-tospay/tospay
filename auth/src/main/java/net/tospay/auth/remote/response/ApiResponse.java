@@ -5,6 +5,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import net.tospay.auth.remote.exception.NoConnectivityException;
+import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.utils.Utils;
 
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class ApiResponse<T> {
     public ApiResponse(Throwable error) {
         code = 500;
         body = null;
-        
+
         if (error instanceof UnknownHostException) {
             errorMessage = "No network available, please check your WiFi or Data connection";
         } else {

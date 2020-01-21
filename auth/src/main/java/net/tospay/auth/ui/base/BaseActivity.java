@@ -54,7 +54,7 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppExecutors mAppExecutors = new AppExecutors();
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class);
+        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class, this);
         mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         mSharedPrefManager = SharedPrefManager.getInstance(this);
         performDataBinding();

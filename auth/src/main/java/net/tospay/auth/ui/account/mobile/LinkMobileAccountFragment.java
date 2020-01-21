@@ -60,8 +60,8 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public MobileMoneyViewModel getViewModel() {
-        MobileRepository repository =
-                new MobileRepository(getAppExecutors(), ServiceGenerator.createService(MobileService.class));
+        MobileService service = ServiceGenerator.createService(MobileService.class, getContext());
+        MobileRepository repository = new MobileRepository(getAppExecutors(), service);
         MobileViewModelFactory factory = new MobileViewModelFactory(repository);
         viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
         return viewModel;

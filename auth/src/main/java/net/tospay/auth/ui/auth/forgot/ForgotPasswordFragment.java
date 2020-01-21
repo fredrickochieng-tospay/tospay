@@ -55,7 +55,7 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
     @Override
     public ForgotPasswordViewModel getViewModel() {
         UserRepository repository = new UserRepository(getAppExecutors(),
-                ServiceGenerator.createService(UserService.class));
+                ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
         mViewModel = ViewModelProviders.of(this, factory).get(ForgotPasswordViewModel.class);
         return mViewModel;
@@ -131,13 +131,8 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
         }
 
         mViewModel.getEmail().setValue(email);
-
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.forgotPassword();
-            mViewModel.getResponseLiveData().observe(this, this::handleResponse);
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+        mViewModel.forgotPassword();
+        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
     }
 
     private void handleResponse(Resource<Result> resource) {

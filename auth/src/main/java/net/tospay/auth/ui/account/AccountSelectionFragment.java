@@ -27,7 +27,7 @@ import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.repository.PaymentRepository;
-import net.tospay.auth.remote.response.TospayException;
+import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.remote.service.AccountService;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.account.topup.TopupAccountSelectionDialog;
@@ -76,10 +76,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Override
     public AccountViewModel getViewModel() {
         AccountRepository accountRepository = new AccountRepository(getAppExecutors(),
-                ServiceGenerator.createService(AccountService.class));
+                ServiceGenerator.createService(AccountService.class, getContext()));
 
         PaymentRepository paymentRepository = new PaymentRepository(getAppExecutors(),
-                ServiceGenerator.createService(PaymentService.class));
+                ServiceGenerator.createService(PaymentService.class, getContext()));
 
         AccountViewModelFactory factory =
                 new AccountViewModelFactory(accountRepository, paymentRepository);

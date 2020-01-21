@@ -1,5 +1,8 @@
 package net.tospay.auth.remote;
 
+import android.content.Context;
+
+import net.tospay.auth.remote.interceptor.NetworkConnectionInterceptor;
 import net.tospay.auth.remote.util.LiveDataCallAdapterFactory;
 import net.tospay.auth.remote.interceptor.RequestInterceptor;
 
@@ -36,9 +39,10 @@ public class ServiceGenerator {
      *
      * @return OkHttpClient
      */
-    private static OkHttpClient okHttpClient(HttpLoggingInterceptor httpLoggingInterceptor) {
+    private static OkHttpClient okHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, Context mContext) {
         return new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor(new NetworkConnectionInterceptor(mContext))
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
@@ -52,10 +56,10 @@ public class ServiceGenerator {
      * @param baseUrl - url endpoint
      * @return retrofit instance
      */
-    private static Retrofit retrofitClient(String baseUrl) {
+    private static Retrofit retrofitClient(String baseUrl, Context mContext) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(okHttpClient(loggingInterceptor()))
+                .client(okHttpClient(loggingInterceptor(), mContext))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -69,8 +73,8 @@ public class ServiceGenerator {
      * @param <S>          -interface class
      * @return S
      */
-    public static <S> S createService(Class<S> serviceClass) {
-        return retrofitClient(ApiConstants.BASE_URL).create(serviceClass);
+    public static <S> S createService(Class<S> serviceClass, Context mContext) {
+        return retrofitClient(ApiConstants.BASE_URL, mContext).create(serviceClass);
     }
 
     /**
@@ -80,7 +84,7 @@ public class ServiceGenerator {
      * @param <S>          -interface class
      * @return S
      */
-    public static <S> S createService(Class<S> serviceClass, String url) {
-        return retrofitClient(url).create(serviceClass);
+    public static <S> S createService(Class<S> serviceClass, String url, Context mContext) {
+        return retrofitClient(url, mContext).create(serviceClass);
     }
 }
