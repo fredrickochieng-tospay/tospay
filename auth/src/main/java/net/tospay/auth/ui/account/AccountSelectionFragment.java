@@ -46,7 +46,7 @@ import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener, AccountNavigator,
-        TopupAccountSelectionDialog.OnAccountListener {
+        TopupAccountSelectionDialog.OnAccountListener, TopupMobileAmountDialog.OnTopupListener {
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
@@ -363,5 +363,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
             TopupMobileAmountDialog.newInstance(topupWallet, account)
                     .show(getChildFragmentManager(), TopupMobileAmountDialog.TAG);
         }
+    }
+
+    @Override
+    public void onTopupSuccess(String transactionId) {
+        
     }
 }

@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
                 .setPaymentToken(token)
                 .getPaymentIntent();
 
-        //startActivityForResult(intent, 1);
-        startActivityForResult(new Intent(this, AuthActivity.class), 1);
+        startActivityForResult(intent, 1);
+        //startActivityForResult(new Intent(this, AuthActivity.class), 1);
     }
 
     @Override
