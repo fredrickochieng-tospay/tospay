@@ -16,7 +16,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.main.TospayActivity"
-            android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

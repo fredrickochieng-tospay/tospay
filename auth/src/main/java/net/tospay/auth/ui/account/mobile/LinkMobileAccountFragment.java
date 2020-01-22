@@ -36,13 +36,10 @@ import net.tospay.auth.utils.NetworkUtils;
 public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAccountBinding, MobileMoneyViewModel>
         implements CountryDialog.CountrySelectedListener, NetworkDialog.NetworkSelectedListener, MobileMoneyNavigator {
 
-    private ProgressDialog progressDialog;
     private Country country = null;
     private Network network = null;
-
     private FragmentLinkMobileAccountBinding mBinding;
-    private MobileMoneyViewModel viewModel;
-
+    private MobileMoneyViewModel mViewModel;
 
     public LinkMobileAccountFragment() {
         // Required empty public constructor
@@ -63,36 +60,29 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
         MobileService service = ServiceGenerator.createService(MobileService.class, getContext());
         MobileRepository repository = new MobileRepository(getAppExecutors(), service);
         MobileViewModelFactory factory = new MobileViewModelFactory(repository);
-        viewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
-        return viewModel;
+        mViewModel = ViewModelProviders.of(this, factory).get(MobileMoneyViewModel.class);
+        return mViewModel;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBinding = getViewDataBinding();
-        mBinding.setMobileMoneyViewModel(viewModel);
-        viewModel.setNavigator(this);
-
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Adding account. Please wait...");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCanceledOnTouchOutside(false);
-
-        mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view)
-                .navigateUp());
+        mBinding.setMobileMoneyViewModel(mViewModel);
+        mViewModel.setNavigator(this);
+        mBinding.btnBackImageView.setOnClickListener(view1 -> Navigation.findNavController(view).navigateUp());
     }
 
     @Override
     public void onCountrySelected(Country country) {
         this.country = country;
-        viewModel.getCountry().setValue(country);
+        mViewModel.getCountry().setValue(country);
     }
 
     @Override
     public void onNetworkSelected(Network network) {
         this.network = network;
-        viewModel.getNetwork().setValue(network);
+        mViewModel.getNetwork().setValue(network);
     }
 
     @Override
@@ -140,49 +130,46 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
         account.setNetwork(network.getOperator());
         account.setTrunc(phone);
 
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            viewModel.link(phone, mBinding.nameEditText.getText().toString());
-            viewModel.getMobileResourceLiveData().observe(this, resource -> {
-                if (resource != null) {
-                    switch (resource.status) {
-                        case SUCCESS:
-                            progressDialog.dismiss();
+        mViewModel.link(phone, mBinding.nameEditText.getText().toString());
+        mViewModel.getMobileResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setLoadingTitle("Adding account. Please wait...");
+                        mViewModel.setIsError(false);
+                        break;
 
-                            if (resource.data != null) {
-                                account.setId(resource.data.getId());
-                            }
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
 
-                            AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile action =
-                                    AccountSelectionFragmentDirections
-                                            .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
+                        if (resource.data != null) {
+                            account.setId(resource.data.getId());
+                        }
 
-                            NavHostFragment.findNavController(this).navigate(action);
+                        AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile action =
+                                AccountSelectionFragmentDirections
+                                        .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
 
-                            break;
+                        NavHostFragment.findNavController(this).navigate(action);
 
-                        case ERROR:
-                            progressDialog.dismiss();
-                            viewModel.setIsError(true);
-                            viewModel.setErrorMessage(resource.message);
-                            break;
+                        break;
 
-                        case LOADING:
-                            progressDialog.show();
-                            viewModel.setIsError(false);
-                            break;
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-                        case RE_AUTHENTICATE:
-                            viewModel.setIsLoading(false);
-                            viewModel.setIsError(true);
-                            viewModel.setErrorMessage(resource.message);
-                            openActivityOnTokenExpire();
-                            break;
-                    }
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        openActivityOnTokenExpire();
+                        break;
                 }
-            });
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 
     @Override

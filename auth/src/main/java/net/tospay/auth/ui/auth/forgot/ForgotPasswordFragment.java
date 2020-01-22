@@ -36,10 +36,8 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
         implements ForgotPasswordNavigator {
 
     private ForgotPasswordViewModel mViewModel;
-    private FragmentForgotPasswordBinding mBinding;
     private TextInputLayout emailInputLayout;
     private EditText emailEditText;
-    private ProgressDialog mProgressDialog;
     private NavController navController;
 
     @Override
@@ -92,21 +90,12 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mBinding = getViewDataBinding();
+        FragmentForgotPasswordBinding mBinding = getViewDataBinding();
         mBinding.setForgotPasswordViewModel(mViewModel);
         mViewModel.setNavigator(this);
-
         emailEditText = mBinding.emailEditText;
         emailInputLayout = mBinding.emailInputLayout;
         emailEditText.addTextChangedListener(emailTextWatcher);
-
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage("Send verification code. Please wait...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-
         navController = Navigation.findNavController(view);
     }
 
@@ -138,28 +127,26 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
     private void handleResponse(Resource<Result> resource) {
         if (resource != null) {
             switch (resource.status) {
-                case ERROR:
-                    mProgressDialog.dismiss();
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    break;
-
                 case LOADING:
                     hideKeyboard();
-                    mProgressDialog.show();
+                    mViewModel.setLoadingTitle("Send verification code. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;
 
+                case ERROR:
+                    mViewModel.setIsLoading(false);
+                    mViewModel.setIsError(true);
+                    mViewModel.setErrorMessage(resource.message);
+                    break;
+
                 case SUCCESS:
-                    mProgressDialog.dismiss();
+                    mViewModel.setIsLoading(false);
                     mViewModel.setIsError(false);
                     Toast.makeText(getContext(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
-
                     ForgotPasswordFragmentDirections.ActionNavigationForgotPasswordToNavigationResetPassword
                             action = ForgotPasswordFragmentDirections
                             .actionNavigationForgotPasswordToNavigationResetPassword(mViewModel.getEmail().getValue());
-
                     navController.navigate(action);
                     break;
             }

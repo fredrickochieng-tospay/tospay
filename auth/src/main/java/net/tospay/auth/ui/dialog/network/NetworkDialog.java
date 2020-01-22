@@ -98,11 +98,16 @@ public class NetworkDialog extends BottomSheetDialogFragment {
         mViewModel.getResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {
+                    case LOADING:
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        mViewModel.setLoadingTitle("Fetching networks");
+                        break;
+
                     case ERROR:
-                    case RE_AUTHENTICATE:
-                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
                         mViewModel.setIsLoading(false);
-                        dismiss();
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
                         break;
 
                     case SUCCESS:

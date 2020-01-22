@@ -1,6 +1,5 @@
 package net.tospay.auth.ui.auth.reset;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -22,9 +20,8 @@ import net.tospay.auth.databinding.FragmentResetPasswordBinding;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-import net.tospay.auth.utils.NetworkUtils;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBinding, ResetPasswordViewModel>
         implements ResetPasswordNavigator {
@@ -32,7 +29,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
     private ResetPasswordViewModel mViewModel;
     private TextInputLayout passwordInputLayout;
     private FragmentResetPasswordBinding mBinding;
-    private ProgressDialog mProgressDialog;
     private NavController navController;
 
     @Override
@@ -68,12 +64,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
         mBinding.passwordEditText.addTextChangedListener(passwordTextWatcher);
 
         mViewModel.getEmail().setValue(email);
-
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-
         navController = Navigation.findNavController(view);
     }
 
@@ -168,22 +158,21 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
         mViewModel.getResetResourceLiveData().observe(this, resource -> {
             if (resource != null) {
                 switch (resource.status) {
-                    case ERROR:
-                        mProgressDialog.dismiss();
-                        mViewModel.setIsError(true);
-                        mViewModel.setErrorMessage(resource.message);
-                        break;
-
                     case LOADING:
                         hideKeyboard();
-                        mProgressDialog.setMessage("Resetting password. Please wait...");
-                        mProgressDialog.show();
+                        mViewModel.setLoadingTitle("Resetting password. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
 
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
+
                     case SUCCESS:
-                        mProgressDialog.dismiss();
+                        mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
                         Toast.makeText(view.getContext(), "Password changed successfully", Toast.LENGTH_SHORT).show();
                         navController.navigate(ResetPasswordFragmentDirections.actionNavigationResetPasswordToNavigationLogin());
@@ -195,35 +184,30 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
 
     @Override
     public void onResendClick(View view) {
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.resend();
-            mViewModel.getResendResourceLiveData().observe(this, resource -> {
-                if (resource != null) {
-                    switch (resource.status) {
-                        case ERROR:
-                            mProgressDialog.dismiss();
-                            mViewModel.setIsError(true);
-                            mViewModel.setErrorMessage(resource.message);
-                            break;
+        mViewModel.resend();
+        mViewModel.getResendResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        hideKeyboard();
+                        mViewModel.setLoadingTitle("Resending verification code. Please wait...");
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        break;
 
-                        case LOADING:
-                            hideKeyboard();
-                            mProgressDialog.setMessage("Resending verification code. Please wait...");
-                            mProgressDialog.show();
-                            mViewModel.setIsLoading(true);
-                            mViewModel.setIsError(false);
-                            break;
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-                        case SUCCESS:
-                            mProgressDialog.dismiss();
-                            mViewModel.setIsError(false);
-                            Toast.makeText(view.getContext(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        Toast.makeText(view.getContext(), "OTP sent to your email", Toast.LENGTH_SHORT).show();
+                        break;
                 }
-            });
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 }

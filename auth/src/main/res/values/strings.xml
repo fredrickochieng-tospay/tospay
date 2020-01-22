@@ -47,7 +47,7 @@
     <string name="new_user">Don\'t have an account?</string>
     <string name="country">Country</string>
     <string name="forgot_password_instructions">
-        Enter your email address and we will send you instructions on how to create a new password
+        Enter your email address and we will \n send you instructions on how to create a new \n password
     </string>
     <string name="submit">Submit</string>
     <string name="back_to_login">Back to login</string>
@@ -60,6 +60,4 @@
     <string name="link_mobile_account">Link Mobile Account</string>
     <string name="alias_name">Alias name</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import net.tospay.auth.Tospay;
+import net.tospay.auth.ui.auth.AuthActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
                 .setPaymentToken(token)
                 .getPaymentIntent();
 
-        startActivityForResult(intent, 1);
-        //startActivityForResult(new Intent(this, AuthActivity.class), 1);
+        //startActivityForResult(intent, 1);
+        startActivityForResult(new Intent(this, AuthActivity.class), 1);
     }
 
     @Override

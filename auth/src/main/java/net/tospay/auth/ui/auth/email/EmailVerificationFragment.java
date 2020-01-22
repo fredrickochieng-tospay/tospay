@@ -1,6 +1,5 @@
 package net.tospay.auth.ui.auth.email;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,8 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentEmailVerificationBinding;
@@ -24,16 +21,14 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
-import net.tospay.auth.utils.NetworkUtils;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerificationBinding, EmailViewModel>
         implements EmailNavigator {
 
     private FragmentEmailVerificationBinding mBinding;
     private EmailViewModel mViewModel;
-    private ProgressDialog mProgressDialog;
     private TospayUser tospayUser;
 
     public EmailVerificationFragment() {
@@ -93,11 +88,6 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
         mViewModel.setNavigator(this);
         tospayUser = getSharedPrefManager().getActiveUser();
         mViewModel.getUser().setValue(tospayUser);
-
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     @Override
@@ -124,26 +114,24 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
     private void handleResponse(Resource<Result> resource) {
         if (resource != null) {
             switch (resource.status) {
-                case ERROR:
-                    mProgressDialog.dismiss();
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    break;
-
                 case LOADING:
                     hideKeyboard();
-                    mProgressDialog.setMessage("Verifying OTP. Please wait...");
-                    mProgressDialog.show();
+                    mViewModel.setLoadingTitle("Verifying OTP. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
+                    break;
+
+                case ERROR:
+                    mViewModel.setIsLoading(false);
+                    mViewModel.setIsError(true);
+                    mViewModel.setErrorMessage(resource.message);
                     break;
 
                 case SUCCESS:
                     mViewModel.setIsError(false);
                     tospayUser.setEmailVerified(true);
                     getSharedPrefManager().setActiveUser(tospayUser);
-                    mProgressDialog.dismiss();
-
+                    mViewModel.setIsLoading(false);
                     NavHostFragment.findNavController(this)
                             .navigate(EmailVerificationFragmentDirections
                                     .actionNavigationEmailVerificationToNavigationPhoneVerification());
@@ -154,35 +142,30 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
 
     @Override
     public void onResendClick(View view) {
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.resend();
-            mViewModel.getResendResourceLiveData().observe(this, resource -> {
-                if (resource != null) {
-                    switch (resource.status) {
-                        case ERROR:
-                            mProgressDialog.dismiss();
-                            mViewModel.setIsError(true);
-                            mViewModel.setErrorMessage(resource.message);
-                            break;
+        mViewModel.resend();
+        mViewModel.getResendResourceLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        mViewModel.setLoadingTitle("Resending OTP. Please wait...");
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        hideKeyboard();
+                        break;
 
-                        case LOADING:
-                            mViewModel.setIsLoading(true);
-                            mViewModel.setIsError(false);
-                            hideKeyboard();
-                            mProgressDialog.setMessage("Resending OTP. Please wait...");
-                            mProgressDialog.show();
-                            break;
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-                        case SUCCESS:
-                            mViewModel.setIsError(false);
-                            mProgressDialog.dismiss();
-                            Toast.makeText(view.getContext(), "Please check your email for OTP", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
+                    case SUCCESS:
+                        mViewModel.setIsError(false);
+                        mViewModel.setIsLoading(false);
+                        Toast.makeText(view.getContext(), "Please check your email for OTP", Toast.LENGTH_SHORT).show();
+                        break;
                 }
-            });
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 }

@@ -1,7 +1,5 @@
 package net.tospay.auth.ui.auth.register;
 
-
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -26,18 +23,15 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.utils.EmailValidator;
-import net.tospay.auth.utils.NetworkUtils;
-
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, RegisterViewModel>
         implements RegisterNavigation, CountryDialog.CountrySelectedListener {
 
     private RegisterViewModel mViewModel;
-    private FragmentRegisterBinding mBinding;
 
     private EditText firstNameEditText;
     private TextInputLayout firstNameInputLayout;
@@ -58,7 +52,6 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     private TextInputLayout confirmPasswordInputLayout;
 
     private Country country = null;
-    private ProgressDialog mProgressDialog;
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -86,7 +79,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBinding = getViewDataBinding();
+        FragmentRegisterBinding mBinding = getViewDataBinding();
 
         mBinding.setRegisterViewModel(mViewModel);
         mViewModel.setNavigator(this);
@@ -203,12 +196,6 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         });
 
         mViewModel.getCountry().observe(this, country -> this.country = country);
-
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage("Creating account. Please wait...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     private boolean validateInputs() {
@@ -278,27 +265,26 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     private void handleResponse(Resource<TospayUser> resource) {
         if (resource != null) {
             switch (resource.status) {
+                case LOADING:
+                    mViewModel.setIsLoading(true);
+                    mViewModel.setIsError(false);
+                    mViewModel.setLoadingTitle("Creating account. Please wait...");
+                    break;
+
                 case ERROR:
-                    mProgressDialog.dismiss();
+                    mViewModel.setIsLoading(false);
                     mViewModel.setIsError(true);
                     mViewModel.setErrorMessage(resource.message);
                     break;
 
-                case LOADING:
-                    mProgressDialog.show();
-                    mViewModel.setIsLoading(true);
-                    mViewModel.setIsError(false);
-                    break;
-
                 case SUCCESS:
-                    mProgressDialog.dismiss();
+                    mViewModel.setIsLoading(false);
                     mViewModel.setIsError(false);
-
+                    mViewModel.setIsError(false);
                     TospayUser user = resource.data;
                     getSharedPrefManager().setActiveUser(user);
-
-                    NavHostFragment.findNavController(this).navigate(RegisterFragmentDirections.actionNavigationRegisterToNavigationEmailVerification());
-
+                    NavHostFragment.findNavController(this)
+                            .navigate(RegisterFragmentDirections.actionNavigationRegisterToNavigationEmailVerification());
                     break;
             }
         }

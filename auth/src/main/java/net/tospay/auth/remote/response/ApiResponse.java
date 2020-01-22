@@ -10,6 +10,7 @@ import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.utils.Utils;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.UnknownHostException;
 
 import retrofit2.Response;
@@ -35,6 +36,8 @@ public class ApiResponse<T> {
         body = null;
 
         if (error instanceof UnknownHostException) {
+            errorMessage = "No network available, please check your WiFi or Data connection";
+        } else if (error instanceof ConnectException) {
             errorMessage = "No network available, please check your WiFi or Data connection";
         } else {
             errorMessage = error.getMessage();

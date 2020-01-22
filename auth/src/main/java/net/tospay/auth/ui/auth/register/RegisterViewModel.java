@@ -33,8 +33,6 @@ public class RegisterViewModel extends BaseViewModel<RegisterNavigation>
     }
 
     public void register(String firstName, String lastName, String email, String password, String phone, Country country) {
-        setIsError(false);
-
         RegisterRequest request = new RegisterRequest();
         request.setFirstname(firstName);
         request.setLastname(lastName);
@@ -42,7 +40,6 @@ public class RegisterViewModel extends BaseViewModel<RegisterNavigation>
         request.setPassword(password);
         request.setPhone(phone);
         request.setCountry(country);
-
         responseLiveData = userRepository.register(request);
     }
 

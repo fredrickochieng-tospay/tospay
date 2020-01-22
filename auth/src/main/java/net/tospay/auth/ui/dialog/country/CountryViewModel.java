@@ -23,7 +23,6 @@ public class CountryViewModel extends BaseViewModel {
     }
 
     public void countries(boolean isOperators) {
-        setIsLoading(true);
         resourceLiveData = gatewayRepository.countries((String) getBearerToken().get(), isOperators);
     }
 }

@@ -72,8 +72,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         super.onCreate(savedInstanceState);
         ActivityTospayBinding binding = getViewDataBinding();
         binding.setPaymentViewModel(mViewModel);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         String paymentToken = getIntent().getStringExtra(KEY_TOKEN);
         mViewModel.getPaymentTokenLiveData().setValue(paymentToken);

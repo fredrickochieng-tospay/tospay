@@ -1,6 +1,5 @@
 package net.tospay.auth.ui.auth.login;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -25,22 +23,19 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
-import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.EmailValidator;
-import net.tospay.auth.utils.NetworkUtils;
 import net.tospay.auth.utils.SharedPrefManager;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>
         implements LoginNavigator {
 
-    private FragmentLoginBinding mBinding;
     private LoginViewModel mViewModel;
     private TextInputLayout emailInputLayout;
     private TextInputLayout passwordInputLayout;
     private EditText emailEditText;
     private EditText passwordEditText;
-    private ProgressDialog mProgressDialog;
     private NavController navController;
 
     private String email;
@@ -127,7 +122,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding = getViewDataBinding();
+        FragmentLoginBinding mBinding = getViewDataBinding();
         mBinding.setLoginViewModel(mViewModel);
         mViewModel.setNavigator(this);
 
@@ -139,12 +134,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
         emailEditText.addTextChangedListener(emailTextWatcher);
         passwordEditText.addTextChangedListener(passwordTextWatcher);
-
-        mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage("Authenticating. Please wait...");
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
 
         if (getSharedPrefManager().read(SharedPrefManager.KEY_REMEMBER_ME, false)) {
             if (getSharedPrefManager().getActiveUser() != null) {
@@ -214,22 +203,23 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
     private void handleResponse(Resource<TospayUser> resource) {
         if (resource != null) {
             switch (resource.status) {
-                case ERROR:
-                    passwordEditText.setText(null);
-                    mProgressDialog.dismiss();
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    break;
 
                 case LOADING:
                     hideKeyboard();
-                    mProgressDialog.show();
+                    mViewModel.setLoadingTitle("Authenticating. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;
 
+                case ERROR:
+                    passwordEditText.setText(null);
+                    mViewModel.setIsLoading(false);
+                    mViewModel.setIsError(true);
+                    mViewModel.setErrorMessage(resource.message);
+                    break;
+
                 case SUCCESS:
-                    mProgressDialog.dismiss();
+                    mViewModel.setIsLoading(false);
                     mViewModel.setIsError(false);
 
                     TospayUser user = resource.data;
