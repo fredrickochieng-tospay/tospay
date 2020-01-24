@@ -61,6 +61,7 @@ public class Tospay {
      * @return this class instance
      */
     public Tospay setPaymentToken(String token) {
+        if (token == null) throw new RuntimeException("Payment token cannot be null");
         this.token = token;
         return this;
     }

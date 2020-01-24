@@ -43,10 +43,10 @@ public class ServiceGenerator {
         return new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(new NetworkConnectionInterceptor(mContext))
+                .addInterceptor(new RequestInterceptor())
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(new RequestInterceptor())
                 .build();
     }
 

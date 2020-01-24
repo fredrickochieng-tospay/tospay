@@ -44,4 +44,16 @@ public interface MobileService {
     LiveData<ApiResponse<Result<List<Account>>>> accounts(
             @Header("Authorization") String bearer
     );
+
+    @POST("v1/mobile/delete")
+    LiveData<ApiResponse<Result>> delete(
+            @Header("Authorization") String bearer,
+            @Body Map<String, Object> request
+    );
+
+    @POST("v1/mobile/update")
+    LiveData<ApiResponse<Result>> update(
+            @Header("Authorization") String bearer,
+            @Body Map<String, Object> request
+    );
 }

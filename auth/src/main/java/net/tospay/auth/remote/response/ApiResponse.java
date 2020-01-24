@@ -5,7 +5,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import net.tospay.auth.remote.exception.NoConnectivityException;
 import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.utils.Utils;
 

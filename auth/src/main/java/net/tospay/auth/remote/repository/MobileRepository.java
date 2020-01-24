@@ -192,4 +192,84 @@ public class MobileRepository {
             }
         }.asLiveData();
     }
+
+    public LiveData<Resource<Result>> update(String bearerToken,
+                                             Map<String, Object> param) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mMobileService.update(bearerToken, param);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<Result>> delete(String bearerToken,
+                                             Map<String, Object> param) {
+        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+
+            private Result resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result item) {
+                resultsDb = item;
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable Result data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<Result> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<Result>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result>> createCall() {
+                return mMobileService.delete(bearerToken, param);
+            }
+        }.asLiveData();
+    }
 }
