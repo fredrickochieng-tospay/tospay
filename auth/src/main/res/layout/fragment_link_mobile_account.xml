@@ -108,7 +108,7 @@
 
                 <TextView
                     android:id="@+id/selectCountryTextView"
-                    style="@style/DesignComponent.EditTextAppearance.Search"
+                    style="@style/Tospay.EditTextAppearance.Search"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
@@ -137,7 +137,7 @@
 
                 <TextView
                     android:id="@+id/selectNetworkTextView"
-                    style="@style/DesignComponent.EditTextAppearance.Search"
+                    style="@style/Tospay.EditTextAppearance.Search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"

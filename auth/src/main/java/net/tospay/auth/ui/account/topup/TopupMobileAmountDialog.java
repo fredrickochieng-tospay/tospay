@@ -82,7 +82,7 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+        setStyle(STYLE_NORMAL, R.style.Tospay_BaseBottomSheetDialog);
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());
 
         transfer = new Transfer();

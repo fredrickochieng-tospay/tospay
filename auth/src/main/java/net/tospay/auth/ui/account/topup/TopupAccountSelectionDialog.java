@@ -60,7 +60,7 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+        setStyle(STYLE_NORMAL, R.style.Tospay_BaseBottomSheetDialog);
         mSharedPrefManager = SharedPrefManager.getInstance(getContext());
     }
 
@@ -172,6 +172,12 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
     }
 
     @Override
+    public void onVerifyClick(AccountType accountType) {
+        mListener.onVerifyAccount((Account) accountType);
+        dismiss();
+    }
+
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         final Fragment parent = getParentFragment();
@@ -189,7 +195,8 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
     }
 
     public interface OnAccountListener {
-
         void onAccount(Account account);
+
+        void onVerifyAccount(Account account);
     }
 }

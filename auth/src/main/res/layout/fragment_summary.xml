@@ -187,9 +187,10 @@
                         android:id="@+id/constraint"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/default_space_16"
-                        android:paddingRight="@dimen/default_space_16"
-                        android:paddingBottom="@dimen/default_space_16">
+                        android:paddingLeft="@dimen/default_space_24"
+                        android:paddingTop="@dimen/default_space_24"
+                        android:paddingRight="@dimen/default_space_24"
+                        android:paddingBottom="@dimen/default_space_24">
 
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/guideline"

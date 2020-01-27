@@ -14,6 +14,10 @@
             type="net.tospay.auth.ui.account.AccountViewModel" />
 
         <variable
+            name="name"
+            type="String" />
+
+        <variable
             name="resource"
             type="net.tospay.auth.remote.Resource" />
 
@@ -113,9 +117,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/proxima_nova_semibold"
-                        android:text="Hi Jane Doe"
+                        android:text="@{`Hi `+name}"
                         android:textColor="#1a2853"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        tools:text="Hi Jane Doe" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

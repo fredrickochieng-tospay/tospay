@@ -31,7 +31,7 @@ public class LoginTypeDialog extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+        setStyle(STYLE_NORMAL, R.style.Tospay_BaseBottomSheetDialog);
     }
 
     @Override

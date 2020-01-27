@@ -93,6 +93,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         super.onViewCreated(view, savedInstanceState);
         mBinding = getViewDataBinding();
         mBinding.setAccountViewModel(mViewModel);
+        mBinding.setName(getSharedPrefManager().getActiveUser().getName());
         mViewModel.setNavigator(this);
 
         if (getArguments() != null) {
@@ -366,7 +367,16 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     @Override
+    public void onVerifyAccount(net.tospay.auth.model.Account account) {
+        AccountSelectionFragmentDirections.ActionNavigationAccountSelectionToNavigationVerifyMobile
+                action = AccountSelectionFragmentDirections
+                .actionNavigationAccountSelectionToNavigationVerifyMobile(account);
+
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+
+    @Override
     public void onTopupSuccess(String transactionId) {
-        
+
     }
 }
