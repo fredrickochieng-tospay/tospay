@@ -247,4 +247,14 @@ public class Account implements Parcelable, AccountType {
                 ", checked=" + checked +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Account)) {
+            return false;
+        }
+
+        Account account = (Account) obj;
+        return this.id.equals(account.id);
+    }
 }
