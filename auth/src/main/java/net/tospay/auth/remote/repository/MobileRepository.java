@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.Account;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
@@ -16,6 +17,7 @@ import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.util.NetworkBoundResource;
 import net.tospay.auth.utils.AbsentLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -160,8 +162,12 @@ public class MobileRepository {
             private List<Account> resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<List<Account>> item) {
-                resultsDb = item.getData();
+            protected void saveCallResult(@NonNull Result<List<Account>> items) {
+                resultsDb = new ArrayList<>();
+                for (Account account : items.getData()) {
+                    account.setAccountType(AccountType.MOBILE);
+                    resultsDb.add(account);
+                }
             }
 
             @Override
