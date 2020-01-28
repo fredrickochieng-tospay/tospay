@@ -78,7 +78,6 @@
             tools:listitem="@layout/list_item_country_view" />
 
         <net.tospay.auth.view.LoadingLayout
-            loading_title="@{countryViewModel.loadingTitle}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="@{countryViewModel.isLoading?View.VISIBLE:View.GONE}"
@@ -86,7 +85,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

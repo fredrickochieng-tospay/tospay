@@ -121,7 +121,6 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
                         case LOADING:
                             mViewModel.setIsError(false);
                             mViewModel.setIsLoading(true);
-                            mViewModel.setLoadingTitle("Verifying OTP. Please wait...");
                             break;
 
                         case ERROR:
@@ -152,7 +151,6 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
                     case LOADING:
                         mViewModel.setIsError(false);
                         mViewModel.setIsLoading(true);
-                        mViewModel.setLoadingTitle("Resend OTP. Please check your phone...");
                         break;
 
                     case ERROR:

@@ -112,7 +112,6 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
                 switch (resource.status) {
                     case LOADING:
                         hideKeyboard();
-                        mViewModel.setLoadingTitle("Verifying OTP. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -144,7 +143,6 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
                 switch (resource.status) {
                     case LOADING:
                         hideKeyboard();
-                        mViewModel.setLoadingTitle("Resending OTP. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;

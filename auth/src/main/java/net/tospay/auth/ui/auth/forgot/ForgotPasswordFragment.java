@@ -129,7 +129,6 @@ public class ForgotPasswordFragment extends BaseFragment<FragmentForgotPasswordB
             switch (resource.status) {
                 case LOADING:
                     hideKeyboard();
-                    mViewModel.setLoadingTitle("Send verification code. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;

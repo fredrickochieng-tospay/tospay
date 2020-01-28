@@ -181,7 +181,6 @@
         </androidx.core.widget.NestedScrollView>
 
         <net.tospay.auth.view.LoadingLayout
-            loading_title="@{phoneViewModel.loadingTitle}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:visibility="@{phoneViewModel.isLoading?View.VISIBLE:View.GONE}"

@@ -141,7 +141,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     case LOADING:
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
-                        mViewModel.setLoadingTitle("Fetching sources of funds...");
                         break;
 
                     case SUCCESS:
@@ -254,7 +253,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     case LOADING:
                         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        mViewModel.setLoadingTitle("Fetching transaction charges...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -304,7 +302,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                     case LOADING:
                         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        mViewModel.setLoadingTitle("Processing transactions...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;

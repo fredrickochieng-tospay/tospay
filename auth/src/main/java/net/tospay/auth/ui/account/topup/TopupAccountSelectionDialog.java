@@ -142,7 +142,6 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
                     case LOADING:
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
-                        mViewModel.setLoadingTitle("Loading accounts...");
                         break;
 
                     case ERROR:

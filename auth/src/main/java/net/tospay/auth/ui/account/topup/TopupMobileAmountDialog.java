@@ -168,7 +168,6 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
-                        mViewModel.setLoadingTitle("Enter mpesa pin when prompted to complete transaction");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -247,7 +246,6 @@ public class TopupMobileAmountDialog extends BottomSheetDialogFragment {
                     case LOADING:
                         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        mViewModel.setLoadingTitle("Fetching Transaction charges...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;

@@ -101,7 +101,6 @@ public class NetworkDialog extends BottomSheetDialogFragment {
                     case LOADING:
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
-                        mViewModel.setLoadingTitle("Fetching networks");
                         break;
 
                     case ERROR:

@@ -79,17 +79,6 @@ public final class BindingUtils {
         errorLayout.setErrorMessage(message);
     }
 
-    /**
-     * Set loading title of the view
-     *
-     * @param layout - loading layout
-     * @param title  -title
-     */
-    @BindingAdapter("loading_title")
-    public static void setLoadingTitle(LoadingLayout layout, String title) {
-        layout.setLoadingTitle(title);
-    }
-
     @BindingAdapter("profile_pic")
     public static void profilePic(ImageView imageView, String imageUrl) {
         if (imageUrl == null) {

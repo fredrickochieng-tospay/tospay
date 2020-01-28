@@ -206,7 +206,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
 
                 case LOADING:
                     hideKeyboard();
-                    mViewModel.setLoadingTitle("Authenticating. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;

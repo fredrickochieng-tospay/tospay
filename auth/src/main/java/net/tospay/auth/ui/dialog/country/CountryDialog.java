@@ -93,7 +93,6 @@ public class CountryDialog extends BottomSheetDialogFragment {
                     case LOADING:
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
-                        mViewModel.setLoadingTitle("Fetching countries");
                         break;
 
                     case ERROR:

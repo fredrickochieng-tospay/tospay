@@ -2,12 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loading"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:background="#55000000" />
 
     <View
@@ -15,19 +15,6 @@
         android:layout_height="@dimen/default_space_64"
         android:layout_gravity="center"
         android:background="@drawable/card_white_corners" />
-
-    <TextView
-        android:id="@+id/loading_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/default_space_32"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="@dimen/default_space_32"
-        android:fontFamily="@font/proxima_nova_regular"
-        android:gravity="center"
-        android:textColor="@color/white"
-        tools:text="Processing. Please wait..." />
 
     <ProgressBar
         android:layout_width="@dimen/default_space_36"

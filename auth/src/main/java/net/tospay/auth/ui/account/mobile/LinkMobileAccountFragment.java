@@ -136,7 +136,6 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
                 switch (resource.status) {
                     case LOADING:
                         mViewModel.setIsLoading(true);
-                        mViewModel.setLoadingTitle("Adding account. Please wait...");
                         mViewModel.setIsError(false);
                         break;
 

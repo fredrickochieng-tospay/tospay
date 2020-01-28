@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="ErrorLayout">
         <attr name="text" format="string" />
     </declare-styleable>
-
-    <declare-styleable name="LoadingLayout">
-        <attr name="loading_title" format="string" />
-    </declare-styleable>
-
     <attr name="partner_logo" format="reference|integer" />
     <attr name="partner_banner" format="reference|integer" />
-
 </resources>

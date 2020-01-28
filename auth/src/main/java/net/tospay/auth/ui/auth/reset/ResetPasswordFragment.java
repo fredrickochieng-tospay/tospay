@@ -160,7 +160,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
                 switch (resource.status) {
                     case LOADING:
                         hideKeyboard();
-                        mViewModel.setLoadingTitle("Resetting password. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;
@@ -190,7 +189,6 @@ public class ResetPasswordFragment extends BaseFragment<FragmentResetPasswordBin
                 switch (resource.status) {
                     case LOADING:
                         hideKeyboard();
-                        mViewModel.setLoadingTitle("Resending verification code. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         break;

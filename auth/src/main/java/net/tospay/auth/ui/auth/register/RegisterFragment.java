@@ -268,7 +268,6 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
                 case LOADING:
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
-                    mViewModel.setLoadingTitle("Creating account. Please wait...");
                     break;
 
                 case ERROR:

@@ -116,7 +116,6 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
             switch (resource.status) {
                 case LOADING:
                     hideKeyboard();
-                    mViewModel.setLoadingTitle("Verifying OTP. Please wait...");
                     mViewModel.setIsLoading(true);
                     mViewModel.setIsError(false);
                     break;
@@ -147,7 +146,6 @@ public class EmailVerificationFragment extends BaseFragment<FragmentEmailVerific
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
-                        mViewModel.setLoadingTitle("Resending OTP. Please wait...");
                         mViewModel.setIsLoading(true);
                         mViewModel.setIsError(false);
                         hideKeyboard();
