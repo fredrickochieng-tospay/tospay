@@ -1,10 +1,18 @@
 package net.tospay.auth.ui.main;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -182,12 +190,43 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainView
                 if (notification.getData().getStatus().equals("FAILED")) {
                     finishWithError(notification.getData().getMessage());
                 } else {
+                    displayNotification(notification.getNotification().getTitle(),
+                            notification.getNotification().getBody());
                     finishWithSuccess();
                 }
             } else {
                 TransferDialog.newInstance(notification).show(getSupportFragmentManager(), TransferDialog.TAG);
             }
         }
+    }
+
+    private void displayNotification(String title, String body) {
+        String channelId = getString(R.string.default_notification_channel_id);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, channelId)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, title, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(body);
+            channel.enableLights(true);
+            channel.setLightColor(getColor(R.color.colorPrimary));
+            channel.enableVibration(true);
+            channel.setShowBadge(true);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
     @Override

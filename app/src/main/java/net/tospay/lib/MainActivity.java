@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pay(View view) {
-        String token = "ZGQASTFCUAOOKPSF";
+        String token = "HJTOBZBHDRRVSTGB";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();
