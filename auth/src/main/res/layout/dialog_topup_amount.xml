@@ -23,7 +23,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.account.topup.TopupMobileAmountDialog">
+        tools:context=".ui.account.topup.TopupAmountDialog">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -74,16 +74,17 @@
 
         <RelativeLayout
             android:id="@+id/cardEditText"
+            account_type_background="@{accountViewModel.account.type}"
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:background="@drawable/ic_mpesa_card"
             android:contentDescription="@string/app_name"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/errorLayout">
+            app:layout_constraintTop_toBottomOf="@id/errorLayout"
+            tools:background="@drawable/ic_mpesa_card">
 
             <TextView
-                android:id="@+id/CardName"
+                android:id="@+id/cardName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="60dp"
@@ -96,8 +97,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/CardName"
-                android:layout_alignLeft="@id/CardName"
+                android:layout_below="@id/cardName"
+                android:layout_alignLeft="@id/cardName"
                 android:layout_marginTop="-32dp"
                 android:fontFamily="@font/proxima_nova_regular"
                 android:text="@{`****`+accountViewModel.account.trunc}"
@@ -241,17 +242,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_space_24"
             app:layout_constraintTop_toBottomOf="@id/btn_pay" />
-
-        <net.tospay.auth.view.MessageLayout
-            android:id="@+id/message_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
 
         <net.tospay.auth.view.LoadingLayout
             android:layout_width="match_parent"

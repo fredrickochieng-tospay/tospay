@@ -13,6 +13,7 @@ import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.repository.PaymentRepository;
+import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.ui.base.BaseViewModel;
 
 import java.util.List;
@@ -27,8 +28,8 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
 
     private LiveData<Resource<List<AccountType>>> accountsResourceLiveData;
     private LiveData<Resource<Amount>> amountResourceLiveData;
-    private LiveData<Resource<String>> paymentResourceLiveData;
-    private LiveData<Resource<String>> transferResourceLiveData;
+    private LiveData<Resource<TransferResponse>> paymentResourceLiveData;
+    private LiveData<Resource<TransferResponse>> transferResourceLiveData;
     private MutableLiveData<Transfer> transfer;
     private MutableLiveData<Amount> charge;
     private MutableLiveData<Account> account;
@@ -52,7 +53,7 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         return accountsResourceLiveData;
     }
 
-    public LiveData<Resource<String>> getPaymentResourceLiveData() {
+    public LiveData<Resource<TransferResponse>> getPaymentResourceLiveData() {
         return paymentResourceLiveData;
     }
 
@@ -90,7 +91,7 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
         transferResourceLiveData = paymentRepository.transfer(getBearerToken().get(), transfer);
     }
 
-    public LiveData<Resource<String>> getTransferResourceLiveData() {
+    public LiveData<Resource<TransferResponse>> getTransferResourceLiveData() {
         return transferResourceLiveData;
     }
 

@@ -5,7 +5,7 @@
 
         <variable
             name="paymentViewModel"
-            type="net.tospay.auth.ui.main.PaymentViewModel" />
+            type="net.tospay.auth.ui.main.MainViewModel" />
 
     </data>
 

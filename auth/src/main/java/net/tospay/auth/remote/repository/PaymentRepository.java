@@ -9,6 +9,7 @@ import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.response.ApiResponse;
 import net.tospay.auth.remote.response.Result;
+import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.util.NetworkBoundResource;
@@ -82,28 +83,28 @@ public class PaymentRepository {
      * @param transfer    - Transfer payload
      * @return payment reference no.
      */
-    public LiveData<Resource<String>> pay(String bearerToken, String paymentId, Transfer transfer) {
-        return new NetworkBoundResource<String, Result<String>>(mAppExecutors) {
+    public LiveData<Resource<TransferResponse>> pay(String bearerToken, String paymentId, Transfer transfer) {
+        return new NetworkBoundResource<TransferResponse, Result<TransferResponse>>(mAppExecutors) {
 
-            private String resultsDb;
+            private TransferResponse resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<String> item) {
+            protected void saveCallResult(@NonNull Result<TransferResponse> item) {
                 resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable String data) {
+            protected boolean shouldFetch(@Nullable TransferResponse data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<String> loadFromDb() {
+            protected LiveData<TransferResponse> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<String>() {
+                    return new LiveData<TransferResponse>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -115,7 +116,7 @@ public class PaymentRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<String>>> createCall() {
+            protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
                 return mPaymentService.pay(bearerToken, paymentId, transfer);
             }
         }.asLiveData();
@@ -164,28 +165,28 @@ public class PaymentRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<String>> transfer(String bearerToken, Transfer transfer) {
-        return new NetworkBoundResource<String, Result<String>>(mAppExecutors) {
+    public LiveData<Resource<TransferResponse>> transfer(String bearerToken, Transfer transfer) {
+        return new NetworkBoundResource<TransferResponse, Result<TransferResponse>>(mAppExecutors) {
 
-            private String resultsDb;
+            private TransferResponse resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<String> item) {
+            protected void saveCallResult(@NonNull Result<TransferResponse> item) {
                 resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable String data) {
+            protected boolean shouldFetch(@Nullable TransferResponse data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<String> loadFromDb() {
+            protected LiveData<TransferResponse> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<String>() {
+                    return new LiveData<TransferResponse>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -197,7 +198,7 @@ public class PaymentRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<String>>> createCall() {
+            protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
                 return mPaymentService.transfer(bearerToken, transfer);
             }
         }.asLiveData();

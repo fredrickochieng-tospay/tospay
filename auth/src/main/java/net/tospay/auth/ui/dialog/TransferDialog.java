@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -58,8 +59,10 @@ public class TransferDialog extends BottomSheetDialogFragment {
         messageTextView.setText(event.getData().getMessage());
 
         if (event.getData().getStatus().equals("FAILED")) {
+            titleTextView.setTextColor(ContextCompat.getColor(view.getContext(), R.color.red_palette_error));
             imageView.setImageResource(R.drawable.ic_failed_illustration);
         } else {
+            titleTextView.setTextColor(ContextCompat.getColor(view.getContext(), R.color.green));
             imageView.setImageResource(R.drawable.ic_success_illustration);
         }
 

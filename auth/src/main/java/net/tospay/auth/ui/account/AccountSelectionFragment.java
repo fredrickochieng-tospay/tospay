@@ -25,13 +25,14 @@ import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.Store;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.remote.repository.AccountRepository;
 import net.tospay.auth.remote.repository.PaymentRepository;
-import net.tospay.auth.remote.exception.TospayException;
+import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.service.AccountService;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.account.topup.TopupAccountSelectionDialog;
-import net.tospay.auth.ui.account.topup.TopupMobileAmountDialog;
+import net.tospay.auth.ui.account.topup.TopupAmountDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.Utils;
@@ -46,7 +47,7 @@ import java.util.List;
 
 public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelectionBinding, AccountViewModel>
         implements OnAccountItemClickListener, PaymentListener, AccountNavigator,
-        TopupAccountSelectionDialog.OnAccountListener, TopupMobileAmountDialog.OnTopupListener {
+        TopupAccountSelectionDialog.OnAccountListener, TopupAmountDialog.OnTopupListener {
 
     private AccountViewModel mViewModel;
     private FragmentAccountSelectionBinding mBinding;
@@ -123,16 +124,18 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                 Navigation.findNavController(view).navigateUp());
 
         mBinding.btnPay.setOnClickListener(view14 -> executePayment());
+        mBinding.swipeRefreshLayout.setOnRefreshListener(this::fetchAccounts);
 
         fetchAccounts();
     }
 
     private void fetchAccounts() {
         mViewModel.fetchAccounts(true);
-        mViewModel.getAccountsResourceLiveData().observe(this, resource -> {
+        mViewModel.getAccountsResourceLiveData().observe(getViewLifecycleOwner(), resource -> {
             if (resource != null) {
                 switch (resource.status) {
                     case ERROR:
+                        mBinding.swipeRefreshLayout.setRefreshing(false);
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
@@ -144,6 +147,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         break;
 
                     case SUCCESS:
+                        mBinding.swipeRefreshLayout.setRefreshing(false);
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
                         if (resource.data != null && resource.data.size() > 0) {
@@ -154,6 +158,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         break;
 
                     case RE_AUTHENTICATE:
+                        mBinding.swipeRefreshLayout.setRefreshing(false);
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
@@ -284,6 +289,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         openActivityOnTokenExpire();
                         break;
                 }
@@ -296,7 +302,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         payload.setSource(sources);
 
         mViewModel.pay(paymentId, payload);
-        mViewModel.getPaymentResourceLiveData().observe(this, resource -> {
+        mViewModel.getPaymentResourceLiveData().observe(getViewLifecycleOwner(), resource -> {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:
@@ -317,12 +323,20 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                        TransferResponse response = resource.data;
+                        assert response != null;
+                        if (response.getHtml() != null) {
+                            CardPaymentDialog.newInstance(response.getHtml())
+                                    .show(getChildFragmentManager(), CardPaymentDialog.TAG);
+                        }
                         break;
 
                     case RE_AUTHENTICATE:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         openActivityOnTokenExpire();
                         break;
                 }
@@ -333,8 +347,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotification(NotificationEvent notification) {
         if (notification != null) {
-            if (!notification.getData().getStatus().equals("FAILED")) {
-                fetchAccounts();
+            if (notification.getData().getTopic().equals("TOPUP")) {
+                if (!notification.getData().getStatus().equals("FAILED")) {
+                    fetchAccounts();
+                }
             }
         }
     }
@@ -357,10 +373,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
             return;
         }
 
-        if (account.getType() == AccountType.MOBILE) {
-            TopupMobileAmountDialog.newInstance(topupWallet, account)
-                    .show(getChildFragmentManager(), TopupMobileAmountDialog.TAG);
-        }
+        TopupAmountDialog.newInstance(topupWallet, account)
+                .show(getChildFragmentManager(), TopupAmountDialog.TAG);
     }
 
     @Override
@@ -373,7 +387,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     }
 
     @Override
-    public void onTopupSuccess(String transactionId) {
-
+    public void onTopupSuccess(TransferResponse transferResponse) {
+        MpesaLoadingDialog.newInstance().show(getChildFragmentManager(), MpesaLoadingDialog.TAG);
     }
 }

@@ -119,7 +119,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     private void fetchPaymentDetails() {
         if (NetworkUtils.isNetworkAvailable(getContext())) {
             mViewModel.details(paymentId);
-            mViewModel.getDetailsResourceLiveData().observe(this, this::handleResponse);
+            mViewModel.getDetailsResourceLiveData().observe(getViewLifecycleOwner(), this::handleResponse);
         } else {
             showNetworkErrorDialog();
         }

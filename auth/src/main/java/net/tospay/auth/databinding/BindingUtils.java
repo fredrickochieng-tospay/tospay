@@ -105,4 +105,21 @@ public final class BindingUtils {
                 break;
         }
     }
+
+    @BindingAdapter("account_type_background")
+    public static void setAccountTypeBackground(View view, int type) {
+        switch (type) {
+            case AccountType.BANK:
+                view.setBackgroundResource(R.drawable.ic_nbk_card);
+                break;
+
+            case AccountType.MOBILE:
+                view.setBackgroundResource(R.drawable.ic_mpesa_card);
+                break;
+
+            case AccountType.CARD:
+                view.setBackgroundResource(R.drawable.ic_visa_card);
+                break;
+        }
+    }
 }

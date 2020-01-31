@@ -21,13 +21,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pay(View view) {
-        String token = "GGHKONPTKNRJNWOU";
+        String token = "ZGQASTFCUAOOKPSF";
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .getPaymentIntent();
-
         startActivityForResult(intent, 1);
-        //startActivityForResult(new Intent(this, AuthActivity.class), 1);
     }
 
     @Override

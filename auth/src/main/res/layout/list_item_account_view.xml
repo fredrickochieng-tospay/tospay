@@ -55,6 +55,7 @@
             android:textSize="13sp"
             app:layout_constraintBottom_toTopOf="@id/guideline4"
             app:layout_constraintLeft_toRightOf="@id/guideline3"
+            app:layout_constraintRight_toLeftOf="@id/btn_verify_phone"
             tools:text="Visa, Mobile" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -82,7 +83,7 @@
             android:id="@+id/btn_verify_phone"
             style="@style/Tospay.Button.Large"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:fontFamily="@font/proxima_nova_regular"
             android:text="Verify"
             android:textAllCaps="false"

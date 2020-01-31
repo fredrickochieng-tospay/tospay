@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,10 +21,15 @@ import net.tospay.auth.event.NotificationEvent;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.ApiConstants;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.Status;
 import net.tospay.auth.remote.exception.TospayException;
+import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.service.UserService;
+import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.base.BaseActivity;
 import net.tospay.auth.ui.dialog.TransferDialog;
-import net.tospay.auth.viewmodelfactory.GatewayViewModelFactory;
+import net.tospay.auth.viewmodelfactory.MainViewModelFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,7 +39,7 @@ import java.net.URISyntaxException;
 
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
-public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentViewModel>
+public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainViewModel>
         implements PaymentListener {
 
     private static final String TAG = "TospayActivity";
@@ -48,7 +52,7 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         EventBus.getDefault().postSticky(event);
     };
 
-    private PaymentViewModel mViewModel;
+    private MainViewModel mViewModel;
 
     @Override
     public int getBindingVariable() {
@@ -61,9 +65,12 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
     }
 
     @Override
-    public PaymentViewModel getViewModel() {
-        GatewayViewModelFactory factory = new GatewayViewModelFactory(getGatewayRepository());
-        mViewModel = ViewModelProviders.of(this, factory).get(PaymentViewModel.class);
+    public MainViewModel getViewModel() {
+        UserRepository repository = new UserRepository(new AppExecutors(),
+                ServiceGenerator.createService(UserService.class, this));
+
+        MainViewModelFactory factory = new MainViewModelFactory(repository, getSharedPrefManager());
+        mViewModel = ViewModelProviders.of(this, factory).get(MainViewModel.class);
         return mViewModel;
     }
 
@@ -74,8 +81,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         binding.setPaymentViewModel(mViewModel);
 
         String paymentToken = getIntent().getStringExtra(KEY_TOKEN);
-        mViewModel.getPaymentTokenLiveData().setValue(paymentToken);
-
         Bundle args = new Bundle();
         args.putString(KEY_TOKEN, paymentToken);
 
@@ -85,6 +90,25 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, PaymentV
         if (!getSharedPrefManager().isTokenExpiredOrAlmost()) {
             connectSocket(getAccessToken());
         }
+
+        if (getSharedPrefManager().getActiveUser() != null) {
+            if (getSharedPrefManager().isTokenExpiredOrAlmost()) {
+                reAuthenticateUser();
+            }
+        }
+    }
+
+    private void reAuthenticateUser() {
+        mViewModel.login();
+        mViewModel.getResponseLiveData().observe(this, resource -> {
+            if (resource != null) {
+                if (resource.status == Status.SUCCESS) {
+                    if (resource.data != null) {
+                        getSharedPrefManager().setActiveUser(resource.data);
+                    }
+                }
+            }
+        });
     }
 
     private void connectSocket(String bearerToken) {

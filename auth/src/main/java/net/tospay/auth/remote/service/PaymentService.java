@@ -6,6 +6,7 @@ import net.tospay.auth.model.transfer.Amount;
 import net.tospay.auth.model.transfer.Transfer;
 import net.tospay.auth.remote.response.ApiResponse;
 import net.tospay.auth.remote.response.Result;
+import net.tospay.auth.remote.response.TransferResponse;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -31,7 +32,7 @@ public interface PaymentService {
     );
 
     @POST("v1/transfer/execute-payment/{paymentId}")
-    LiveData<ApiResponse<Result<String>>> pay(
+    LiveData<ApiResponse<Result<TransferResponse>>> pay(
             @Header("Authorization") String bearer,
             @Path("paymentId") String paymentId,
             @Body Transfer transfer
@@ -44,7 +45,7 @@ public interface PaymentService {
     );
 
     @POST("v1/transfer/execute-transfer")
-    LiveData<ApiResponse<Result<String>>> transfer(
+    LiveData<ApiResponse<Result<TransferResponse>>> transfer(
             @Header("Authorization") String bearer,
             @Body Transfer transfer
     );
