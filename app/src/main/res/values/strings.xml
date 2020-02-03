@@ -1,8 +1,4 @@
 <resources>
     <string name="app_name">Tospay auth</string>
-
-    <string name="biometric_title">Login</string>
-    <string name="biometric_subtitle">Login to your Osta account</string>
-    <string name="biometric_description">Place your finger on the device home button to verify your identity</string>
-    <string name="biometric_negative_button_text">CANCEL</string>
+    <string name="auth_description">Welcome to Tospay Checkout: the secure, \n faster and easier  wat to pay. To process this \n payment, proceed to Sign in or Sign up.</string>
 </resources>

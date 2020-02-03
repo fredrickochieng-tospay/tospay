@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -142,15 +141,6 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
         }
 
         navController = Navigation.findNavController(view);
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                mListener.onLoginFailed();
-            }
-        };
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(callback);
 
         mBinding.rememberMeCheckbox.setOnCheckedChangeListener((compoundButton, b) ->
                 getSharedPrefManager().save(SharedPrefManager.KEY_REMEMBER_ME, b));

@@ -25,7 +25,7 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         navController.setGraph(R.navigation.nav_auth);
 
-        TospayUser tospayUser = SharedPrefManager.getInstance(this).getActiveUser();
+        /*TospayUser tospayUser = SharedPrefManager.getInstance(this).getActiveUser();
         if (tospayUser != null) {
             if (!tospayUser.isEmailVerified()) {
                 navController.navigate(R.id.navigation_email_verification);
@@ -33,7 +33,7 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
             } else if (!tospayUser.isPhoneVerified()) {
                 navController.navigate(R.id.navigation_phone_verification);
             }
-        }
+        }*/
     }
 
     @Override

@@ -3,7 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_auth"
-    app:startDestination="@id/navigation_login">
+    app:startDestination="@id/navigation_set_pin">
+
+    <fragment
+        android:id="@+id/navigation_auth"
+        android:name="net.tospay.auth.ui.auth.AuthFragment"
+        android:label="Authentication"
+        tools:layout="@layout/fragment_auth">
+        <action
+            android:id="@+id/action_navigation_auth_to_navigation_login"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_auth_to_navigation_register"
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_login"
@@ -51,9 +72,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/navigation_login"
-            app:popUpToInclusive="true" />
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -78,8 +97,8 @@
         android:label="Phone Verification"
         tools:layout="@layout/fragment_phone_verification">
         <action
-            android:id="@+id/action_navigation_phone_verification_to_navigation_login"
-            app:destination="@id/navigation_login"
+            android:id="@+id/action_navigation_phone_verification_to_navigation_set_pin"
+            app:destination="@id/navigation_set_pin"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -91,7 +110,8 @@
     <fragment
         android:id="@+id/navigation_forgot_password"
         android:name="net.tospay.auth.ui.auth.forgot.ForgotPasswordFragment"
-        android:label="Forgot Password">
+        android:label="Forgot Password"
+        tools:layout="@layout/fragment_forgot_password">
         <action
             android:id="@+id/action_navigation_forgot_password_to_navigation_reset_password"
             app:destination="@id/navigation_reset_password"
@@ -106,7 +126,8 @@
     <fragment
         android:id="@+id/navigation_reset_password"
         android:name="net.tospay.auth.ui.auth.reset.ResetPasswordFragment"
-        android:label="Reset Password">
+        android:label="Reset Password"
+        tools:layout="@layout/fragment_reset_password">
         <argument
             android:name="email"
             app:argType="string" />
@@ -120,5 +141,20 @@
             app:popUpTo="@id/navigation_login"
             app:popUpToInclusive="true" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_set_pin"
+        android:name="net.tospay.auth.ui.auth.pin.SetPinFragment"
+        android:label="Set Pin"
+        tools:layout="@layout/fragment_set_pin">
+        <action
+            android:id="@+id/action_navigation_set_pin_to_navigation_lock_screen"
+            app:destination="@id/navigation_pin_activity" />
+    </fragment>
+    <activity
+        android:id="@+id/navigation_pin_activity"
+        android:name="net.tospay.auth.ui.auth.pin.PinActivity"
+        android:label="Pin Activity"
+        tools:layout="@layout/activity_pin" />
 
 </navigation>

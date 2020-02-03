@@ -320,7 +320,6 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                         break;
 
                     case SUCCESS:
-                        mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
@@ -343,6 +342,8 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
             }
         });
     }
+
+    // TODO: 2/3/20 add timer to check payment status
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotification(NotificationEvent notification) {

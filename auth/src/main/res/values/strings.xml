@@ -61,5 +61,24 @@
     <string name="alias_name">Alias name</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="tac_link">Accept our <![CDATA[ <a href="%1s">Terms</a>]]>and <![CDATA[<a href="%1s">Conditions</a>]]></string>
+    <string name="account_success">Your account has been successfully created.
+        \n As a measure of extra security, \n would like to <![CDATA[ <a href="">setup your PIN?</a>]]>
+    </string>
+
+    <string name="cancel_pf">Cancel</string>
+    <string name="use_pin_pf">Use pin</string>
+    <string name="sign_in_pf">Sign in</string>
+    <string name="next_pf">Save &amp; Continue</string>
+    <string name="forgot_pf">Forgot?</string>
+    <string name="lock_screen_title_pf">Enter passcode</string>
+    <string name="settings_pf">Settings</string>
+    <string name="no_fingerprints_message_pf">No fingerprints found. Please add fingerprints in the settings if you want to use this authorization method."</string>
+    <string name="no_fingerprints_title_pf">"No fingerprints found"</string>
+
+    <string name="fingerprint_not_recognized_pf">Fingerprint not recognized. Try again</string>
+    <string name="fingerprint_success_pf">Fingerprint recognized</string>
+    <string name="fingerprint_description_pf">Confirm fingerprint to continue</string>
+    <string name="fingerprint_hint_pf">Touch sensor</string>
+    <string name="description_fingerprint_icon_pf">Fingerprint icon</string>
 
 </resources>

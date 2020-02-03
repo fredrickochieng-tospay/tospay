@@ -204,7 +204,11 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
             }
         });
 
-        mViewModel.getCountry().observe(getViewLifecycleOwner(), country -> this.country = country);
+        mViewModel.getCountry().observe(getViewLifecycleOwner(), country -> {
+            if (country != null) {
+                this.country = country;
+            }
+        });
     }
 
     private boolean validateInputs() {
@@ -316,5 +320,6 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public void onCountrySelected(Country country) {
         mViewModel.getCountry().setValue(country);
+        mBinding.phoneEditText.setText(String.format("+%s", country.getPhonecode()));
     }
 }
