@@ -1,9 +1,14 @@
 package net.tospay.auth.databinding;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -120,6 +125,17 @@ public final class BindingUtils {
             case AccountType.CARD:
                 view.setBackgroundResource(R.drawable.ic_visa_card);
                 break;
+        }
+    }
+
+    @BindingAdapter("html")
+    public static void setHtml(TextView textView, String html) {
+        if (html != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                textView.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                textView.setText(Html.fromHtml(html));
+            }
         }
     }
 }

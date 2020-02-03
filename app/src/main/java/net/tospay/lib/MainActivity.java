@@ -22,9 +22,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void pay(View view) {
         String token = "HJTOBZBHDRRVSTGB";
+        String url = "https://developer.android.com/guide/topics/resources/string-resource";
+
+        /*Intent intent = Tospay.getInstance(this)
+                .setPaymentToken(token)
+                .setTermsAndConditionsUrl(url)
+                .getPaymentIntent();*/
+
         Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
-                .getPaymentIntent();
+                .setTermsAndConditionsUrl(url)
+                .getAuthenticationIntent();
+
         startActivityForResult(intent, 1);
     }
 

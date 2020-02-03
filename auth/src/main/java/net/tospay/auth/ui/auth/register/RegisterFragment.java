@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.EditText;
 
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import net.tospay.auth.BR;
@@ -25,6 +27,7 @@ import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.EmailValidator;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
@@ -32,6 +35,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         implements RegisterNavigation, CountryDialog.CountrySelectedListener {
 
     private RegisterViewModel mViewModel;
+    private FragmentRegisterBinding mBinding;
 
     private EditText firstNameEditText;
     private TextInputLayout firstNameInputLayout;
@@ -79,9 +83,12 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FragmentRegisterBinding mBinding = getViewDataBinding();
-
+        mBinding = getViewDataBinding();
         mBinding.setRegisterViewModel(mViewModel);
+
+        String url = getSharedPrefManager().read(Constants.KEY_TAC_URL, "https://tospay.net/");
+        mBinding.setTerms(getString(R.string.tac_link, url, url));
+
         mViewModel.setNavigator(this);
 
         firstNameEditText = mBinding.firstNameEditText;
@@ -101,6 +108,8 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
         confirmPasswordEditText = mBinding.confirmPasswordEditText;
         confirmPasswordInputLayout = mBinding.confirmPasswordInputLayout;
+
+        mBinding.tacTextview.setMovementMethod(LinkMovementMethod.getInstance());
 
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -195,7 +204,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
             }
         });
 
-        mViewModel.getCountry().observe(this, country -> this.country = country);
+        mViewModel.getCountry().observe(getViewLifecycleOwner(), country -> this.country = country);
     }
 
     private boolean validateInputs() {
@@ -257,6 +266,11 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String phone = phoneEditText.getText().toString();
+
+        if (!mBinding.checkboxTermsConditions.isChecked()) {
+            Snackbar.make(mBinding.container, "Please confirm you've our terms and conditions", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
 
         mViewModel.register(firstName, lastName, email, password, phone, country);
         mViewModel.getResponseLiveData().observe(this, this::handleResponse);

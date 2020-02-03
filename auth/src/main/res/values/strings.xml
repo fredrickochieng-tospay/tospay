@@ -60,5 +60,6 @@
     <string name="link_mobile_account">Link Mobile Account</string>
     <string name="alias_name">Alias name</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="tac_link">Accept our <![CDATA[ <a href="%1s">Terms</a>]]>and <![CDATA[<a href="%1s">Conditions</a>]]></string>
 
 </resources>

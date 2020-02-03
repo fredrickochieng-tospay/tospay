@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 
 import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.main.TospayActivity;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.SharedPrefManager;
 
+import static net.tospay.auth.utils.Constants.KEY_TAC_URL;
 import static net.tospay.auth.utils.Constants.KEY_TOKEN;
 
 public class Tospay {
 
     private String token;
+    private String tacUrl;
     private Context context;
 
     private Tospay(Context context) {
@@ -66,6 +70,13 @@ public class Tospay {
         return this;
     }
 
+    public Tospay setTermsAndConditionsUrl(String tacUrl) {
+        if (tacUrl == null) throw new RuntimeException("Please provide terms and condition url");
+        this.tacUrl = tacUrl;
+        SharedPrefManager.getInstance(context).save(KEY_TAC_URL, tacUrl);
+        return this;
+    }
+
     /**
      * @return tospay payment activity intent
      */
@@ -73,6 +84,17 @@ public class Tospay {
         if (context == null) throw new RuntimeException("Context can not be null");
         Intent intent = new Intent(context, TospayActivity.class);
         intent.putExtra(KEY_TOKEN, token);
+        intent.putExtra(KEY_TAC_URL, tacUrl);
+        return intent;
+    }
+
+    /**
+     * @return tospay authentication activity intent
+     */
+    public Intent getAuthenticationIntent() {
+        if (context == null) throw new RuntimeException("Context can not be null");
+        Intent intent = new Intent(context, AuthActivity.class);
+        intent.putExtra(KEY_TAC_URL, tacUrl);
         return intent;
     }
 }
