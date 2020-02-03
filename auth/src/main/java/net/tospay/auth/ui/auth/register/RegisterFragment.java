@@ -23,6 +23,7 @@ import net.tospay.auth.model.Country;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.base.BaseFragment;
@@ -314,7 +315,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
 
     @Override
     public void onSelectCountry(View view) {
-        CountryDialog.newInstance(false).show(getChildFragmentManager(), CountryDialog.TAG);
+        CountryDialog.newInstance(GatewayRepository.CountryType.DEFAULT).show(getChildFragmentManager(), CountryDialog.TAG);
     }
 
     @Override

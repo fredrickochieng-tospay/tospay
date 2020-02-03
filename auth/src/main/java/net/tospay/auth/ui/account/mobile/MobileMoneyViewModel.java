@@ -12,7 +12,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.repository.MobileRepository;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
-import net.tospay.auth.remote.response.MobileResponse;
+import net.tospay.auth.remote.response.AccountLinkResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.ui.base.BaseViewModel;
 
@@ -26,11 +26,11 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
     private MutableLiveData<String> phone = new MutableLiveData<>();
     public MutableLiveData<String> otp = new MutableLiveData<>();
 
-    private LiveData<Resource<MobileResponse>> mobileResourceLiveData;
+    private LiveData<Resource<AccountLinkResponse>> mobileResourceLiveData;
     private LiveData<Resource<Result>> resendResourceLiveData;
     private LiveData<Resource<Result>> verifyResourceLiveData;
 
-    private MobileRepository repository;
+    private final MobileRepository repository;
 
     public MobileMoneyViewModel(MobileRepository repository) {
         this.repository = repository;
@@ -56,7 +56,7 @@ public class MobileMoneyViewModel extends BaseViewModel<MobileMoneyNavigator> im
         this.otp = otp;
     }
 
-    public LiveData<Resource<MobileResponse>> getMobileResourceLiveData() {
+    public LiveData<Resource<AccountLinkResponse>> getMobileResourceLiveData() {
         return mobileResourceLiveData;
     }
 

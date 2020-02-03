@@ -120,6 +120,12 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
                                 .actionNavigationAccountSelectionToNavigationLinkMobileAccount())
         );
 
+        mBinding.layoutLinkBank.setOnClickListener(view15 -> {
+            NavHostFragment.findNavController(this)
+                    .navigate(AccountSelectionFragmentDirections
+                            .actionNavigationAccountSelectionToNavigationLinkBank());
+        });
+
         mBinding.btnBackImageView.setOnClickListener(view1 ->
                 Navigation.findNavController(view).navigateUp());
 

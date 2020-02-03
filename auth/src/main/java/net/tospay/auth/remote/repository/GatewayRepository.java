@@ -24,6 +24,12 @@ public class GatewayRepository {
     private final GatewayService mGatewayService;
     private final AppExecutors mAppExecutors;
 
+    public enum CountryType {
+        DEFAULT,
+        BANK,
+        MOBILE
+    }
+
     /**
      * @param mAppExecutors   -AppExecutor
      * @param mGatewayService - Gateway service
@@ -33,7 +39,7 @@ public class GatewayRepository {
         this.mAppExecutors = mAppExecutors;
     }
 
-    public LiveData<Resource<List<Country>>> countries(String bearerToken, boolean isOperators) {
+    public LiveData<Resource<List<Country>>> countries(String bearerToken, CountryType type) {
         return new NetworkBoundResource<List<Country>, Result<List<Country>>>(mAppExecutors) {
 
             private List<Country> resultsDb;
@@ -67,10 +73,13 @@ public class GatewayRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<Result<List<Country>>>> createCall() {
-                if (isOperators) {
-                    return mGatewayService.mobileCountries(bearerToken);
-                } else {
-                    return mGatewayService.countries();
+                switch (type) {
+                    case MOBILE:
+                        return mGatewayService.mobileCountries(bearerToken);
+                    case BANK:
+                        return mGatewayService.bankCountries(bearerToken);
+                    default:
+                        return mGatewayService.countries();
                 }
             }
         }.asLiveData();

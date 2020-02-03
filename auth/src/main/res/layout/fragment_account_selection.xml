@@ -259,6 +259,34 @@
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/layout_link_bank"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/default_space_10">
+
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/ic_bank" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/default_space_16"
+                                android:fontFamily="@font/proxima_nova_regular"
+                                android:text="Link bank account"
+                                android:textColor="@color/black"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
                         <include
                             layout="@layout/divider"
                             android:layout_width="match_parent"

@@ -187,21 +187,12 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginTop="@dimen/default_space_16"
-                    android:layout_marginEnd="@dimen/default_space_24"
-                    android:fontFamily="@font/proxima_nova_regular"
-                    android:paddingLeft="@dimen/default_space_6"
-                    android:text="@string/phone_number" />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
+                    android:layout_marginTop="@dimen/default_space_8"
                     android:layout_marginEnd="@dimen/default_space_24">
 
                     <TextView
@@ -209,8 +200,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:drawableStart="@drawable/ic_phone"
-                        android:drawableLeft="@drawable/ic_phone"
+                        android:drawableStart="@drawable/ic_country_flag"
+                        android:drawableLeft="@drawable/ic_country_flag"
                         android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
                         android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
                         android:drawablePadding="@dimen/default_space_8"
@@ -240,6 +231,7 @@
                         android:id="@+id/phoneInputLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:hint="@string/phone_number"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toRightOf="@id/guideline"
                         app:layout_constraintRight_toRightOf="parent">
@@ -249,12 +241,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@null"
+                            android:drawableStart="@drawable/ic_phone"
+                            android:drawableLeft="@drawable/ic_phone"
                             android:fontFamily="@font/proxima_nova_regular"
                             android:inputType="phone"
                             android:nextFocusRight="@id/passwordEditText"
                             android:nextFocusDown="@id/passwordEditText"
-                            android:singleLine="true"
-                            tools:text="+254" />
+                            android:singleLine="true" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

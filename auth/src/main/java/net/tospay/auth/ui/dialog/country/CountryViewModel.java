@@ -22,7 +22,7 @@ public class CountryViewModel extends BaseViewModel {
         return resourceLiveData;
     }
 
-    public void countries(boolean isOperators) {
-        resourceLiveData = gatewayRepository.countries((String) getBearerToken().get(), isOperators);
+    public void countries(GatewayRepository.CountryType type) {
+        resourceLiveData = gatewayRepository.countries((String) getBearerToken().get(), type);
     }
 }

@@ -41,13 +41,13 @@ public class CountryDialog extends BottomSheetDialogFragment {
     private CountrySelectedListener mListener;
     private List<Country> countryList;
     private CountryAdapter adapter;
-    private boolean isMobileOperators = true;
+    private GatewayRepository.CountryType countryType = GatewayRepository.CountryType.DEFAULT;
     private CountryViewModel mViewModel;
 
-    public static CountryDialog newInstance(boolean isMobileOperators) {
+    public static CountryDialog newInstance(GatewayRepository.CountryType countryType) {
         CountryDialog fragment = new CountryDialog();
         Bundle args = new Bundle();
-        args.putBoolean(KEY_MOBILE_OPERATORS, isMobileOperators);
+        args.putSerializable(KEY_MOBILE_OPERATORS, countryType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +60,7 @@ public class CountryDialog extends BottomSheetDialogFragment {
         this.adapter = new CountryAdapter(countryList);
 
         if (getArguments() != null) {
-            isMobileOperators = getArguments().getBoolean(KEY_MOBILE_OPERATORS);
+            countryType = (GatewayRepository.CountryType) getArguments().getSerializable(KEY_MOBILE_OPERATORS);
         }
     }
 
@@ -86,8 +86,8 @@ public class CountryDialog extends BottomSheetDialogFragment {
         SharedPrefManager mSharedPrefManager = SharedPrefManager.getInstance(view.getContext());
         setBearerToken(mSharedPrefManager.getAccessToken());
 
-        mViewModel.countries(isMobileOperators);
-        mViewModel.getResourceLiveData().observe(this, resource -> {
+        mViewModel.countries(countryType);
+        mViewModel.getResourceLiveData().observe(getViewLifecycleOwner(), resource -> {
             if (resource != null) {
                 switch (resource.status) {
                     case LOADING:

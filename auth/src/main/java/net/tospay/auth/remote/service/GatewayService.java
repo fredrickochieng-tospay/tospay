@@ -23,6 +23,11 @@ public interface GatewayService {
             @Header("Authorization") String bearer
     );
 
+    @GET("v1/config/bank-countries")
+    LiveData<ApiResponse<Result<List<Country>>>> bankCountries(
+            @Header("Authorization") String bearer
+    );
+
     @GET("v1/config/mobile-operators/{iso}")
     LiveData<ApiResponse<Result<List<Network>>>> networks(
             @Header("Authorization") String bearer,

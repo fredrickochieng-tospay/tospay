@@ -63,6 +63,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
 
+        <action
+            android:id="@+id/action_navigation_account_selection_to_navigation_link_bank"
+            app:destination="@id/navigation_link_bank"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
         <argument
             android:name="transfer"
             app:argType="net.tospay.auth.model.transfer.Transfer" />
@@ -86,7 +94,7 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/navigation_verify_mobile"
+            app:popUpTo="@id/navigation_account_selection"
             app:popUpToInclusive="true" />
 
     </fragment>
@@ -106,5 +114,11 @@
             android:name="account"
             app:argType="net.tospay.auth.model.Account" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_link_bank"
+        android:name="net.tospay.auth.ui.account.bank.LinkBankFragment"
+        android:label="Link Bank"
+        tools:layout="@layout/fragment_link_bank" />
 
 </navigation>

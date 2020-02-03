@@ -48,6 +48,13 @@ public class LoginViewModel extends BaseViewModel<LoginNavigator> implements Vie
         responseLiveData = userRepository.login(request);
     }
 
+    public void login(String email, String password) {
+        LoginRequest request = new LoginRequest();
+        request.setEmail(email);
+        request.setPassword(password);
+        responseLiveData = userRepository.login(request);
+    }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_login) {

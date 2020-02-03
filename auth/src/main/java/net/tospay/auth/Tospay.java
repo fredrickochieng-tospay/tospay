@@ -42,6 +42,10 @@ public class Tospay {
         return SharedPrefManager.getInstance(context);
     }
 
+    public SharedPrefManager getSharedPrefManager() {
+        return SharedPrefManager.getInstance(context);
+    }
+
     /**
      * Returns currently logged in user
      *

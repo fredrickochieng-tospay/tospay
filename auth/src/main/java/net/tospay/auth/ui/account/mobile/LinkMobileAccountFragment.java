@@ -23,6 +23,7 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.repository.MobileRepository;
 import net.tospay.auth.remote.service.MobileService;
 import net.tospay.auth.viewmodelfactory.MobileViewModelFactory;
@@ -34,7 +35,8 @@ import net.tospay.auth.ui.dialog.network.NetworkDialog;
 import net.tospay.auth.utils.NetworkUtils;
 
 public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAccountBinding, MobileMoneyViewModel>
-        implements CountryDialog.CountrySelectedListener, NetworkDialog.NetworkSelectedListener, MobileMoneyNavigator {
+        implements CountryDialog.CountrySelectedListener,
+        NetworkDialog.NetworkSelectedListener, MobileMoneyNavigator {
 
     private Country country = null;
     private Network network = null;
@@ -87,7 +89,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
 
     @Override
     public void onSelectCountryClick(View view) {
-        CountryDialog.newInstance(true)
+        CountryDialog.newInstance(GatewayRepository.CountryType.MOBILE)
                 .show(getChildFragmentManager(), CountryDialog.TAG);
     }
 

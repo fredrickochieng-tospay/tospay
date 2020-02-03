@@ -7,21 +7,35 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import net.tospay.auth.R;
+import net.tospay.auth.remote.ServiceGenerator;
+import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.service.UserService;
+import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.auth.AuthActivity;
+import net.tospay.auth.ui.auth.login.LoginViewModel;
 import net.tospay.auth.utils.SharedPrefManager;
+import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class PinActivity extends AppCompatActivity {
 
     public static final String KEY_PIN = "pin";
     public static final String KEY_PIN_SET = "pin_set";
     private SharedPrefManager sharedPrefManager;
+    private LoginViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin);
+
+        UserRepository repository = new UserRepository(new AppExecutors(),
+                ServiceGenerator.createService(UserService.class, this));
+        UserViewModelFactory factory = new UserViewModelFactory(repository);
+        mViewModel = ViewModelProviders.of(this, factory).get(LoginViewModel.class);
+
         sharedPrefManager = SharedPrefManager.getInstance(this);
         showLockScreenFragment();
     }
@@ -75,7 +89,25 @@ public class PinActivity extends AppCompatActivity {
             };
 
     private void reAuthenticateUser() {
+        String email = sharedPrefManager.read(SharedPrefManager.KEY_EMAIL, null);
+        String password = sharedPrefManager.read(SharedPrefManager.KEY_PASSWORD, null);
+        mViewModel.login(email, password);
+        mViewModel.getResponseLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case SUCCESS:
+                        if (resource.data != null) {
+                            sharedPrefManager.setActiveUser(resource.data);
+                            finishWithSuccess();
+                        }
+                        break;
 
+                    case ERROR:
+                        finishWithSuccess();
+                        break;
+                }
+            }
+        });
     }
 
     private void showLockScreenFragment() {

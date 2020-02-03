@@ -6,7 +6,7 @@ import net.tospay.auth.model.Account;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.response.ApiResponse;
-import net.tospay.auth.remote.response.MobileResponse;
+import net.tospay.auth.remote.response.AccountLinkResponse;
 import net.tospay.auth.remote.response.Result;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import retrofit2.http.POST;
 public interface MobileService {
 
     @POST("v1/mobile/link")
-    LiveData<ApiResponse<Result<MobileResponse>>> link(
+    LiveData<ApiResponse<Result<AccountLinkResponse>>> link(
             @Header("Authorization") String bearer,
             @Body MobileRequest request
     );

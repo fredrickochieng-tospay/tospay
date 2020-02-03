@@ -10,7 +10,7 @@ import net.tospay.auth.remote.Resource;
 import net.tospay.auth.remote.request.MobileAccountVerificationRequest;
 import net.tospay.auth.remote.request.MobileRequest;
 import net.tospay.auth.remote.response.ApiResponse;
-import net.tospay.auth.remote.response.MobileResponse;
+import net.tospay.auth.remote.response.AccountLinkResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.service.MobileService;
 import net.tospay.auth.remote.util.AppExecutors;
@@ -36,29 +36,29 @@ public class MobileRepository {
         this.mMobileService = mMobileService;
     }
 
-    public LiveData<Resource<MobileResponse>> link(String bearerToken,
-                                                   MobileRequest request) {
-        return new NetworkBoundResource<MobileResponse, Result<MobileResponse>>(mAppExecutors) {
+    public LiveData<Resource<AccountLinkResponse>> link(String bearerToken,
+                                                        MobileRequest request) {
+        return new NetworkBoundResource<AccountLinkResponse, Result<AccountLinkResponse>>(mAppExecutors) {
 
-            private MobileResponse resultsDb;
+            private AccountLinkResponse resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result<MobileResponse> item) {
+            protected void saveCallResult(@NonNull Result<AccountLinkResponse> item) {
                 resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable MobileResponse data) {
+            protected boolean shouldFetch(@Nullable AccountLinkResponse data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<MobileResponse> loadFromDb() {
+            protected LiveData<AccountLinkResponse> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<MobileResponse>() {
+                    return new LiveData<AccountLinkResponse>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -70,7 +70,7 @@ public class MobileRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result<MobileResponse>>> createCall() {
+            protected LiveData<ApiResponse<Result<AccountLinkResponse>>> createCall() {
                 return mMobileService.link(bearerToken, request);
             }
         }.asLiveData();
