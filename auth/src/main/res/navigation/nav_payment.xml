@@ -93,9 +93,7 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popUpTo="@id/navigation_account_selection"
-            app:popUpToInclusive="true" />
+            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -110,9 +108,11 @@
         android:name="net.tospay.auth.ui.account.mobile.VerifyMobileFragment"
         android:label="Verify Mobile"
         tools:layout="@layout/fragment_verify_mobile">
+
         <argument
             android:name="account"
             app:argType="net.tospay.auth.model.Account" />
+
     </fragment>
 
     <fragment

@@ -107,7 +107,7 @@
 
                 <TextView
                     android:id="@+id/selectCountryTextView"
-                    style="@style/Tospay.EditTextAppearance.Search"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
@@ -119,6 +119,7 @@
                     android:drawableLeft="@drawable/ic_country_flag"
                     android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
                     android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                    android:drawablePadding="@dimen/default_space_8"
                     android:ellipsize="end"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
@@ -126,6 +127,7 @@
                     android:gravity="center_vertical"
                     android:hint="@string/country"
                     android:onClick="@{(view)->mobileMoneyViewModel.onClick(view)}"
+                    android:padding="@dimen/default_space_8"
                     android:scrollHorizontally="false"
                     android:singleLine="true"
                     android:text="@{mobileMoneyViewModel.country.name}"
@@ -136,21 +138,23 @@
 
                 <TextView
                     android:id="@+id/selectNetworkTextView"
-                    style="@style/Tospay.EditTextAppearance.Search"
+                    style="@style/Tospay.TextInputEditText.Style"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginTop="@dimen/default_space_8"
+                    android:layout_marginTop="@dimen/default_space_16"
                     android:layout_marginEnd="@dimen/default_space_24"
                     android:layout_marginBottom="@dimen/default_space_8"
                     android:drawableStart="@drawable/ic_country_flag"
                     android:drawableLeft="@drawable/ic_country_flag"
                     android:drawableEnd="@drawable/ic_arrow_drop_down_grey_700_24dp"
                     android:drawableRight="@drawable/ic_arrow_drop_down_grey_700_24dp"
+                    android:drawablePadding="@dimen/default_space_8"
                     android:fontFamily="@font/proxima_nova_regular"
                     android:gravity="center_vertical"
                     android:hint="@string/network"
                     android:onClick="@{(view)->mobileMoneyViewModel.onClick(view)}"
+                    android:padding="@dimen/default_space_8"
                     android:scrollHorizontally="false"
                     android:singleLine="true"
                     android:text="@{mobileMoneyViewModel.network.operator}"
@@ -164,7 +168,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginTop="@dimen/default_space_8"
+                    android:layout_marginTop="@dimen/default_space_16"
                     android:layout_marginEnd="@dimen/default_space_24"
                     android:hint="@string/phone_number">
 
@@ -187,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginTop="@dimen/default_space_8"
+                    android:layout_marginTop="@dimen/default_space_16"
                     android:layout_marginEnd="@dimen/default_space_24"
                     android:hint="@string/alias_name">
 

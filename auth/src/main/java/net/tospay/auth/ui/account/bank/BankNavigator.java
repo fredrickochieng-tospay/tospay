@@ -7,4 +7,10 @@ public interface BankNavigator {
     default void onSelectCountryClick(View view) {
 
     }
+
+    default void onSelectBankClick(View view) {
+
+    }
+
+    void onDone(View view);
 }

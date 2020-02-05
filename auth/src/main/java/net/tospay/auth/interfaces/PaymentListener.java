@@ -2,10 +2,12 @@ package net.tospay.auth.interfaces;
 
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.exception.TospayException;
+import net.tospay.auth.remote.response.TransferResponse;
 
 public interface PaymentListener {
 
-    default void onPaymentSuccess() {
+    default void onPaymentSuccess(TransferResponse transferResponse,
+                                  String title, String body) {
 
     }
 

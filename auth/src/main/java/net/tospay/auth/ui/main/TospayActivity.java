@@ -3,7 +3,6 @@ package net.tospay.auth.ui.main;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -30,18 +29,15 @@ import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
 import net.tospay.auth.remote.ApiConstants;
 import net.tospay.auth.remote.ServiceGenerator;
-import net.tospay.auth.remote.Status;
 import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.remote.repository.UserRepository;
+import net.tospay.auth.remote.response.TransferResponse;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.base.BaseActivity;
-import net.tospay.auth.ui.dialog.TransferDialog;
 import net.tospay.auth.viewmodelfactory.MainViewModelFactory;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.net.URISyntaxException;
 
@@ -98,25 +94,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainView
         if (!getSharedPrefManager().isTokenExpiredOrAlmost()) {
             connectSocket(getAccessToken());
         }
-
-        if (getSharedPrefManager().getActiveUser() != null) {
-            if (getSharedPrefManager().isTokenExpiredOrAlmost()) {
-                reAuthenticateUser();
-            }
-        }
-    }
-
-    private void reAuthenticateUser() {
-        mViewModel.login();
-        mViewModel.getResponseLiveData().observe(this, resource -> {
-            if (resource != null) {
-                if (resource.status == Status.SUCCESS) {
-                    if (resource.data != null) {
-                        getSharedPrefManager().setActiveUser(resource.data);
-                    }
-                }
-            }
-        });
     }
 
     private void connectSocket(String bearerToken) {
@@ -144,24 +121,22 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainView
         finish();
     }
 
-    private void finishWithSuccess() {
+    @Override
+    public void onPaymentSuccess(TransferResponse transferResponse, String title, String body) {
+        displayNotification(title, body);
         if (mSocket != null) {
             mSocket.disconnect();
         }
 
         Intent returnIntent = new Intent();
-        //returnIntent.putExtra("result", transaction);
+        returnIntent.putExtra("result", transferResponse);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
     @Override
-    public void onPaymentSuccess() {
-        finishWithSuccess();
-    }
-
-    @Override
     public void onPaymentFailed(TospayException exception) {
+        Log.e(TAG, "onPaymentFailed: " + exception);
         finishWithError(exception.getErrorMessage());
     }
 
@@ -180,23 +155,6 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainView
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off("notify", onNewMessage);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotification(NotificationEvent notification) {
-        if (notification != null) {
-            if (notification.getData().getTopic().equals("PAYMENT")) {
-                if (notification.getData().getStatus().equals("FAILED")) {
-                    finishWithError(notification.getData().getMessage());
-                } else {
-                    displayNotification(notification.getNotification().getTitle(),
-                            notification.getNotification().getBody());
-                    finishWithSuccess();
-                }
-            } else {
-                TransferDialog.newInstance(notification).show(getSupportFragmentManager(), TransferDialog.TAG);
-            }
         }
     }
 
@@ -223,21 +181,13 @@ public class TospayActivity extends BaseActivity<ActivityTospayBinding, MainView
             channel.setLightColor(getColor(R.color.colorPrimary));
             channel.enableVibration(true);
             channel.setShowBadge(true);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
 
-        notificationManager.notify(0, notificationBuilder.build());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+        if (notificationManager != null) {
+            notificationManager.notify(0, notificationBuilder.build());
+        }
     }
 }

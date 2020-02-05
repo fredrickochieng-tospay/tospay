@@ -1,6 +1,8 @@
 package net.tospay.auth.ui.account.topup;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.account.AccountAdapter;
 import net.tospay.auth.ui.account.AccountViewModel;
 import net.tospay.auth.ui.account.OnAccountItemClickListener;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
@@ -87,8 +90,7 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
         mViewModel = ViewModelProviders.of(this, factory).get(AccountViewModel.class);
         mBinding.setAccountViewModel(mViewModel);
 
-        String bearerToken = "Bearer " + mSharedPrefManager.getAccessToken();
-        mViewModel.setBearerToken(bearerToken);
+        reloadBearerToken();
 
         List<AccountType> accountTypes = new ArrayList<>();
         adapter = new AccountAdapter(accountTypes, this);
@@ -159,9 +161,31 @@ public class TopupAccountSelectionDialog extends BottomSheetDialogFragment
                             mViewModel.setIsEmpty(true);
                         }
                         break;
+
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
+                        break;
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PinActivity.REQUEST_PIN) {
+            if (resultCode == Activity.RESULT_OK) {
+                reloadBearerToken();
+            }
+        }
+    }
+
+    private void reloadBearerToken() {
+        String bearerToken = "Bearer " + mSharedPrefManager.getAccessToken();
+        mViewModel.setBearerToken(bearerToken);
     }
 
     @Override

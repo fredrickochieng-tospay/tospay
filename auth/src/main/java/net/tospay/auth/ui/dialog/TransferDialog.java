@@ -55,10 +55,10 @@ public class TransferDialog extends BottomSheetDialogFragment {
         TextView titleTextView = view.findViewById(R.id.titleTextView);
         TextView messageTextView = view.findViewById(R.id.messageTextView);
 
-        titleTextView.setText(String.format("%s %s", event.getData().getTopic(), event.getData().getStatus()));
-        messageTextView.setText(event.getData().getMessage());
+        titleTextView.setText(String.format("%s %s", event.getPayload().getTopic(), event.getPayload().getStatus()));
+        messageTextView.setText(event.getPayload().getMessage());
 
-        if (event.getData().getStatus().equals("FAILED")) {
+        if (event.getPayload().getStatus().equals("FAILED")) {
             titleTextView.setTextColor(ContextCompat.getColor(view.getContext(), R.color.red_palette_error));
             imageView.setImageResource(R.drawable.ic_failed_illustration);
         } else {

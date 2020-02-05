@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.model.Bank;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.Resource;
@@ -120,6 +121,45 @@ public class GatewayRepository {
             @Override
             protected LiveData<ApiResponse<Result<List<Network>>>> createCall() {
                 return mGatewayService.networks(bearerToken, iso);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<List<Bank>>> banks(String bearerToken, String iso) {
+        return new NetworkBoundResource<List<Bank>, Result<List<Bank>>>(mAppExecutors) {
+
+            private List<Bank> resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<List<Bank>> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<Bank> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<Bank>> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<List<Bank>>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<List<Bank>>>> createCall() {
+                return mGatewayService.banks(bearerToken, iso);
             }
         }.asLiveData();
     }

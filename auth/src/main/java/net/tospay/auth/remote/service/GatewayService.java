@@ -2,6 +2,7 @@ package net.tospay.auth.remote.service;
 
 import androidx.lifecycle.LiveData;
 
+import net.tospay.auth.model.Bank;
 import net.tospay.auth.model.Country;
 import net.tospay.auth.model.Network;
 import net.tospay.auth.remote.response.ApiResponse;
@@ -23,13 +24,19 @@ public interface GatewayService {
             @Header("Authorization") String bearer
     );
 
+    @GET("v1/config/mobile-operators/{iso}")
+    LiveData<ApiResponse<Result<List<Network>>>> networks(
+            @Header("Authorization") String bearer,
+            @Path("iso") String iso
+    );
+
     @GET("v1/config/bank-countries")
     LiveData<ApiResponse<Result<List<Country>>>> bankCountries(
             @Header("Authorization") String bearer
     );
 
-    @GET("v1/config/mobile-operators/{iso}")
-    LiveData<ApiResponse<Result<List<Network>>>> networks(
+    @GET("v1/config/bank-operators/{iso}")
+    LiveData<ApiResponse<Result<List<Bank>>>> banks(
             @Header("Authorization") String bearer,
             @Path("iso") String iso
     );

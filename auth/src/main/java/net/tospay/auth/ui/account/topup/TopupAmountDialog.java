@@ -41,7 +41,9 @@ import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.account.AccountViewModel;
 import net.tospay.auth.ui.account.CardPaymentDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.utils.SharedPrefManager;
+import net.tospay.auth.utils.StringUtil;
 import net.tospay.auth.utils.Utils;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
@@ -129,6 +131,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
         mBinding.setAccountViewModel(mViewModel);
 
         reloadBearerToken();
+
         mViewModel.getAccount().setValue(selectedAccount);
 
         mBinding.amountEditText.addTextChangedListener(new TextWatcher() {
@@ -242,19 +245,29 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
                         mBinding.paymentSummeryTextView.setVisibility(View.VISIBLE);
                         mBinding.chargeTitleView.setVisibility(View.VISIBLE);
                         mBinding.chargeTextView.setVisibility(View.VISIBLE);
-                        mBinding.chargeTextView.setText(String.format("%s %s", charge.getCurrency(), charge.getAmount()));
+                        mBinding.chargeTextView.setText(String.format("%s %s", charge.getCurrency(),
+                                StringUtil.formatAmount(charge.getAmount())));
 
                         withdrawalAmount += Double.parseDouble(charge.getAmount());
                         source.setTotal(new Amount(String.valueOf(withdrawalAmount), currency));
 
                         mBinding.totalTitleView.setVisibility(View.VISIBLE);
                         mBinding.totalTextView.setVisibility(View.VISIBLE);
-                        mBinding.totalTextView.setText(String.format("%s %s", currency, withdrawalAmount));
+                        mBinding.totalTextView.setText(String.format("%s %s", currency,
+                                StringUtil.formatAmount(withdrawalAmount)));
 
                         mBinding.btnPay.setVisibility(View.VISIBLE);
                         mBinding.btnChargeLookup.setVisibility(View.GONE);
 
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        break;
+
+                    case RE_AUTHENTICATE:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
                         break;
                 }
             }
@@ -322,7 +335,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
                         mViewModel.setIsError(true);
                         mViewModel.setErrorMessage(resource.message);
                         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
+                        startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
                         break;
                 }
             }
@@ -332,7 +345,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+        if (requestCode == PinActivity.REQUEST_PIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
             }
@@ -370,7 +383,7 @@ public class TopupAmountDialog extends BottomSheetDialogFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotification(NotificationEvent notification) {
         if (notification != null) {
-            //dismiss();
+            dismiss();
         }
     }
 

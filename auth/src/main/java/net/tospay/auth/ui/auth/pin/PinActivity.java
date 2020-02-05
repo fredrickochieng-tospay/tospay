@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,19 +18,24 @@ import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.auth.login.LoginViewModel;
 import net.tospay.auth.utils.SharedPrefManager;
+import net.tospay.auth.view.LoadingLayout;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class PinActivity extends AppCompatActivity {
+
+    public static final int REQUEST_PIN = 200;
 
     public static final String KEY_PIN = "pin";
     public static final String KEY_PIN_SET = "pin_set";
     private SharedPrefManager sharedPrefManager;
     private LoginViewModel mViewModel;
+    private LoadingLayout loadingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pin);
+        loadingLayout = findViewById(R.id.loadingLayout);
 
         UserRepository repository = new UserRepository(new AppExecutors(),
                 ServiceGenerator.createService(UserService.class, this));
@@ -70,11 +76,13 @@ public class PinActivity extends AppCompatActivity {
 
                 @Override
                 public void onCodeInputSuccessful() {
+                    loadingLayout.setVisibility(View.VISIBLE);
                     reAuthenticateUser();
                 }
 
                 @Override
                 public void onFingerprintSuccessful() {
+                    loadingLayout.setVisibility(View.VISIBLE);
                     reAuthenticateUser();
                 }
 
@@ -96,14 +104,14 @@ public class PinActivity extends AppCompatActivity {
             if (resource != null) {
                 switch (resource.status) {
                     case SUCCESS:
-                        if (resource.data != null) {
-                            sharedPrefManager.setActiveUser(resource.data);
-                            finishWithSuccess();
-                        }
+                        loadingLayout.setVisibility(View.GONE);
+                        sharedPrefManager.setActiveUser(resource.data);
+                        finishWithSuccess();
                         break;
 
                     case ERROR:
-                        finishWithSuccess();
+                        loadingLayout.setVisibility(View.GONE);
+                        finishWithError();
                         break;
                 }
             }

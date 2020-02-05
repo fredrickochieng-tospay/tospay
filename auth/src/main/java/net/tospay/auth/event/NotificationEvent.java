@@ -8,9 +8,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class NotificationEvent implements Parcelable {
 
+    public static final String TOPUP = "TOPUP";
+    public static final String STATUS_FAILED = "FAILED";
+    public static final String STATUS_SUCCESS = "SUCCESS";
+    public static final String PAYMENT = "PAYMENT";
+
     @SerializedName("data")
     @Expose
-    private Data data;
+    private Payload payload;
 
     @SerializedName("notification")
     @Expose
@@ -19,14 +24,27 @@ public class NotificationEvent implements Parcelable {
     public NotificationEvent() {
     }
 
+    public NotificationEvent(Payload payload) {
+        this.payload = payload;
+    }
+
+    public NotificationEvent(Notification notification) {
+        this.notification = notification;
+    }
+
+    public NotificationEvent(Payload payload, Notification notification) {
+        this.payload = payload;
+        this.notification = notification;
+    }
+
     protected NotificationEvent(Parcel in) {
-        data = in.readParcelable(Data.class.getClassLoader());
+        payload = in.readParcelable(Payload.class.getClassLoader());
         notification = in.readParcelable(Notification.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(data, flags);
+        dest.writeParcelable(payload, flags);
         dest.writeParcelable(notification, flags);
     }
 
@@ -47,12 +65,12 @@ public class NotificationEvent implements Parcelable {
         }
     };
 
-    public Data getData() {
-        return data;
+    public Payload getPayload() {
+        return payload;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setPayload(Payload payload) {
+        this.payload = payload;
     }
 
     public Notification getNotification() {
@@ -66,7 +84,7 @@ public class NotificationEvent implements Parcelable {
     @Override
     public String toString() {
         return "NotificationEvent{" +
-                "data=" + data +
+                "payload=" + payload +
                 ", notification=" + notification +
                 '}';
     }

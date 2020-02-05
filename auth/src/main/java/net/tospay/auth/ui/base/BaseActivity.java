@@ -11,19 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import net.tospay.auth.remote.ApiConstants;
-import net.tospay.auth.remote.ServiceGenerator;
-import net.tospay.auth.remote.repository.GatewayRepository;
-import net.tospay.auth.remote.service.GatewayService;
-import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.utils.SharedPrefManager;
 
-public abstract class BaseActivity<DB extends ViewDataBinding,
-        VM extends BaseViewModel> extends AppCompatActivity {
+public abstract class BaseActivity<DB extends ViewDataBinding, VM extends BaseViewModel> extends AppCompatActivity {
 
     private VM mViewModel;
     private DB mDataBinding;
-    private GatewayRepository mGatewayRepository;
     private SharedPrefManager mSharedPrefManager;
 
     /**
@@ -53,9 +46,6 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppExecutors mAppExecutors = new AppExecutors();
-        GatewayService gatewayService = ServiceGenerator.createService(GatewayService.class, this);
-        mGatewayRepository = new GatewayRepository(mAppExecutors, gatewayService);
         mSharedPrefManager = SharedPrefManager.getInstance(this);
         performDataBinding();
         setBearerToken(mSharedPrefManager.getAccessToken());
@@ -76,10 +66,6 @@ public abstract class BaseActivity<DB extends ViewDataBinding,
     protected void onDestroy() {
         mDataBinding.unbind();
         super.onDestroy();
-    }
-
-    public GatewayRepository getGatewayRepository() {
-        return mGatewayRepository;
     }
 
     public void setBearerToken(String token) {

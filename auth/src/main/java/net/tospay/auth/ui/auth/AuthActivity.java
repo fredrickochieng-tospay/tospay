@@ -33,9 +33,11 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
         if (tospayUser != null) {
             if (!tospayUser.isEmailVerified()) {
                 navController.navigate(R.id.navigation_email_verification);
+
             } else if (!tospayUser.isPhoneVerified()) {
                 navController.navigate(R.id.navigation_phone_verification);
-            } else if (sharedPrefManager.read(KEY_PIN_SET, false)) {
+
+            } else if (!sharedPrefManager.read(KEY_PIN_SET, false)) {
                 navController.navigate(R.id.navigation_set_pin);
             }
         }

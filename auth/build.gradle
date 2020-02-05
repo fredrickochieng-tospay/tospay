@@ -17,7 +17,7 @@ android {
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -93,4 +93,7 @@ dependencies {
 
     //event bus
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //otp view
+    implementation 'com.chaos.view:pinview:1.4.3'
 }

@@ -54,33 +54,6 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
         return mViewModel;
     }
 
-    private TextWatcher otpTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (!TextUtils.isEmpty(charSequence)) {
-                if (charSequence.length() >= 5) {
-                    mBinding.codeInputLayout.setError(null);
-                    mViewModel.getOtp().setValue(charSequence.toString());
-                } else {
-                    mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
-                }
-            } else {
-                mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
-
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -92,58 +65,52 @@ public class VerifyMobileFragment extends BaseFragment<FragmentVerifyMobileBindi
             account = VerifyMobileFragmentArgs.fromBundle(getArguments()).getAccount();
             mViewModel.getPhone().setValue("****" + account.getTrunc());
         }
-
-        mBinding.codeEditText.addTextChangedListener(otpTextWatcher);
     }
 
     @Override
     public void onConfirmClick(View view) {
-        mBinding.codeInputLayout.setError(null);
-
-        String code = mBinding.codeEditText.getText().toString();
+        String code = mBinding.otpView.getText().toString();
         mViewModel.getOtp().setValue(code);
 
         if (TextUtils.isEmpty(code)) {
-            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            Toast.makeText(view.getContext(), getString(R.string.invalid_otp), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (code.length() < 5) {
-            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            Toast.makeText(view.getContext(), getString(R.string.invalid_otp), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
-            mViewModel.verify(account.getId());
-            mViewModel.getVerifyResourceLiveData().observe(this, resultResource -> {
-                if (resultResource != null) {
-                    switch (resultResource.status) {
-                        case LOADING:
-                            mViewModel.setIsError(false);
-                            mViewModel.setIsLoading(true);
-                            break;
+        mViewModel.verify(account.getId());
+        mViewModel.getVerifyResourceLiveData().observe(this, resultResource -> {
+            if (resultResource != null) {
+                switch (resultResource.status) {
+                    case LOADING:
+                        mViewModel.setIsError(false);
+                        mViewModel.setIsLoading(true);
+                        break;
 
-                        case ERROR:
-                            mViewModel.setIsLoading(false);
-                            mViewModel.setIsError(true);
-                            mViewModel.setErrorMessage(resultResource.message);
-                            break;
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resultResource.message);
+                        break;
 
-                        case SUCCESS:
-                            mViewModel.setIsLoading(false);
-                            mViewModel.setIsError(false);
-                            NavHostFragment.findNavController(this).navigateUp();
-                            break;
-                    }
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        Toast.makeText(view.getContext(), "Your account has been verified successfully", Toast.LENGTH_SHORT).show();
+                        NavHostFragment.findNavController(this).navigateUp();
+                        break;
                 }
-            });
-        } else {
-            Snackbar.make(mBinding.container, getString(R.string.internet_error), Snackbar.LENGTH_LONG).show();
-        }
+            }
+        });
     }
 
     @Override
     public void onResendClick(View view) {
+        mBinding.otpView.setText(null);
         mViewModel.resend(account.getId());
         mViewModel.getResendResourceLiveData().observe(this, resultResource -> {
             if (resultResource != null) {

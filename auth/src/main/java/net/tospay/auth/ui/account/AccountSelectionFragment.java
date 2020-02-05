@@ -3,6 +3,8 @@ package net.tospay.auth.ui.account;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -17,6 +19,7 @@ import net.tospay.auth.BR;
 import net.tospay.auth.R;
 import net.tospay.auth.databinding.FragmentAccountSelectionBinding;
 import net.tospay.auth.event.NotificationEvent;
+import net.tospay.auth.event.Payload;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.Wallet;
@@ -34,7 +37,10 @@ import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.account.topup.TopupAccountSelectionDialog;
 import net.tospay.auth.ui.account.topup.TopupAmountDialog;
 import net.tospay.auth.ui.auth.AuthActivity;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.ui.dialog.TransferDialog;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.Utils;
 import net.tospay.auth.viewmodelfactory.AccountViewModelFactory;
 
@@ -57,8 +63,14 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     private String paymentId;
     private List<Store> sources;
     private double withdrawalAmount = 0;
-
+    private String status = NotificationEvent.STATUS_FAILED, title = "", message = "Error Unknown";
     private Wallet topupWallet;
+    private TransferResponse transferResponse;
+
+    private final Handler handler = new Handler();
+    private Runnable runnable;
+    private boolean shouldRun = true, isSocketNotified = false;
+    private int count = 0;
 
     public AccountSelectionFragment() {
         // Required empty public constructor
@@ -219,12 +231,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN || requestCode == PinActivity.REQUEST_PIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
                 fetchAccounts();
-            } else {
-                mListener.onPaymentFailed(new TospayException("Invalid credentials"));
             }
         }
     }
@@ -307,6 +317,10 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         Transfer payload = new Transfer();
         payload.setSource(sources);
 
+        isSocketNotified = false;
+        shouldRun = true;
+        count = 0;
+
         mViewModel.pay(paymentId, payload);
         mViewModel.getPaymentResourceLiveData().observe(getViewLifecycleOwner(), resource -> {
             if (resource != null) {
@@ -327,13 +341,14 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
                     case SUCCESS:
                         mViewModel.setIsError(false);
-                        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-
-                        TransferResponse response = resource.data;
-                        assert response != null;
-                        if (response.getHtml() != null) {
-                            CardPaymentDialog.newInstance(response.getHtml())
+                        transferResponse = resource.data;
+                        assert transferResponse != null;
+                        if (transferResponse.getHtml() != null) {
+                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                            CardPaymentDialog.newInstance(transferResponse.getHtml())
                                     .show(getChildFragmentManager(), CardPaymentDialog.TAG);
+                        } else {
+                            new Handler().postDelayed(this::triggerTimer, 5000);
                         }
                         break;
 
@@ -349,15 +364,120 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
         });
     }
 
-    // TODO: 2/3/20 add timer to check payment status
+    private void triggerTimer() {
+        if (!isSocketNotified) {
+            runnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    checkTransactionStatus();
+
+                    if (shouldRun) {
+                        handler.postDelayed(this, Constants.RETRY_DELAY);
+                    } else {
+                        handler.removeCallbacks(runnable);
+                    }
+                }
+            };
+
+            handler.post(runnable);
+        }
+    }
+
+    private void checkTransactionStatus() {
+        if (shouldRun) {
+            if (count <= Constants.RETRY_MAX) {
+                mViewModel.status(transferResponse);
+                mViewModel.getTransferStatusResourceLiveData().observe(getViewLifecycleOwner(), resource -> {
+                    if (resource != null) {
+                        switch (resource.status) {
+                            case ERROR:
+                                mViewModel.setIsLoading(false);
+                                mViewModel.setIsError(true);
+                                mViewModel.setErrorMessage(resource.message);
+                                handler.removeCallbacks(runnable);
+                                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                break;
+
+                            case SUCCESS:
+                                count++;
+                                if (resource.data != null) {
+                                    status = resource.data.getStatus();
+                                    if (status.equals(NotificationEvent.STATUS_SUCCESS)) {
+                                        status = NotificationEvent.STATUS_SUCCESS;
+                                        message = "Congratulation! Your Topup was successful";
+                                        completeProcessing();
+                                    } else {
+                                        status = NotificationEvent.STATUS_FAILED;
+                                        message = "Failed to complete transaction. Please try again";
+                                    }
+                                } else {
+                                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                    handler.removeCallbacks(runnable);
+                                    mViewModel.setIsLoading(false);
+                                    mViewModel.setIsError(true);
+                                    mViewModel.setErrorMessage("Unable to process this transaction");
+                                }
+                                break;
+
+                            case RE_AUTHENTICATE:
+                                shouldRun = false;
+                                isSocketNotified = false;
+                                mViewModel.setIsLoading(false);
+                                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
+                                break;
+                        }
+                    }
+                });
+            } else {
+                completeProcessing();
+            }
+        } else {
+            completeProcessing();
+        }
+    }
+
+    private void completeProcessing() {
+        handler.removeCallbacksAndMessages(null);
+        if (status.equals(NotificationEvent.STATUS_SUCCESS)) {
+            mListener.onPaymentSuccess(transferResponse, title, message);
+        } else {
+            mListener.onPaymentFailed(new TospayException(message));
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotification(NotificationEvent notification) {
-        if (notification != null) {
-            if (notification.getData().getTopic().equals("TOPUP")) {
-                if (!notification.getData().getStatus().equals("FAILED")) {
-                    fetchAccounts();
-                }
+    public void onPaymentNotification(NotificationEvent event) {
+        if (event != null) {
+            Payload payload = event.getPayload();
+            switch (payload.getTopic()) {
+                case NotificationEvent.TOPUP:
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    if (!payload.getStatus().equals(NotificationEvent.STATUS_FAILED)) {
+                        fetchAccounts();
+                    } else {
+                        TransferDialog.newInstance(event).show(getChildFragmentManager(), TransferDialog.TAG);
+                    }
+                    break;
+
+                case NotificationEvent.PAYMENT:
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    title = event.getNotification().getTitle();
+                    message = event.getNotification().getBody();
+
+                    shouldRun = false;
+                    isSocketNotified = true;
+                    handler.removeCallbacksAndMessages(null);
+
+                    mViewModel.setIsLoading(false);
+                    if (payload.getStatus().equals(NotificationEvent.STATUS_FAILED)) {
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(payload.getReason());
+                    } else {
+                        mListener.onPaymentSuccess(transferResponse, title, message);
+                    }
+                    break;
             }
         }
     }
@@ -372,6 +492,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        handler.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -395,6 +516,7 @@ public class AccountSelectionFragment extends BaseFragment<FragmentAccountSelect
 
     @Override
     public void onTopupSuccess(TransferResponse transferResponse) {
-        MpesaLoadingDialog.newInstance().show(getChildFragmentManager(), MpesaLoadingDialog.TAG);
+        MpesaLoadingDialog.newInstance(transferResponse)
+                .show(getChildFragmentManager(), MpesaLoadingDialog.TAG);
     }
 }

@@ -51,8 +51,8 @@
             android:layout_marginBottom="@dimen/default_space_16"
             android:text="Sign In"
             app:layout_constraintBottom_toTopOf="@id/divider"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toLeftOf="@id/guideline2" />
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline" />
 
         <LinearLayout
             android:id="@+id/divider"
@@ -62,8 +62,8 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@id/btn_register"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toLeftOf="@id/guideline2">
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline">
 
             <View
                 android:layout_width="wrap_content"
@@ -89,7 +89,6 @@
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/btn_register"
             style="@style/Tospay.Button.White.Border"
@@ -98,30 +97,31 @@
             android:layout_marginBottom="@dimen/default_space_16"
             android:text="Sign Up"
             app:layout_constraintBottom_toTopOf="@id/checkoutTextView"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toLeftOf="@id/guideline2" />
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline" />
 
         <TextView
             android:id="@+id/checkoutTextView"
             style="?partner_auth_description"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/proxima_nova_regular"
             android:gravity="center"
+            android:textColor="@color/deep_blue_palette_strong"
             app:layout_constraintBottom_toTopOf="@id/bottom_guideline"
-            app:layout_constraintLeft_toRightOf="@id/guideline"
-            app:layout_constraintRight_toLeftOf="@id/guideline2"
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
             tools:text="Welcome to Tospay Checkout: the secure, \n faster and easier  wat to pay. To process this \n payment, proceed to Sign in or Sign up." />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/left_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="56dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline2"
+            android:id="@+id/right_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

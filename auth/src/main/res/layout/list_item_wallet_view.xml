@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="net.tospay.auth.utils.StringUtil" />
+
         <variable
             name="wallet"
             type="net.tospay.auth.model.Wallet" />
@@ -68,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:fontFamily="@font/proxima_nova_regular"
-            android:text="@{String.format(`%s %s`, wallet.getCurrency(),wallet.getAccountBalance())}"
+            android:text="@{String.format(`%s %s`, wallet.getCurrency(), StringUtil.formatAmount(wallet.getAccountBalance()))}"
             android:textColor="@color/textColor"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="@+id/textView2"

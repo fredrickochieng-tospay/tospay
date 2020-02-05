@@ -8,6 +8,8 @@ import net.tospay.auth.remote.response.ApiResponse;
 import net.tospay.auth.remote.response.Result;
 import net.tospay.auth.remote.response.TransferResponse;
 
+import java.util.Map;
+
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -48,5 +50,11 @@ public interface PaymentService {
     LiveData<ApiResponse<Result<TransferResponse>>> transfer(
             @Header("Authorization") String bearer,
             @Body Transfer transfer
+    );
+
+    @POST("v1/transfer/transaction/status/id")
+    LiveData<ApiResponse<Result<TransferResponse>>> status(
+            @Header("Authorization") String bearer,
+            @Body TransferResponse response
     );
 }

@@ -30,6 +30,8 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
     private LiveData<Resource<Amount>> amountResourceLiveData;
     private LiveData<Resource<TransferResponse>> paymentResourceLiveData;
     private LiveData<Resource<TransferResponse>> transferResourceLiveData;
+    private LiveData<Resource<TransferResponse>> transferStatusResourceLiveData;
+
     private MutableLiveData<Transfer> transfer;
     private MutableLiveData<Amount> charge;
     private MutableLiveData<Account> account;
@@ -93,6 +95,14 @@ public class AccountViewModel extends BaseViewModel<AccountNavigator>
 
     public LiveData<Resource<TransferResponse>> getTransferResourceLiveData() {
         return transferResourceLiveData;
+    }
+
+    public void status(TransferResponse response) {
+        transferStatusResourceLiveData = paymentRepository.status(getBearerToken().get(), response);
+    }
+
+    public LiveData<Resource<TransferResponse>> getTransferStatusResourceLiveData() {
+        return transferStatusResourceLiveData;
     }
 
     @Override

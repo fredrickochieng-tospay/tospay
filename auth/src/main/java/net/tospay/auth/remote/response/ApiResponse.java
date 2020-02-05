@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 
+import javax.net.ssl.SSLException;
+
 import retrofit2.Response;
 
 /**
@@ -38,6 +40,8 @@ public class ApiResponse<T> {
             errorMessage = "No network available, please check your WiFi or Data connection";
         } else if (error instanceof ConnectException) {
             errorMessage = "No network available, please check your WiFi or Data connection";
+        } else if (error instanceof SSLException) {
+            errorMessage = "Failed, please try again";
         } else {
             errorMessage = error.getMessage();
         }

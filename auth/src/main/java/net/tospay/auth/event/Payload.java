@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Data implements Parcelable {
+public class Payload implements Parcelable {
 
     @SerializedName("topic")
     @Expose
@@ -20,13 +20,29 @@ public class Data implements Parcelable {
     @Expose
     private String message;
 
-    public Data() {
+    @SerializedName("reason")
+    @Expose
+    private String reason;
+
+    @SerializedName("code")
+    @Expose
+    private String code;
+
+    public Payload() {
     }
 
-    protected Data(Parcel in) {
+    public Payload(String topic, String status, String message) {
+        this.topic = topic;
+        this.status = status;
+        this.message = message;
+    }
+
+    protected Payload(Parcel in) {
         topic = in.readString();
         status = in.readString();
         message = in.readString();
+        reason = in.readString();
+        code = in.readString();
     }
 
     @Override
@@ -34,6 +50,8 @@ public class Data implements Parcelable {
         dest.writeString(topic);
         dest.writeString(status);
         dest.writeString(message);
+        dest.writeString(reason);
+        dest.writeString(code);
     }
 
     @Override
@@ -41,15 +59,15 @@ public class Data implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Data> CREATOR = new Creator<Data>() {
+    public static final Creator<Payload> CREATOR = new Creator<Payload>() {
         @Override
-        public Data createFromParcel(Parcel in) {
-            return new Data(in);
+        public Payload createFromParcel(Parcel in) {
+            return new Payload(in);
         }
 
         @Override
-        public Data[] newArray(int size) {
-            return new Data[size];
+        public Payload[] newArray(int size) {
+            return new Payload[size];
         }
     };
 
@@ -77,12 +95,30 @@ public class Data implements Parcelable {
         this.message = message;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
-        return "Data{" +
+        return "Payload{" +
                 "topic='" + topic + '\'' +
                 ", status='" + status + '\'' +
                 ", message='" + message + '\'' +
+                ", reason='" + reason + '\'' +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

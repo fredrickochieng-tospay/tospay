@@ -24,6 +24,7 @@ import net.tospay.auth.remote.repository.PaymentRepository;
 import net.tospay.auth.remote.exception.TospayException;
 import net.tospay.auth.remote.service.PaymentService;
 import net.tospay.auth.ui.auth.AuthActivity;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.utils.NetworkUtils;
 import net.tospay.auth.viewmodelfactory.PaymentViewModelFactory;
@@ -88,7 +89,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
             }
 
             if (tospay.getSharedPrefManager(getContext()).isTokenExpiredOrAlmost()) {
-                LoginTypeDialog.newInstance().show(getChildFragmentManager(), LoginTypeDialog.TAG);
+                startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
                 return;
             }
 
@@ -183,7 +184,7 @@ public class SummaryFragment extends BaseFragment<FragmentSummaryBinding, Summar
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN || requestCode == PinActivity.REQUEST_PIN) {
             if (resultCode == Activity.RESULT_OK) {
                 if (mListener != null) {
                     mListener.onLoginSuccess(getSharedPrefManager().getActiveUser());

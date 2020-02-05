@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pay(View view) {
-        String token = "YIUOKJWOFAJANKXF";
+        String token = "IBIECTELGTPALPKM";
         String url = "https://developer.android.com/guide/topics/resources/string-resource";
 
         Intent intent = Tospay.getInstance(this)

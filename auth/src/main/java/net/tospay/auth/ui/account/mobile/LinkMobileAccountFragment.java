@@ -26,6 +26,7 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.GatewayRepository;
 import net.tospay.auth.remote.repository.MobileRepository;
 import net.tospay.auth.remote.service.MobileService;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.viewmodelfactory.MobileViewModelFactory;
 import net.tospay.auth.ui.account.AccountSelectionFragmentDirections;
 import net.tospay.auth.ui.auth.AuthActivity;
@@ -130,7 +131,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
         Account account = new Account();
         account.setAlias(alias);
         account.setNetwork(network.getOperator());
-        account.setTrunc(phone);
+        account.setTrunc(phone.substring(phone.length() - 4));
 
         mViewModel.link(phone, mBinding.nameEditText.getText().toString());
         mViewModel.getMobileResourceLiveData().observe(this, resource -> {
@@ -176,7 +177,7 @@ public class LinkMobileAccountFragment extends BaseFragment<FragmentLinkMobileAc
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN || requestCode == PinActivity.REQUEST_PIN) {
             if (resultCode == Activity.RESULT_OK) {
                 reloadBearerToken();
             }

@@ -136,31 +136,17 @@
                     android:visibility="@{mobileViewModel.isError ? View.VISIBLE : View.GONE}"
                     app:error_message="@{mobileViewModel.errorMessage}" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/codeInputLayout"
+                <com.chaos.view.PinView
+                    android:id="@+id/otpView"
+                    style="@style/PinWidget.PinView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginLeft="28dp"
-                    android:layout_marginTop="@dimen/default_space_24"
-                    android:layout_marginEnd="@dimen/default_space_24"
-                    android:layout_marginRight="28dp"
-                    android:hint="@string/enter_code">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/codeEditText"
-                        style="@style/Tospay.TextInputEditText.Style"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:text="@{mobileViewModel.otp}"
-                        android:textAllCaps="true"
-                        android:textSize="20sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="@dimen/default_space_16"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/colorPrimary"
+                    app:itemCount="6"
+                    app:lineColor="@color/colorPrimary" />
 
                 <Button
                     android:id="@+id/btn_verify_phone"
@@ -174,7 +160,7 @@
                     android:layout_marginRight="28dp"
                     android:layout_marginBottom="8dp"
                     android:onClick="@{(view)->mobileViewModel.onClick(view)}"
-                    android:text="@string/send"
+                    android:text="Verify"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="16sp" />

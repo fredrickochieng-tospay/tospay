@@ -15,6 +15,8 @@ import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.remote.util.NetworkBoundResource;
 import net.tospay.auth.utils.AbsentLiveData;
 
+import java.util.Map;
+
 public class PaymentRepository {
 
     private final PaymentService mPaymentService;
@@ -200,6 +202,45 @@ public class PaymentRepository {
             @Override
             protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
                 return mPaymentService.transfer(bearerToken, transfer);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<TransferResponse>> status(String bearerToken, TransferResponse response) {
+        return new NetworkBoundResource<TransferResponse, Result<TransferResponse>>(mAppExecutors) {
+
+            private TransferResponse resultsDb;
+
+            @Override
+            protected void saveCallResult(@NonNull Result<TransferResponse> item) {
+                resultsDb = item.getData();
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable TransferResponse data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<TransferResponse> loadFromDb() {
+                if (resultsDb == null) {
+                    return AbsentLiveData.create();
+                } else {
+                    return new LiveData<TransferResponse>() {
+                        @Override
+                        protected void onActive() {
+                            super.onActive();
+                            setValue(resultsDb);
+                        }
+                    };
+                }
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<Result<TransferResponse>>> createCall() {
+                return mPaymentService.status(bearerToken, response);
             }
         }.asLiveData();
     }

@@ -19,8 +19,11 @@ import com.bumptech.glide.request.RequestOptions;
 import net.tospay.auth.R;
 import net.tospay.auth.interfaces.AccountType;
 import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.utils.StringUtil;
 import net.tospay.auth.view.ErrorLayout;
 import net.tospay.auth.view.LoadingLayout;
+
+import java.text.NumberFormat;
 
 public final class BindingUtils {
 
@@ -137,5 +140,10 @@ public final class BindingUtils {
                 textView.setText(Html.fromHtml(html));
             }
         }
+    }
+
+    @BindingAdapter("currency")
+    public static void setCurrency(TextView textView, String amount) {
+        textView.setText(StringUtil.formatAmount(amount));
     }
 }

@@ -3,6 +3,7 @@ package net.tospay.auth.remote.request;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import net.tospay.auth.model.Bank;
 import net.tospay.auth.model.Country;
 
 public class BankRequest {
@@ -10,6 +11,10 @@ public class BankRequest {
     @SerializedName("country")
     @Expose
     private Country country;
+
+    @SerializedName("bank")
+    @Expose
+    private Bank bank;
 
     @SerializedName("account_number")
     @Expose
@@ -25,6 +30,14 @@ public class BankRequest {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
     public String getAccountNumber() {

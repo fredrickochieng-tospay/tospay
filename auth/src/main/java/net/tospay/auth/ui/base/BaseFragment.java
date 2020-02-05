@@ -23,6 +23,7 @@ import net.tospay.auth.remote.service.GatewayService;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.auth.AuthActivity;
+import net.tospay.auth.ui.auth.pin.PinActivity;
 import net.tospay.auth.utils.SharedPrefManager;
 
 
@@ -132,7 +133,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding, VM extends BaseVi
     }
 
     public void openActivityOnTokenExpire() {
-        startActivityForResult(new Intent(getContext(), AuthActivity.class), AuthActivity.REQUEST_CODE_LOGIN);
+        startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
     }
 
     public void hideKeyboard() {

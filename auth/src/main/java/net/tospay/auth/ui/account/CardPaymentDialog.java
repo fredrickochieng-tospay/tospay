@@ -66,7 +66,6 @@ public class CardPaymentDialog extends DialogFragment {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadDataWithBaseURL(null, html,
                 "text/html; charset=utf-8", "UTF-8", null);
-
         view.findViewById(R.id.btn_close).setOnClickListener(view1 -> dismiss());
     }
 
