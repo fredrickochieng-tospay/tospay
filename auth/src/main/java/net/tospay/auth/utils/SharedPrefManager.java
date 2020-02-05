@@ -176,8 +176,6 @@ public class SharedPrefManager {
         } else {
             Date date = new Date(expireAt * 1000L);
             long diff = date.getTime() - Calendar.getInstance().getTime().getTime();
-            long seconds = diff / 1000;
-            long minutes = seconds / 60;
             return diff < 5;
         }
     }

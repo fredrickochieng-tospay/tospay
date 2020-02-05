@@ -37,11 +37,39 @@
             android:layout_marginTop="@dimen/default_space_16"
             android:layout_marginBottom="@dimen/default_space_16"
             android:contentDescription="@string/app_name"
-            app:layout_constraintBottom_toTopOf="@id/btn_login"
+            app:layout_constraintBottom_toTopOf="@id/titleTextView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo"
             tools:src="@drawable/ic_register" />
+
+        <TextView
+            android:id="@+id/titleTextView"
+            style="?partner_auth_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_space_10"
+            android:fontFamily="@font/proxima_nova_bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/checkoutTextView"
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            tools:text="Welcome to KPA Biller24" />
+
+        <TextView
+            android:id="@+id/checkoutTextView"
+            style="?partner_auth_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_space_16"
+            android:fontFamily="@font/proxima_nova_regular"
+            android:gravity="center"
+            android:textColor="@color/deep_blue_palette_strong"
+            app:layout_constraintBottom_toTopOf="@id/btn_login"
+            app:layout_constraintLeft_toRightOf="@id/left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            tools:text="Welcome to Tospay Checkout: the secure, \n faster and easier  wat to pay. To process this \n payment, proceed to Sign in or Sign up." />
 
         <Button
             android:id="@+id/btn_login"
@@ -94,24 +122,10 @@
             style="@style/Tospay.Button.White.Border"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_space_16"
             android:text="Sign Up"
-            app:layout_constraintBottom_toTopOf="@id/checkoutTextView"
-            app:layout_constraintLeft_toRightOf="@id/left_guideline"
-            app:layout_constraintRight_toLeftOf="@id/right_guideline" />
-
-        <TextView
-            android:id="@+id/checkoutTextView"
-            style="?partner_auth_description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/proxima_nova_regular"
-            android:gravity="center"
-            android:textColor="@color/deep_blue_palette_strong"
             app:layout_constraintBottom_toTopOf="@id/bottom_guideline"
             app:layout_constraintLeft_toRightOf="@id/left_guideline"
-            app:layout_constraintRight_toLeftOf="@id/right_guideline"
-            tools:text="Welcome to Tospay Checkout: the secure, \n faster and easier  wat to pay. To process this \n payment, proceed to Sign in or Sign up." />
+            app:layout_constraintRight_toLeftOf="@id/right_guideline" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/left_guideline"
@@ -132,7 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".93" />
+            app:layout_constraintGuide_percent=".95" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -24,15 +24,15 @@ public class MainActivity extends AppCompatActivity {
         String token = "IBIECTELGTPALPKM";
         String url = "https://developer.android.com/guide/topics/resources/string-resource";
 
-        Intent intent = Tospay.getInstance(this)
-                .setPaymentToken(token)
-                .setTermsAndConditionsUrl(url)
-                .getPaymentIntent();
-
         /*Intent intent = Tospay.getInstance(this)
                 .setPaymentToken(token)
                 .setTermsAndConditionsUrl(url)
-                .getAuthenticationIntent();*/
+                .getPaymentIntent();*/
+
+        Intent intent = Tospay.getInstance(this)
+                .setPaymentToken(token)
+                .setTermsAndConditionsUrl(url)
+                .getAuthenticationIntent();
 
         startActivityForResult(intent, 1);
     }

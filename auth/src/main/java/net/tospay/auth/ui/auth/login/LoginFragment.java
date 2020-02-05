@@ -23,11 +23,11 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.EmailValidator;
 import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
-import static net.tospay.auth.ui.auth.pin.PinActivity.KEY_PIN_SET;
 
 public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewModel>
         implements LoginNavigator {
@@ -226,7 +226,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             navController.navigate(R.id.navigation_email_verification);
                         } else if (!user.isPhoneVerified()) {
                             navController.navigate(R.id.navigation_phone_verification);
-                        } else if (sharedPrefManager.read(KEY_PIN_SET, false)) {
+                        } else if (sharedPrefManager.read(Constants.KEY_PIN_SET, false)) {
                             navController.navigate(R.id.navigation_set_pin);
                         } else {
                             mListener.onLoginSuccess(user);

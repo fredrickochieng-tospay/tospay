@@ -146,15 +146,7 @@
         android:id="@+id/navigation_set_pin"
         android:name="net.tospay.auth.ui.auth.pin.SetPinFragment"
         android:label="Set Pin"
-        tools:layout="@layout/fragment_set_pin">
-        <action
-            android:id="@+id/action_navigation_set_pin_to_navigation_lock_screen"
-            app:destination="@id/navigation_pin_activity" />
-    </fragment>
-    <activity
-        android:id="@+id/navigation_pin_activity"
-        android:name="net.tospay.auth.ui.auth.pin.PinActivity"
-        android:label="Pin Activity"
-        tools:layout="@layout/activity_pin" />
+        tools:layout="@layout/fragment_set_pin" />
+
 
 </navigation>

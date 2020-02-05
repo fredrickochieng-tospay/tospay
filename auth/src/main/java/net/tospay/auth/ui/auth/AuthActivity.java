@@ -2,9 +2,13 @@ package net.tospay.auth.ui.auth;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -12,9 +16,8 @@ import net.tospay.auth.R;
 import net.tospay.auth.Tospay;
 import net.tospay.auth.interfaces.PaymentListener;
 import net.tospay.auth.model.TospayUser;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.SharedPrefManager;
-
-import static net.tospay.auth.ui.auth.pin.PinActivity.KEY_PIN_SET;
 
 public class AuthActivity extends AppCompatActivity implements PaymentListener {
 
@@ -24,6 +27,13 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        }
+
         SharedPrefManager sharedPrefManager = Tospay.getInstance(this).getSharedPrefManager();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -37,7 +47,7 @@ public class AuthActivity extends AppCompatActivity implements PaymentListener {
             } else if (!tospayUser.isPhoneVerified()) {
                 navController.navigate(R.id.navigation_phone_verification);
 
-            } else if (!sharedPrefManager.read(KEY_PIN_SET, false)) {
+            } else if (!sharedPrefManager.read(Constants.KEY_PIN_SET, false)) {
                 navController.navigate(R.id.navigation_set_pin);
             }
         }

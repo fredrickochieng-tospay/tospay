@@ -59,6 +59,8 @@ public class Tospay {
      * Logs out user
      */
     public void signOut() {
+        SharedPrefManager.getInstance(context).save(Constants.KEY_PIN, null);
+        SharedPrefManager.getInstance(context).save(Constants.KEY_PIN_SET, true);
         SharedPrefManager.getInstance(context).setActiveUser(null);
     }
 

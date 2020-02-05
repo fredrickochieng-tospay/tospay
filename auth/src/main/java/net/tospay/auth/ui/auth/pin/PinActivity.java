@@ -17,6 +17,7 @@ import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.remote.util.AppExecutors;
 import net.tospay.auth.ui.auth.AuthActivity;
 import net.tospay.auth.ui.auth.login.LoginViewModel;
+import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.view.LoadingLayout;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
@@ -24,9 +25,6 @@ import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 public class PinActivity extends AppCompatActivity {
 
     public static final int REQUEST_PIN = 200;
-
-    public static final String KEY_PIN = "pin";
-    public static final String KEY_PIN_SET = "pin_set";
     private SharedPrefManager sharedPrefManager;
     private LoginViewModel mViewModel;
     private LoadingLayout loadingLayout;
@@ -51,8 +49,8 @@ public class PinActivity extends AppCompatActivity {
 
                 @Override
                 public void onCodeCreated(String encodedCode) {
-                    sharedPrefManager.save(KEY_PIN, encodedCode);
-                    sharedPrefManager.save(KEY_PIN_SET, true);
+                    sharedPrefManager.save(Constants.KEY_PIN, encodedCode);
+                    sharedPrefManager.save(Constants.KEY_PIN_SET, true);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(PinActivity.this);
                     builder.setTitle("Pin setup success");
@@ -151,7 +149,7 @@ public class PinActivity extends AppCompatActivity {
                 ? PFFLockScreenConfiguration.MODE_AUTH
                 : PFFLockScreenConfiguration.MODE_CREATE);
         if (isPinExist) {
-            fragment.setEncodedPinCode(sharedPrefManager.read(KEY_PIN, null));
+            fragment.setEncodedPinCode(sharedPrefManager.read(Constants.KEY_PIN, null));
             fragment.setLoginListener(mLoginListener);
         }
 

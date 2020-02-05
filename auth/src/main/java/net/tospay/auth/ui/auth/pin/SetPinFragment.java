@@ -54,14 +54,15 @@ public class SetPinFragment extends BaseFragment<FragmentSetPinBinding, LoginVie
         FragmentSetPinBinding mBinding = getViewDataBinding();
         mBinding.setLoginViewModel(mViewModel);
         mBinding.setMessage(getString(R.string.account_success));
-        mBinding.btnSetPin.setOnClickListener(view1 -> Navigation.findNavController(view1).navigate(
-                SetPinFragmentDirections.actionNavigationSetPinToNavigationLockScreen()));
+        mBinding.btnSetPin.setOnClickListener(view1 -> {
+            startActivityForResult(new Intent(getContext(), PinActivity.class), PinActivity.REQUEST_PIN);
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AuthActivity.REQUEST_CODE_LOGIN) {
+        if (requestCode == PinActivity.REQUEST_PIN) {
             if (resultCode == Activity.RESULT_OK) {
                 mListener.onLoginSuccess(getSharedPrefManager().getActiveUser());
             } else {
