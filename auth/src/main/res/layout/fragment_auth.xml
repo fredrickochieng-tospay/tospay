@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_space_10"
             android:fontFamily="@font/proxima_nova_bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/deep_blue_palette_strong"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/checkoutTextView"
             app:layout_constraintLeft_toRightOf="@id/left_guideline"

@@ -226,7 +226,7 @@ public class LoginFragment extends BaseFragment<FragmentLoginBinding, LoginViewM
                             navController.navigate(R.id.navigation_email_verification);
                         } else if (!user.isPhoneVerified()) {
                             navController.navigate(R.id.navigation_phone_verification);
-                        } else if (sharedPrefManager.read(Constants.KEY_PIN_SET, false)) {
+                        } else if (!sharedPrefManager.read(Constants.KEY_PIN_SET, false)) {
                             navController.navigate(R.id.navigation_set_pin);
                         } else {
                             mListener.onLoginSuccess(user);
