@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -20,12 +21,12 @@ import net.tospay.auth.remote.ServiceGenerator;
 import net.tospay.auth.remote.repository.UserRepository;
 import net.tospay.auth.remote.service.UserService;
 import net.tospay.auth.ui.base.BaseFragment;
+import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerificationBinding, PhoneViewModel>
         implements PhoneNavigator {
 
-    private TospayUser tospayUser;
     private FragmentPhoneVerificationBinding mBinding;
     private PhoneViewModel mViewModel;
 
@@ -48,7 +49,7 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
         UserRepository repository = new UserRepository(getAppExecutors(),
                 ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
-        mViewModel = ViewModelProviders.of(this, factory).get(PhoneViewModel.class);
+        mViewModel = new ViewModelProvider(this, factory).get(PhoneViewModel.class);
         return mViewModel;
     }
 
@@ -58,7 +59,7 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
         mBinding = getViewDataBinding();
         mBinding.setPhoneViewModel(mViewModel);
         mViewModel.setNavigator(this);
-        tospayUser = getSharedPrefManager().getActiveUser();
+        TospayUser tospayUser = getSharedPrefManager().getActiveUser();
         mViewModel.getUser().setValue(tospayUser);
     }
 
@@ -76,6 +77,7 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
             Toast.makeText(view.getContext(), getString(R.string.invalid_otp), Toast.LENGTH_SHORT).show();
             return;
         }
+
         mViewModel.verify();
         mViewModel.getVerifyResourceLiveData().observe(this, resource -> {
             if (resource != null) {
@@ -95,8 +97,7 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
                     case SUCCESS:
                         mViewModel.setIsLoading(false);
                         mViewModel.setIsError(false);
-                        tospayUser.setPhoneVerified(true);
-                        getSharedPrefManager().setActiveUser(tospayUser);
+                        getSharedPrefManager().setActiveUser(resource.data);
                         NavHostFragment.findNavController(this).navigate(
                                 PhoneVerificationFragmentDirections.actionNavigationPhoneVerificationToNavigationSetPin());
                         break;

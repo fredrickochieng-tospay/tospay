@@ -39,7 +39,7 @@ public interface UserService {
     LiveData<ApiResponse<Result>> resendEmailToken(@Body ResendEmailRequest request);
 
     @POST("v1/auth/user/verify-phone")
-    LiveData<ApiResponse<Result>> verifyPhone(@Body VerifyPhoneRequest request);
+    LiveData<ApiResponse<Result<TospayUser>>> verifyPhone(@Body VerifyPhoneRequest request);
 
     @POST("v1/auth/user/resend-phone")
     LiveData<ApiResponse<Result>> resendOtp(@Body OtpRequest request);

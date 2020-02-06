@@ -21,14 +21,14 @@ public class PhoneViewModel extends BaseViewModel<PhoneNavigator> implements Vie
     public MutableLiveData<String> otp = new MutableLiveData<>();
 
     private UserRepository userRepository;
-    private LiveData<Resource<Result>> verifyResourceLiveData;
+    private LiveData<Resource<TospayUser>> verifyResourceLiveData;
     private LiveData<Resource<Result>> resendResourceLiveData;
 
     public PhoneViewModel(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public LiveData<Resource<Result>> getVerifyResourceLiveData() {
+    public LiveData<Resource<TospayUser>> getVerifyResourceLiveData() {
         return verifyResourceLiveData;
     }
 

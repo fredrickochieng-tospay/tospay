@@ -198,29 +198,29 @@ public class UserRepository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<Result>> verifyPhone(VerifyPhoneRequest request) {
+    public LiveData<Resource<TospayUser>> verifyPhone(VerifyPhoneRequest request) {
 
-        return new NetworkBoundResource<Result, Result>(mAppExecutors) {
+        return new NetworkBoundResource<TospayUser, Result<TospayUser>>(mAppExecutors) {
 
-            private Result resultsDb;
+            private TospayUser resultsDb;
 
             @Override
-            protected void saveCallResult(@NonNull Result item) {
-                resultsDb = item;
+            protected void saveCallResult(@NonNull Result<TospayUser> item) {
+                resultsDb = item.getData();
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable Result data) {
+            protected boolean shouldFetch(@Nullable TospayUser data) {
                 return true;
             }
 
             @NonNull
             @Override
-            protected LiveData<Result> loadFromDb() {
+            protected LiveData<TospayUser> loadFromDb() {
                 if (resultsDb == null) {
                     return AbsentLiveData.create();
                 } else {
-                    return new LiveData<Result>() {
+                    return new LiveData<TospayUser>() {
                         @Override
                         protected void onActive() {
                             super.onActive();
@@ -232,7 +232,7 @@ public class UserRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<Result>> createCall() {
+            protected LiveData<ApiResponse<Result<TospayUser>>> createCall() {
                 return mUserService.verifyPhone(request);
             }
         }.asLiveData();

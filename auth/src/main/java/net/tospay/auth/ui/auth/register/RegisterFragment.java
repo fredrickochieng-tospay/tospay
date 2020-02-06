@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -30,6 +32,7 @@ import net.tospay.auth.ui.base.BaseFragment;
 import net.tospay.auth.ui.dialog.country.CountryDialog;
 import net.tospay.auth.utils.Constants;
 import net.tospay.auth.utils.EmailValidator;
+import net.tospay.auth.utils.SharedPrefManager;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, RegisterViewModel>
@@ -77,7 +80,7 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         UserRepository repository = new UserRepository(getAppExecutors(),
                 ServiceGenerator.createService(UserService.class, getContext()));
         UserViewModelFactory factory = new UserViewModelFactory(repository);
-        mViewModel = ViewModelProviders.of(this, factory).get(RegisterViewModel.class);
+        mViewModel = new ViewModelProvider(this, factory).get(RegisterViewModel.class);
         return mViewModel;
     }
 
@@ -278,34 +281,36 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
         }
 
         mViewModel.register(firstName, lastName, email, password, phone, country);
-        mViewModel.getResponseLiveData().observe(this, this::handleResponse);
-    }
+        mViewModel.getResponseLiveData().observe(this, resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case LOADING:
+                        mViewModel.setIsLoading(true);
+                        mViewModel.setIsError(false);
+                        break;
 
-    private void handleResponse(Resource<TospayUser> resource) {
-        if (resource != null) {
-            switch (resource.status) {
-                case LOADING:
-                    mViewModel.setIsLoading(true);
-                    mViewModel.setIsError(false);
-                    break;
+                    case ERROR:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(true);
+                        mViewModel.setErrorMessage(resource.message);
+                        break;
 
-                case ERROR:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(true);
-                    mViewModel.setErrorMessage(resource.message);
-                    break;
+                    case SUCCESS:
+                        mViewModel.setIsLoading(false);
+                        mViewModel.setIsError(false);
+                        mViewModel.setIsError(false);
 
-                case SUCCESS:
-                    mViewModel.setIsLoading(false);
-                    mViewModel.setIsError(false);
-                    mViewModel.setIsError(false);
-                    TospayUser user = resource.data;
-                    getSharedPrefManager().setActiveUser(user);
-                    NavHostFragment.findNavController(this)
-                            .navigate(RegisterFragmentDirections.actionNavigationRegisterToNavigationEmailVerification());
-                    break;
+                        getSharedPrefManager().save(SharedPrefManager.KEY_EMAIL, email);
+                        getSharedPrefManager().save(SharedPrefManager.KEY_PASSWORD, password);
+
+                        TospayUser user = resource.data;
+                        getSharedPrefManager().setActiveUser(user);
+                        NavHostFragment.findNavController(this)
+                                .navigate(RegisterFragmentDirections.actionNavigationRegisterToNavigationEmailVerification());
+                        break;
+                }
             }
-        }
+        });
     }
 
     @Override
@@ -321,6 +326,5 @@ public class RegisterFragment extends BaseFragment<FragmentRegisterBinding, Regi
     @Override
     public void onCountrySelected(Country country) {
         mViewModel.getCountry().setValue(country);
-        mBinding.phoneEditText.setText(String.format("+%s", country.getPhonecode()));
     }
 }
