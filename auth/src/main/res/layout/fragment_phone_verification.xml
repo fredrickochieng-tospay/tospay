@@ -75,30 +75,17 @@
                     android:visibility="@{phoneViewModel.isError ? View.VISIBLE : View.GONE}"
                     app:error_message="@{phoneViewModel.errorMessage}" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/codeInputLayout"
+                <com.chaos.view.PinView
+                    android:id="@+id/otpView"
+                    style="@style/PinWidget.PinView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_space_24"
-                    android:layout_marginLeft="28dp"
-                    android:layout_marginTop="@dimen/default_space_24"
-                    android:layout_marginEnd="@dimen/default_space_24"
-                    android:layout_marginRight="28dp"
-                    android:hint="@string/enter_code">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/codeEditText"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/proxima_nova_regular"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:text="@{phoneViewModel.otp}"
-                        android:textAllCaps="true"
-                        android:textSize="20sp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginTop="@dimen/default_space_16"
+                    android:fontFamily="@font/proxima_nova_regular"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/colorPrimary"
+                    app:itemCount="6"
+                    app:lineColor="@color/colorPrimary" />
 
                 <Button
                     android:id="@+id/btn_verify_phone"

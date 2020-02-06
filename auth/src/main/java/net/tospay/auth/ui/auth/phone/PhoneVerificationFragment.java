@@ -52,60 +52,30 @@ public class PhoneVerificationFragment extends BaseFragment<FragmentPhoneVerific
         return mViewModel;
     }
 
-    private TextWatcher otpTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if (!TextUtils.isEmpty(charSequence)) {
-                if (charSequence.length() >= 5) {
-                    mBinding.codeInputLayout.setError(null);
-                    mViewModel.getOtp().setValue(charSequence.toString());
-                } else {
-                    mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
-                }
-            } else {
-                mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-
-        }
-    };
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBinding = getViewDataBinding();
         mBinding.setPhoneViewModel(mViewModel);
         mViewModel.setNavigator(this);
-        mBinding.codeEditText.addTextChangedListener(otpTextWatcher);
         tospayUser = getSharedPrefManager().getActiveUser();
         mViewModel.getUser().setValue(tospayUser);
     }
 
     @Override
     public void onVerifyClick(View view) {
-        mBinding.codeInputLayout.setError(null);
-
-        String code = mBinding.codeEditText.getText().toString();
+        String code = mBinding.otpView.getText().toString();
         mViewModel.getOtp().setValue(code);
 
         if (TextUtils.isEmpty(code)) {
-            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            Toast.makeText(view.getContext(), getString(R.string.invalid_otp), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (code.length() < 5) {
-            mBinding.codeInputLayout.setError(getString(R.string.invalid_otp));
+            Toast.makeText(view.getContext(), getString(R.string.invalid_otp), Toast.LENGTH_SHORT).show();
             return;
         }
-
         mViewModel.verify();
         mViewModel.getVerifyResourceLiveData().observe(this, resource -> {
             if (resource != null) {
