@@ -92,8 +92,8 @@
                     android:layout_height="@dimen/button_lock_screen_fp_size"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textColor="@color/white"
                     android:text="2"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -109,6 +109,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="3"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -133,6 +134,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="4"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -148,6 +150,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="5"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -163,6 +166,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="6"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -186,6 +190,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="7"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -201,6 +206,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="8"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -216,6 +222,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="9"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
@@ -242,6 +249,7 @@
                     android:focusable="true"
                     android:gravity="center"
                     android:text="@string/forgot_pf"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenHintTextStyle" />
             </FrameLayout>
 
@@ -257,6 +265,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="0"
+                    android:textColor="@color/white"
                     android:theme="@style/PFLockScreenButtonStyle" />
             </FrameLayout>
 
