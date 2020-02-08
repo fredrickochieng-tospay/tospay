@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import net.tospay.auth.view.LoadingLayout;
 import net.tospay.auth.viewmodelfactory.UserViewModelFactory;
 
 public class PinActivity extends AppCompatActivity {
+
+    private static final String TAG = "PinActivity";
 
     public static final int REQUEST_PIN = 200;
     private SharedPrefManager sharedPrefManager;
@@ -100,7 +103,12 @@ public class PinActivity extends AppCompatActivity {
         mViewModel.login(email, password);
         mViewModel.getResponseLiveData().observe(this, resource -> {
             if (resource != null) {
+                Log.e(TAG, "reAuthenticateUser: " + resource);
                 switch (resource.status) {
+                    case LOADING:
+                        loadingLayout.setVisibility(View.VISIBLE);
+                        break;
+
                     case SUCCESS:
                         loadingLayout.setVisibility(View.GONE);
                         sharedPrefManager.setActiveUser(resource.data);
@@ -109,7 +117,7 @@ public class PinActivity extends AppCompatActivity {
 
                     case ERROR:
                         loadingLayout.setVisibility(View.GONE);
-                        finishWithError();
+                        finishWithError(resource.message);
                         break;
                 }
             }
@@ -166,8 +174,9 @@ public class PinActivity extends AppCompatActivity {
         finish();
     }
 
-    public void finishWithError() {
+    public void finishWithError(String message) {
         Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", message);
         setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }
